@@ -86,17 +86,21 @@ const ko = {
     t += dipSig.length
       ? `${dipSig.map((k) => nm[k]).join("·")}에서 봉우리가 하나가 아니라는 증거가 있다
          (p<0.05) — 조기 소멸 그룹과 성공 그룹으로 갈라진다는 신호다.`
-      : `세 코호트 모두 p>0.05로 "봉우리는 하나"라는 가설을 기각하지 못한다 — 그래프에서
-         코옵의 계곡처럼 보이는 부분도 통계적으로는 쌍봉으로 확정할 수 없다(코옵은 표본이
-         작아 곡선이 울퉁불퉁해 보이기 쉽다).`;
+      : `그래프의 코옵 곡선은 눈으로 보면 거의 쌍봉이다 — 약 1천 장에서 첫 봉우리, 회색
+         구간에서 계곡, 그 오른쪽 수만 장대에서 두 번째 언덕("조기 안착"과 "히트" 두 군집).
+         그럼에도 dip 검정은 p>0.05로 쌍봉을 확정하지 못하는데, 두 번째 봉우리가 첫
+         봉우리보다 낮고 완만하면 이 검정의 검정력이 약해지기 때문이다 — "시각적 쌍봉,
+         통계적 미확정" 상태로 읽는 게 정확하다.`;
     t += `<br/><br/><b>정리:</b> `;
     if (ok && dipSig.includes("A")) {
       t += `코옵은 허리가 유의하게 얇고 분포도 두 봉우리로 갈라진다 — 빈 허리 가설(가설 2)이
         강하게 지지된다.`;
     } else if (ok) {
-      t += `순수 멀티 코옵은 중간 성공 구간이 유의하게 성기다 — 가설 방향이다. 다만 분포가
-        두 봉우리로 쪼개질 정도는 아니어서, "중간이 완전히 빈" 극단적 형태라기보다
-        "중간이 상대적으로 드문" 약한 형태다. 코옵 표본이 작으니 확정은 전체 수집 후에.`;
+      t += `코옵만 가설이 그린 모양을 하고 있다 — 중간 성공 구간이 유의하게 꺼져 있고(허리
+        검정 통과), 곡선도 계곡을 사이에 둔 두 언덕 형태다. 내러티브·로그라이크는 한 봉우리
+        에서 매끈하게 줄어드는 정반대 모양. "죽거나, 중간을 건너뛰고 안착하거나"라는 코옵의
+        이분법이 데이터에 나타난 것으로, dip 검정의 보수성 때문에 "확정 쌍봉" 도장은 아직
+        못 받았을 뿐이다.`;
     } else if (dipSig.length) {
       t += `허리 두께 차이는 불확정이지만 일부 코호트에서 다봉성 신호가 있다 — 혼재된 그림이다.`;
     } else {
@@ -467,18 +471,21 @@ const en: typeof ko = {
     t += dipSig.length
       ? `${dipSig.map((k) => nm[k]).join(", ")} show evidence of more than one peak (p<0.05) —
          a sign of splitting into an early-death group and a success group.`
-      : `all three cohorts have p>0.05, so "one peak" cannot be rejected — even the
-         valley-like dip in the co-op curve cannot be statistically confirmed as bimodality
-         (with a small sample the co-op curve is prone to looking bumpy).`;
+      : `to the eye, the co-op curve is nearly bimodal — a first peak around ~1k copies, a
+         valley through the gray band, and a second hill in the tens-of-thousands range (an
+         "early-landing" cluster and a "hit" cluster). The dip test still cannot reject "one
+         peak" (p>0.05): its power is weak when the second peak is lower and flatter than the
+         first — read this as "visually bimodal, statistically unconfirmed".`;
     t += `<br/><br/><b>Bottom line:</b> `;
     if (ok && dipSig.includes("A")) {
       t += `co-op has both a significantly thinner waist and a genuinely two-peaked
         distribution — strong support for the missing-middle hypothesis.`;
     } else if (ok) {
-      t += `pure multiplayer co-op has a significantly sparser mid-tier — the hypothesized
-        direction. But the distribution does not split into two peaks, so this is the weak
-        form ("the middle is relatively rare"), not the extreme form ("the middle is
-        empty"). The co-op sample is small; final judgment awaits full collection.`;
+      t += `co-op alone has the shape the hypothesis drew — a significantly hollowed
+        mid-tier (waist test passes) and a two-hill curve around a valley, while narrative
+        and roguelike decline smoothly from a single peak. Co-op's "die, or skip the middle
+        and land" split shows in the data; it just lacks the formal bimodality stamp because
+        the dip test is conservative.`;
     } else if (dipSig.length) {
       t += `waist differences are inconclusive but some cohorts show multimodality signals —
         a mixed picture.`;
@@ -857,16 +864,18 @@ const ja: typeof ko = {
     t += dipSig.length
       ? `${dipSig.map((k) => nm[k]).join("・")}で山が1つではない証拠がある (p<0.05) —
          早期消滅グループと成功グループへの分裂シグナルだ。`
-      : `3コホートすべてp>0.05で「山は1つ」を棄却できない — グラフでCo-opの谷のように
-         見える部分も、統計的には二峰性と確定できない(Co-opは標本が小さく曲線が凸凹に
-         見えやすい)。`;
+      : `目で見るとCo-opの曲線はほぼ二峰だ — 約1千本に最初の山、灰色の帯で谷、その右の
+         数万本台に第二の丘(「早期着地」と「ヒット」の2クラスタ)。それでもdip検定はp>0.05で
+         二峰を確定できない — 第二の山が低く緩やかな場合この検定の検出力は弱いためで、
+         「視覚的には二峰、統計的には未確定」と読むのが正確だ。`;
     t += `<br/><br/><b>まとめ:</b> `;
     if (ok && dipSig.includes("A")) {
       t += `Co-opはくびれが有意に薄く、分布も2つの山に割れている — 中間層欠落仮説の強い支持だ。`;
     } else if (ok) {
-      t += `純粋マルチCo-opは中間的成功の帯が有意に疎らだ — 仮説の方向である。ただし分布が
-        2つの山に割れるほどではなく、「中間が完全に空く」極端な形ではなく「中間が相対的に
-        稀」という弱い形だ。Co-op標本は小さいため、確定は全収集後に。`;
+      t += `Co-opだけが仮説の描いた形をしている — 中間帯が有意に凹み(くびれ検定を通過)、
+        曲線も谷を挟む2つの丘の形だ。ナラティブ・ローグライクは単峰から滑らかに減る正反対の
+        形。「死ぬか、中間を飛ばして着地するか」というCo-opの二分法がデータに現れたもので、
+        dip検定の保守性ゆえに「確定二峰」の判は押されていないだけだ。`;
     } else if (dipSig.length) {
       t += `くびれの差は未確定だが、一部コホートに多峰性のシグナルがある — 混在した絵だ。`;
     } else {

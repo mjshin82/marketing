@@ -147,6 +147,26 @@ def write_report():
                 lines.append(f"| {name} | {cell['n']} | {cell['alpha']:.2f} | "
                              f"{cell['gini']:.3f} |")
         lines.append("")
+    ws = r.get("window_sensitivity")
+    if ws:
+        lines += [
+            "## 출시 기간 민감도 (컷오프 2025-06 vs 2025-12)",
+            "",
+            f"확장 창이 추가하는 2025 하반기 게임: {ws['h2_2025_games']}개. "
+            "주의: 2025 하반기는 리뷰 누적 기간이 짧고(7~12개월), SteamSpy 마스터 목록의 "
+            "최신작 편입 지연으로 커버리지 자체가 얇다 — 확장 창 수치는 참고용.",
+            "",
+            "| 코호트 | α (기본→확장) | Gini (기본→확장) | 기하평균 (기본→확장) |",
+            "|---|---|---|---|",
+        ]
+        for k, label in [("A", "코옵"), ("B", "싱글 내러티브"), ("R", "로그라이크")]:
+            if k in ws["primary"] and k in ws["extended"]:
+                pw, ew = ws["primary"][k], ws["extended"][k]
+                lines.append(
+                    f"| {label} | {pw['alpha']:.2f} → {ew['alpha']:.2f} | "
+                    f"{pw['gini']:.3f} → {ew['gini']:.3f} | "
+                    f"{pw['geomean']:.0f} → {ew['geomean']:.0f} |")
+        lines.append("")
     lines += [
         "## 한계",
         "",
@@ -182,5 +202,6 @@ if __name__ == "__main__":
     run("middle.py")
     run("concentration.py")
     run("robustness.py")
+    run("sensitivity_window.py")
     write_report()
     run("export_web.py", label)

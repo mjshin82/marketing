@@ -297,6 +297,28 @@
       </section>
     {/if}
 
+    {#if R.window_sensitivity}
+      <section class="card">
+        <h3>{L.windowT}</h3>
+        <p class="cap">{L.windowNote(R.window_sensitivity.h2_2025_games)}</p>
+        <table>
+          <thead><tr><th></th>{#each L.windowCols as w}<th>{w}</th>{/each}</tr></thead>
+          <tbody>
+            {#each COLS as c}
+              {#if R.window_sensitivity.primary[c] && R.window_sensitivity.extended[c]}
+                <tr>
+                  <td><span class="dot {DOT[c]}"></span>{cohortName(c)}</td>
+                  <td>{R.window_sensitivity.primary[c].alpha.toFixed(2)} → {R.window_sensitivity.extended[c].alpha.toFixed(2)}</td>
+                  <td>{R.window_sensitivity.primary[c].gini.toFixed(3)} → {R.window_sensitivity.extended[c].gini.toFixed(3)}</td>
+                  <td>{Math.round(R.window_sensitivity.primary[c].geomean).toLocaleString()} → {Math.round(R.window_sensitivity.extended[c].geomean).toLocaleString()}</td>
+                </tr>
+              {/if}
+            {/each}
+          </tbody>
+        </table>
+      </section>
+    {/if}
+
     <section class="card">
       <h3>{L.conclT}</h3>
       <div class="concl">{@html L.concl(R, hasR, data.meta.label !== "full")}</div>

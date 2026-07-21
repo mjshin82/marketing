@@ -139,6 +139,11 @@ const ko = {
   </ul>`,
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
+  windowT: "민감도 — 출시 기간 컷오프 (2025-06 vs 2025-12)",
+  windowNote: (n: number): string => `확장 창(~2025-12)이 추가하는 2025 하반기 게임은 ${n}개뿐이다.
+    하반기 출시작은 리뷰 누적 기간이 짧고(7~12개월), SteamSpy 마스터 목록의 최신작 편입
+    지연으로 커버리지도 얇다 — 확장 창 수치는 참고용이며, 본 분석은 2025-06 컷오프를 쓴다.`,
+  windowCols: ["α", "Gini", "기하평균"] as string[],
   conclT: "지금까지의 결론",
   concl: (r: any, hasR: boolean, interim: boolean): string => {
     const c = r.concentration, t = r.tail;
@@ -328,6 +333,12 @@ const en: typeof ko = {
   </ul>`,
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
+  windowT: "Sensitivity — release-window cutoff (2025-06 vs 2025-12)",
+  windowNote: (n) => `The extended window (through 2025-12) adds only ${n} H2-2025 games.
+    Those releases have short review-accumulation windows (7–12 months) and SteamSpy's
+    master list lags on recent titles, so coverage is thin — the extended figures are for
+    reference; the primary analysis uses the 2025-06 cutoff.`,
+  windowCols: ["α", "Gini", "Geometric mean"],
   conclT: "Conclusions so far",
   concl: (r, hasR, interim) => {
     const c = r.concentration, t = r.tail;
@@ -513,6 +524,12 @@ const ja: typeof ko = {
   </ul>`,
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",
+  windowT: "感度分析 — リリース期間カットオフ (2025-06 vs 2025-12)",
+  windowNote: (n) => `拡張ウィンドウ(~2025-12)が追加する2025年下半期のゲームは${n}本のみ。
+    下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、SteamSpyのマスターリストは最新作の
+    収録が遅れるためカバレッジも薄い — 拡張ウィンドウの数値は参考値であり、本分析は
+    2025-06カットオフを用いる。`,
+  windowCols: ["α", "ジニ係数", "幾何平均"],
   conclT: "ここまでの結論",
   concl: (r, hasR, interim) => {
     const c = r.concentration, t = r.tail;

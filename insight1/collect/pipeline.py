@@ -30,10 +30,12 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = ROOT / "data" / "collect.sqlite"
 CSV_PATH = ROOT / "data" / "games.csv"
+CSV_EXT_PATH = ROOT / "data" / "games_ext.csv"
 UA = "insight1-research/0.1 (academic distribution study; dev@concode.co)"
 
 RELEASE_MIN = "2022-01-01"
-RELEASE_MAX = "2025-06-30"
+RELEASE_MAX = "2025-06-30"       # primary analysis window (>=1yr review accumulation)
+RELEASE_MAX_EXT = "2025-12-31"   # extended window, sensitivity analysis only
 MAX_PRICE_CENTS = 3999  # exclude >= $40 (AAA proxy)
 
 TAGS_A_COOP = {"Online Co-Op", "Co-op"}
@@ -92,6 +94,10 @@ def init_db(conn):
     CREATE INDEX IF NOT EXISTS idx_st ON games(st_status);
     CREATE INDEX IF NOT EXISTS idx_ar ON games(ar_status);
     """)
+    try:
+        conn.execute("ALTER TABLE games ADD COLUMN qualified_ext INTEGER")
+    except sqlite3.OperationalError:
+        pass  # column already exists
     conn.commit()
 
 
@@ -329,25 +335,28 @@ def worker_store(conn_factory):
         cats = [c.get("description") for c in d.get("categories") or []]
         genres = [g.get("description") for g in d.get("genres") or []]
         release = parse_release(rel.get("date"))
-        qualified = int(
+        base_ok = (
             d.get("type") == "game"
             and not rel.get("coming_soon")
             and not d.get("is_free")
             and release is not None
-            and RELEASE_MIN <= release <= RELEASE_MAX
             and (po.get("initial") is None or po.get("initial") <= MAX_PRICE_CENTS
                  or po.get("currency") != "USD")
         )
+        qualified = int(base_ok and RELEASE_MIN <= release <= RELEASE_MAX)
+        qualified_ext = int(base_ok and RELEASE_MIN <= release <= RELEASE_MAX_EXT)
         conn.execute("""UPDATE games SET st_status='done', st_type=?, st_release_date=?,
             st_coming_soon=?, st_is_free=?, st_price_initial=?, st_currency=?,
             st_categories=?, st_genres=?, st_publishers=?, st_fetched_at=?,
-            qualified=?, ar_status=CASE WHEN ?=1 THEN 'pending' ELSE NULL END
+            qualified=?, qualified_ext=?,
+            ar_status=CASE WHEN ?=1 THEN 'pending' ELSE NULL END
             WHERE appid=?""",
             (d.get("type"), release, int(bool(rel.get("coming_soon"))),
              int(bool(d.get("is_free"))), po.get("initial"), po.get("currency"),
              json.dumps(cats), json.dumps(genres),
              json.dumps(d.get("publishers") or []),
-             datetime.now(timezone.utc).isoformat(), qualified, qualified, appid))
+             datetime.now(timezone.utc).isoformat(), qualified, qualified_ext,
+             qualified_ext, appid))
         conn.commit()
     conn.close()
 
@@ -421,11 +430,17 @@ def stage_enrich(target_per_cohort, max_seconds):
 def stage_build():
     import pandas as pd
     conn = db()
-    q = """SELECT appid, name, cand AS cohort, st_release_date AS release_date,
+    for flag, path in [("qualified", CSV_PATH), ("qualified_ext", CSV_EXT_PATH)]:
+        _build_one(conn, pd, flag, path)
+    conn.close()
+
+
+def _build_one(conn, pd, flag, out_path):
+    q = f"""SELECT appid, name, cand AS cohort, st_release_date AS release_date,
                   st_price_initial, ss_initialprice, m_initialprice,
                   ss_tags, ss_positive, ss_negative, ar_total_reviews, ar_status,
                   st_publishers
-           FROM games WHERE qualified=1 AND cand IN ('A','B','R')"""
+           FROM games WHERE {flag}=1 AND cand IN ('A','B','R')"""
     df = pd.read_sql(q, conn)
     # authoritative review count: appreviews; fallback steamspy positive+negative
     ss_total = df.ss_positive.fillna(0) + df.ss_negative.fillna(0)
@@ -437,12 +452,11 @@ def stage_build():
     out = df[["appid", "name", "release_date", "price", "tags",
               "total_reviews", "review_source", "cohort"]].copy()
     out["total_reviews"] = out.total_reviews.astype(int)
-    CSV_PATH.parent.mkdir(exist_ok=True)
-    out.to_csv(CSV_PATH, index=False)
-    print(f"wrote {CSV_PATH}: {len(out)} games "
+    out_path.parent.mkdir(exist_ok=True)
+    out.to_csv(out_path, index=False)
+    print(f"wrote {out_path}: {len(out)} games "
           f"(A={len(out[out.cohort == 'A'])}, B={len(out[out.cohort == 'B'])}, "
           f"R={len(out[out.cohort == 'R'])})")
-    conn.close()
 
 
 # ---------------------------------------------------------------- status

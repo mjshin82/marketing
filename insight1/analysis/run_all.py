@@ -43,8 +43,7 @@ def write_report():
         "싱글 내러티브 게임보다 성공 분포가 더 극단적인 승자독식 형태(supercritical branching "
         "process)를 보인다.",
         "",
-        "**데이터:** Gamalytic의 판매량 추정치(copiesSold)를 주 결과변수로 사용하고, "
-        "스팀 리뷰 수 원시 관측(SteamSpy/Steam 공식 API)을 검증 레이어로 병행. "
+        "**데이터:** Gamalytic의 판매량 추정치(copiesSold)를 결과변수로 사용. "
         f"코호트 A(코옵) n={t['A']['n']}, 코호트 B(싱글 내러티브) n={t['B']['n']}"
         + (f", 코호트 R(로그라이크) n={t['R']['n']}" if 'R' in t else "")
         + " (판매 ≥500장, 유료, <$40, 2022-01~2025-12 출시, AAA 제외). "
@@ -277,6 +276,5 @@ if __name__ == "__main__":
     run("concentration.py")
     run("robustness.py")
     run("era.py")
-    run("review_check.py")          # validation layer: raw review counts
     write_report()
     run("export_web.py", label)

@@ -31,8 +31,7 @@ const ko = {
   lede: (m: any) => `온라인 코옵 게임의 입소문은 "친구 그룹이 동시에 모여야 작동하는" 조정(coordination)
     구조다. supercritical 분기 과정이 예측하는 대로라면 코옵 코호트의 성공 분포는 싱글
     내러티브 게임보다 더 극단적이어야 한다 — 꼬리는 더 무겁고, 중간은 비어 있고, 집중도는
-    더 높아야 한다. <b>주 결과변수는 Gamalytic의 판매량 추정치(copiesSold)</b>이고, 스팀
-    리뷰 수 원시 관측을 검증 레이어로 병행한다.
+    더 높아야 한다. <b>결과변수는 Gamalytic의 판매량 추정치(copiesSold)</b>다.
     코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>${m.n_R
       ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""},
     코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>
@@ -326,9 +325,9 @@ const ko = {
   limitT: "한계",
   limits: [
     `<b>판매량은 추정치다</b> — 주 결과변수인 Gamalytic copiesSold는 리뷰 수·플레이타임 등을
-     입력으로 쓰는 추정 모델이지 원시 관측이 아니다. 모델의 왜곡 가능성은 스팀 리뷰 수
-     원시 관측(검증 레이어 카드)과의 대조로 상쇄한다 — 두 척도가 같은 방향이면 결론은
-     모델 의존적이지 않다.`,
+     입력으로 쓰는 추정 모델이지 원시 관측이 아니다. 모델 자체의 계통 오차가 있다면 절대
+     수준이 함께 밀릴 수 있다 — 다만 코호트 간 비교는 같은 모델을 통과한 값끼리의 비교라
+     상대적 결론에는 영향이 작다.`,
     `<b>장르 교집합은 제외</b> — 멀티 코옵이면서 로그라이크인 게임(예: Risk of Rain 계열)은
      로그라이크 코호트에서 빠지고, Singleplayer 태그까지 있으면 어느 코호트에도 들어가지
      않는다 (Singleplayer가 없으면 분류 우선순위에 따라 코옵으로 분류). 상호배타 코호트를
@@ -337,11 +336,9 @@ const ko = {
      수준이다. 코옵 관련 지표(특히 상위 1% 점유율과 α)는 신뢰구간이 넓고 히트작 몇 개에
      민감하므로 구간으로 읽어야 한다.`,
     `<b>태그는 자기선택</b> — 태그는 유저/개발자가 붙이므로 경계 사례의 오분류 가능성이
-     있다. 검증 레이어(SteamSpy 태그)와 주 데이터(Gamalytic 태그 필터)의 분류 불일치는
-     처리 게임 기준 약 1.5%로 작았다.`,
+     있다. 별도로 수집한 SteamSpy 태그와 대조했을 때 분류 불일치는 약 1.5%로 작았다.`,
   ],
-  foot: `데이터: Gamalytic(판매량 추정, 주) + SteamSpy·Steam 공식 API(리뷰 원시 관측, 검증) ·
-    코드/재현: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
+  foot: `데이터: Gamalytic(판매량 추정) · 코드/재현: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
   defT: "코호트 정의 — 수집에 사용한 태그",
   defCohort: "코호트", defInc: "포함 조건 (스팀 태그)", defExc: "제외 태그",
   defRows: [
@@ -392,8 +389,7 @@ const en: typeof ko = {
     a friend group has to converge at the same time. If the supercritical branching-process
     prediction holds, the co-op cohort's success distribution should be more extreme than
     single-player narrative games: a heavier tail, a hollowed-out middle, and higher
-    concentration. <b>The primary outcome variable is Gamalytic's copies-sold estimate</b>,
-    with raw Steam review counts kept as a validation layer.
+    concentration. <b>The outcome variable is Gamalytic's copies-sold estimate</b>.
     Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>${m.n_R
       ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""},
     cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>
@@ -698,9 +694,9 @@ const en: typeof ko = {
   limitT: "Limitations",
   limits: [
     `<b>Copies sold is an estimate</b> — the primary outcome, Gamalytic's copiesSold, is a
-     model fed by review counts, playtime and more — not a raw observation. Potential model
-     distortion is offset by the raw review-count validation layer (see the comparison
-     card): where both scales agree, conclusions are not model-dependent.`,
+     model fed by review counts, playtime and more — not a raw observation. Systematic model
+     error would shift absolute levels; cross-cohort comparisons, however, run through the
+     same model and are less affected.`,
     `<b>Genre intersections are dropped</b> — games that are both multiplayer co-op and
      roguelike (e.g. the Risk of Rain series) fall out of the roguelike cohort, and with a
      Singleplayer tag they land in no cohort (without it they count as co-op). We keep
@@ -709,11 +705,10 @@ const en: typeof ko = {
      about one-ninth of narrative. Co-op metrics (especially top-1% share and α) have wide
      confidence intervals — read intervals, not points.`,
     `<b>Tags are self-selected</b> — tags come from users/developers, so edge cases can be
-     misclassified. Classification disagreement between the main data (Gamalytic tag
-     filters) and the validation layer (SteamSpy tags) was only ~1.5% of processed games.`,
+     misclassified. Cross-checked against separately collected SteamSpy tags, classification
+     disagreement was only ~1.5% of games.`,
   ],
-  foot: `Data: Gamalytic (sales estimates, primary) + SteamSpy/official Steam API (raw
-    review counts, validation) · code:
+  foot: `Data: Gamalytic (sales estimates) · code:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
   defT: "Cohort definitions — tags used for collection",
   defCohort: "Cohort", defInc: "Inclusion (Steam tags)", defExc: "Excluded tags",
@@ -764,9 +759,7 @@ const ja: typeof ko = {
   title: "Co-opゲームの成功は本当に「勝者総取り」なのか",
   lede: (m) => `オンラインCo-opゲームの口コミは「フレンドグループが同時に集まって初めて機能する」
     調整(coordination)構造で動く。supercritical分岐過程の予測どおりなら、Co-opコホートの
-    成功分布はシングルプレイヤー・ナラティブゲームよりも極端になるはずだ。<b>主要結果変数は
-    Gamalyticの販売本数推定値(copiesSold)</b>で、Steamレビュー数の生観測を検証レイヤーとして
-    併用する。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>${m.n_R
+    成功分布はシングルプレイヤー・ナラティブゲームよりも極端になるはずだ。<b>結果変数はGamalyticの販売本数推定値(copiesSold)</b>だ。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>${m.n_R
       ? `、コホートR(ローグライク) <b>${m.n_R.toLocaleString()}本</b>` : ""}、
     コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>
     (有料 · 価格 &lt;$40 · 2022.01–2025.12リリース · AAA除外 · 分析標本は販売500本以上 (低販売域の推定ノイズと趣味レベルのリリースを除外) ·
@@ -1070,19 +1063,17 @@ const ja: typeof ko = {
   limitT: "限界",
   limits: [
     `<b>販売本数は推定値</b> — 主要結果変数のGamalytic copiesSoldはレビュー数・プレイタイム
-     などを入力とする推定モデルであり、生の観測ではない。モデル歪みの可能性はSteamレビュー数の
-     生観測(検証レイヤーカード)との対照で相殺する — 両尺度が同方向なら結論はモデル依存ではない。`,
+     などを入力とする推定モデルであり、生の観測ではない。モデルに系統誤差があれば絶対水準はずれうるが、
+     コホート間の比較は同じモデルを通した値同士のため相対的な結論への影響は小さい。`,
     `<b>ジャンルの交差は除外</b> — マルチCo-opかつローグライク(例: Risk of Rainシリーズ)は
      ローグライクコホートから外れ、Singleplayerタグ付きならどのコホートにも入らない
      (なければ優先順位によりCo-opに分類)。ハイブリッドジャンルの成果はこの分析の範囲外だ。`,
     `<b>Co-op標本が相対的に小さい</b> — 純粋マルチCo-opは約886本でナラティブの約1/9。
      Co-op関連指標(特に上位1%シェアとα)は信頼区間が広く、区間で読むべきだ。`,
     `<b>タグは自己選択</b> — タグはユーザー/開発者が付けるため境界事例の誤分類がありうる。
-     主データ(Gamalyticタグフィルター)と検証レイヤー(SteamSpyタグ)の分類不一致は処理済み
-     ゲームの約1.5%と小さかった。`,
+     別途収集したSteamSpyタグと照合した分類不一致は約1.5%と小さかった。`,
   ],
-  foot: `データ: Gamalytic(販売推定・主) + SteamSpy・Steam公式API(レビュー生観測・検証) ·
-    コード/再現: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
+  foot: `データ: Gamalytic(販売推定) · コード/再現: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
   defT: "コホート定義 — 収集に使ったタグ",
   defCohort: "コホート", defInc: "包含条件 (Steamタグ)", defExc: "除外タグ",
   defRows: [

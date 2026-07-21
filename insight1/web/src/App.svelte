@@ -300,7 +300,7 @@
     {#if R.era?.years && Object.keys(R.era.years).length >= 2}
       <section class="card">
         <h3>{L.eraT}</h3>
-        <p class="cap">{L.eraCap}</p>
+        <p class="cap">{@html L.eraCap}</p>
         <table>
           <thead><tr><th>{L.eraYear}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>{cohortName(c)}</th>{/each}<th>{L.eraRatioA}</th><th>{L.eraRatioR}</th></tr></thead>
           <tbody>

@@ -144,7 +144,8 @@ const ko = {
     ~1년치 리뷰). 유효한 독법은 같은 연도 안에서 코호트끼리 비교하는 것 — 누적 기간이
     상쇄된다. 이 시기 스팀 전체 출시량이 폭증했지만, 시장 전체의 공급 증가는 같은 시장을
     공유하는 두 코호트의 배율에서 상쇄된다. 상쇄되지 않는 것은 코호트별 공급 증가 속도의
-    차이다 — 그래서 각 칸에 표본 출시작 수(n)를 함께 표시한다.`,
+    차이다. 표의 숫자는 각 코호트의 <b>기하평균 리뷰 수</b>이고, 괄호의 <b>n은 해당 연도
+    신규 출시작 수</b>(표본 기준)다.`,
   eraNote: (era: any): string => {
     const ratios = era.ratios;
     const yrs = Object.keys(ratios).sort();
@@ -412,8 +413,9 @@ const en: typeof ko = {
     is the within-year comparison between cohorts — accumulation cancels out. Steam's overall
     release volume exploded over this period, but market-wide supply growth also cancels in
     the ratio, since both cohorts share the same market. What does NOT cancel is a
-    difference in supply growth between cohorts — hence each cell also shows the sample
-    release count (n).`,
+    difference in supply growth between cohorts. The numbers in the table are each cohort's
+    <b>geometric-mean review count</b>; the <b>n in parentheses is the number of new releases
+    that year</b> (sample-based).`,
   eraNote: (era) => {
     const ratios = era.ratios;
     const yrs = Object.keys(ratios).sort();
@@ -680,7 +682,8 @@ const ja: typeof ko = {
     2025年作は~1年分)。有効な読み方は同じ年の中でコホート同士を比較すること — 蓄積期間が
     相殺される。この期間、Steam全体のリリース数は爆発的に増えたが、市場全体の供給増加は
     同じ市場を共有する両コホートの倍率では相殺される。相殺されないのはコホート間の供給
-    増加速度の差だ — そのため各セルに標本リリース数(n)も併記する。`,
+    増加速度の差だ。表の数字は各コホートの<b>幾何平均レビュー数</b>で、括弧の<b>nはその年の
+    新規リリース数</b>(標本ベース)だ。`,
   eraNote: (era) => {
     const ratios = era.ratios;
     const yrs = Object.keys(ratios).sort();

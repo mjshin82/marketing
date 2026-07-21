@@ -199,12 +199,20 @@ const ko = {
         크면 비용 대비로는 뒤집힐 수 있다. 또한 코옵의 복권 배수(×${(c.A.mean / c.A.geomean).toFixed(0)})가
         가장 크고 상위 1% 점유(${(100 * c.A.top1_share).toFixed(0)}%)는 소표본에서 히트작 몇
         개가 만든 수치라 아직 흔들린다.</li>
-      <li><b>안전하게 말할 수 있는 것:</b> 싱글 내러티브는 진입은 쉽지만 기대값이 가장 낮고
-        조기 소멸(${(100 * c.B.early_death_rate).toFixed(0)}%)이 가장 흔한 세계다.
+      <li><b>안전하게 말할 수 있는 것:</b> ${(() => {
+        const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
+        const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
+        const gmL = [...ks].sort((x, y) => c[y].geomean - c[x].geomean)
+          .map((k) => `${nm[k]} ${sig2(c[k].geomean)}`).join(" > ");
+        const edL = [...ks].sort((x, y) => c[y].early_death_rate - c[x].early_death_rate)
+          .map((k) => `${nm[k]} ${(100 * c[k].early_death_rate).toFixed(1)}%`).join(" > ");
+        return `현재 표본에서 전형적 성과(기하평균 리뷰)는 ${gmL} 순이고,
+          조기 소멸률은 ${edL} 순으로 높다.`;
+      })()}
         ${hasR && rb ? (rb.point < 0
           ? `로그라이크는 내러티브보다 꼬리가 ${rbSig ? "통계적으로 유의하게 " : ""}무겁다
              (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`
-          : `로그라이크와 내러티브(스토리 중심)의 분포는 사실상 대등하다
+          : `로그라이크와 내러티브(스토리 중심)의 꼬리 분포는 사실상 대등하다
              (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
         : ""}</li>
       <li><b>시대 효과 주의:</b> 이 분석 창(2022.01–2025.12)의 수치에는 각 장르의 구조적
@@ -464,13 +472,20 @@ const en: typeof ko = {
         flip once development and live-ops costs are counted. Co-op also has the largest
         lottery multiplier (×${(c.A.mean / c.A.geomean).toFixed(0)}) and its top-1% share
         (${(100 * c.A.top1_share).toFixed(0)}%) rests on a few hits in a small sample.</li>
-      <li><b>What can be said safely:</b> single-player narrative is the easiest world to
-        enter but has the lowest expectations and the highest early-death rate
-        (${(100 * c.B.early_death_rate).toFixed(0)}%).
+      <li><b>What can be said safely:</b> ${(() => {
+        const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
+        const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
+        const gmL = [...ks].sort((x, y) => c[y].geomean - c[x].geomean)
+          .map((k) => `${nm[k]} ${sig2(c[k].geomean)}`).join(" > ");
+        const edL = [...ks].sort((x, y) => c[y].early_death_rate - c[x].early_death_rate)
+          .map((k) => `${nm[k]} ${(100 * c[k].early_death_rate).toFixed(1)}%`).join(" > ");
+        return `In the current sample, typical outcomes (geometric-mean reviews) rank
+          ${gmL}, while early-death rates rank ${edL}.`;
+      })()}
         ${hasR && rb ? (rb.point < 0
           ? `Roguelikes have a ${rbSig ? "statistically significantly " : ""}heavier tail than
              narrative games (α diff ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`
-          : `Roguelikes and (story-rich) narrative games show essentially comparable
+          : `Roguelikes and (story-rich) narrative games show essentially comparable tail
              distributions (α diff ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
         : ""}</li>
       <li><b>Beware era effects:</b> every number in this window (2022.01–2025.12) mixes
@@ -719,12 +734,20 @@ const ja: typeof ko = {
         コスト対比では逆転しうる。またCo-opの宝くじ倍率(×${(c.A.mean / c.A.geomean).toFixed(0)})は
         最大で、上位1%占有(${(100 * c.A.top1_share).toFixed(0)}%)は小標本の数本のヒットが
         作った数値でまだ不安定だ。</li>
-      <li><b>安全に言えること:</b> シングル・ナラティブは参入は簡単だが期待値が最も低く、
-        早期消滅(${(100 * c.B.early_death_rate).toFixed(0)}%)が最も多い世界だ。
+      <li><b>安全に言えること:</b> ${(() => {
+        const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
+        const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
+        const gmL = [...ks].sort((x, y) => c[y].geomean - c[x].geomean)
+          .map((k) => `${nm[k]} ${sig2(c[k].geomean)}`).join(" > ");
+        const edL = [...ks].sort((x, y) => c[y].early_death_rate - c[x].early_death_rate)
+          .map((k) => `${nm[k]} ${(100 * c[k].early_death_rate).toFixed(1)}%`).join(" > ");
+        return `現在の標本では、典型的成果(幾何平均レビュー)は${gmL}の順、
+          早期消滅率は${edL}の順に高い。`;
+      })()}
         ${hasR && rb ? (rb.point < 0
           ? `ローグライクはナラティブより裾が${rbSig ? "統計的に有意に" : ""}重い
              (α差 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}])。`
-          : `ローグライクと(ストーリー重視の)ナラティブの分布は実質的に対等だ
+          : `ローグライクと(ストーリー重視の)ナラティブの裾の分布は実質的に対等だ
              (α差 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}])。`)
         : ""}</li>
       <li><b>時代効果に注意:</b> このウィンドウ(2022.01–2025.12)の数値には、各ジャンルの

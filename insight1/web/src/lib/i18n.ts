@@ -115,18 +115,31 @@ const ko = {
     코옵 ${pct(c.A.early_death_rate)} vs 싱글 ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c: any, ok: boolean | undefined) => {
-    let s = `로렌츠 곡선이 대각선(균등선)에서 멀수록 성공이 소수에 집중된 시장이다.
-      상위 1% 점유는 코옵 ${pct(c.A.top1_share)} vs 싱글 ${pct(c.B.top1_share)}로
-      ${c.A.top1_share >= c.B.top1_share
-        ? "코옵의 초상위 집중이 더 크고,"
-        : "싱글 쪽 초대박 집중이 오히려 크지만, 전 구간 불평등을 재는 Gini는 코옵이 높다 —"}
-      Gini 계수(0=완전 균등, 1=완전 독식)도 코옵 ${f2(c.A.gini)} vs 싱글 ${f2(c.B.gini)}. `;
-    s += ok
-      ? `두 Gini의 신뢰구간이 겹치지 않으므로 <b>가설 3 지지</b> — 코옵 시장이 구조적으로 더 승자독식이다. `
-      : `다만 두 Gini의 신뢰구간이 겹쳐 <b>아직 불확정</b> — 방향은 가설과 일치하지만 표본이 더 필요하다. `;
-    s += `조기 소멸률(판매 500장 미만)은 코옵 ${pct(c.A.early_death_rate)} vs
-      싱글 ${pct(c.B.early_death_rate)}로, "대부분 조기 소멸 + 소수 폭발" 구조의 앞부분을 보여준다.`;
-    return s;
+    const g = (k: string) => c[k].gini, t1 = (k: string) => c[k].top1_share;
+    const ks = ["A", "R", "B"].filter((k) => c[k]);
+    const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
+    const gMax = ks.sort((x, y) => g(y) - g(x))[0];
+    const t1Max = [...ks].sort((x, y) => t1(y) - t1(x))[0];
+    let t = `<b>먼저 큰 그림</b> — 세 곡선이 거의 겹칠 만큼 모두 대각선에서 깊게 처져 있다.
+      상위 5% 게임이 전체 판매의 ${ks.map((k) => `${nm[k]} ${pct(c[k].top5_share)}`).join(" / ")}를
+      가져간다 — <b>승자독식 자체는 장르 불문 스팀 인디 시장의 기본값</b>이고, 코호트 간
+      차이는 그 위의 미세 구조다.
+      <br/><br/>렌즈를 나누면 두 지표가 다른 얘기를 한다.
+      ① <b>Gini (전 구간 불평등)</b> — ${ks.map((k) => `${nm[k]} ${g(k).toFixed(3)}`).join(" / ")}:
+      ${nm[gMax]}가 가장 높다${gMax === "A" ? " — 특정 초대박 없이도 전 구간에서 승자·패자가 넓게 갈리는 구조" : ""}.
+      ② <b>상위 1% 점유 (초대박 집중)</b> — ${ks.map((k) => `${nm[k]} ${pct(t1(k))}`).join(" / ")}:
+      ${nm[t1Max]}의 초대박 쏠림이 가장 크다${t1Max !== gMax ? ` — Gini 1등(${nm[gMax]})과 다르다.
+      ${nm[t1Max] === "내러티브" ? "내러티브는 소수 블록버스터가 유독 큰 \"스타 시스템\"형, " : ""}${gMax === "A" ? "코옵은 특정 스타 없이 전면적으로 불평등한 형태다" : ""}` : ""}.
+      <br/><br/><b>판정</b> — `;
+    t += ok
+      ? `코옵 Gini가 내러티브보다 높고 신뢰구간도 겹치지 않는다 → <b>가설 3(코옵이 더
+         승자독식) 지지</b> — 단, 위의 렌즈 구분대로 "전 구간 불평등" 기준이다.`
+      : `코옵 Gini가 가장 높지만 내러티브와 신뢰구간이 겹쳐 <b>아직 불확정</b>이고, 초대박
+         렌즈로는 오히려 내러티브·로그라이크가 앞선다 — "코옵이 더 승자독식"이라는 원가설은
+         렌즈에 따라 답이 갈리는, 절반의 지지 상태다.`;
+    t += ` 조기 소멸률(판매 500장 미만)은 ${ks.map((k) => `${nm[k]} ${pct(c[k].early_death_rate)}`).join(" / ")}
+      — 로렌츠 곡선에 들어오지도 못한 게임들의 규모다.`;
+    return t;
   },
   sumT: "수치 요약",
   thA: "코옵 (A)",
@@ -502,21 +515,32 @@ const en: typeof ko = {
     co-op ${pct(c.A.early_death_rate)} vs single-player ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c, ok) => {
-    let s = `The farther a Lorenz curve sits from the diagonal (equality line), the more
-      winner-take-all the market. Top-1% shares are co-op ${pct(c.A.top1_share)} vs single-player ${pct(c.B.top1_share)} —
-      ${c.A.top1_share >= c.B.top1_share
-        ? "co-op's mega-hit concentration is larger,"
-        : "single-player's mega-hits actually take a bigger slice, but Gini (whole-distribution inequality) is higher for co-op —"} Gini (0=perfect equality, 1=total monopoly):
-      co-op ${f2(c.A.gini)} vs single-player ${f2(c.B.gini)}. `;
-    s += ok
-      ? `The two Gini confidence intervals do not overlap → <b>Hypothesis 3 supported</b> —
-         the co-op market is structurally more winner-take-all. `
-      : `However the two Gini confidence intervals overlap, so this is <b>still
-         inconclusive</b> — the direction matches the hypothesis but more data is needed. `;
-    s += `Early-death rates (under 500 copies) are co-op ${pct(c.A.early_death_rate)} vs
-      single-player ${pct(c.B.early_death_rate)} — the front half of the
-      "mostly die early + a few explode" structure.`;
-    return s;
+    const g = (k: string) => c[k].gini, t1 = (k: string) => c[k].top1_share;
+    const ks = ["A", "R", "B"].filter((k) => c[k]);
+    const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
+    const gMax = ks.sort((x, y) => g(y) - g(x))[0];
+    const t1Max = [...ks].sort((x, y) => t1(y) - t1(x))[0];
+    let t = `<b>The big picture first</b> — all three curves sag deeply, almost on top of each
+      other. The top 5% of games take ${ks.map((k) => `${nm[k]} ${pct(c[k].top5_share)}`).join(" / ")}
+      of all sales — <b>winner-take-all is the baseline of the Steam indie market regardless
+      of genre</b>; cohort differences are fine structure on top.
+      <br/><br/>Split the lenses and two metrics tell different stories.
+      ① <b>Gini (whole-distribution inequality)</b> — ${ks.map((k) => `${nm[k]} ${g(k).toFixed(3)}`).join(" / ")}:
+      ${nm[gMax]} is highest${gMax === "A" ? " — broadly unequal across the whole range even without a singular mega-hit" : ""}.
+      ② <b>Top-1% share (mega-hit concentration)</b> — ${ks.map((k) => `${nm[k]} ${pct(t1(k))}`).join(" / ")}:
+      ${nm[t1Max]} has the biggest mega-hit tilt${t1Max !== gMax ? ` — a different winner than
+      Gini (${nm[gMax]}). ${nm[t1Max] === "narrative" ? "Narrative is a \"star system\" where a few blockbusters loom large; " : ""}${gMax === "A" ? "co-op is pervasively unequal without a singular star" : ""}` : ""}.
+      <br/><br/><b>Verdict</b> — `;
+    t += ok
+      ? `co-op's Gini exceeds narrative's with non-overlapping confidence intervals →
+         <b>Hypothesis 3 supported</b> — on the whole-distribution lens, per the split above.`
+      : `co-op's Gini is highest but its interval overlaps narrative's, so <b>still
+         inconclusive</b> — and on the mega-hit lens narrative/roguelike actually lead. The
+         original "co-op is more winner-take-all" claim gets a split verdict depending on
+         the lens.`;
+    t += ` Early-death rates (<500 copies) are ${ks.map((k) => `${nm[k]} ${pct(c[k].early_death_rate)}`).join(" / ")}
+      — the games that never even enter the Lorenz curve.`;
+    return t;
   },
   sumT: "Summary of numbers",
   thA: "Co-op (A)",
@@ -890,21 +914,31 @@ const ja: typeof ko = {
     Co-op ${pct(c.A.early_death_rate)} vs シングル ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)})。`,
   interp3: (c, ok) => {
-    let s = `ローレンツ曲線が対角線(均等線)から遠いほど、成功が少数に集中した市場だ。
-      上位1%シェアはCo-op ${pct(c.A.top1_share)} vs シングル ${pct(c.B.top1_share)}で、
-      ${c.A.top1_share >= c.B.top1_share
-        ? "Co-opのメガヒット集中がより大きく、"
-        : "シングル側のメガヒット集中がむしろ大きいが、全区間の不平等を測るジニ係数はCo-opが高い —"}
-      ジニ係数(0=完全均等、1=完全独占)もCo-op ${f2(c.A.gini)} vs シングル ${f2(c.B.gini)}。`;
-    s += ok
-      ? `2つのジニ係数の信頼区間が重ならないため<b>仮説3を支持</b> — Co-op市場は構造的に
-         より勝者総取りだ。`
-      : `ただし2つのジニ係数の信頼区間が重なるため<b>まだ未確定</b> — 方向は仮説と一致するが、
-         より多くの標本が必要だ。`;
-    s += `早期消滅率(販売500本未満)はCo-op ${pct(c.A.early_death_rate)} vs
-      シングル ${pct(c.B.early_death_rate)}で、「大半が早期消滅 + 少数が爆発」構造の
-      前半部分を示している。`;
-    return s;
+    const g = (k: string) => c[k].gini, t1 = (k: string) => c[k].top1_share;
+    const ks = ["A", "R", "B"].filter((k) => c[k]);
+    const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
+    const gMax = ks.sort((x, y) => g(y) - g(x))[0];
+    const t1Max = [...ks].sort((x, y) => t1(y) - t1(x))[0];
+    let t = `<b>まず全体像</b> — 3本の曲線はほぼ重なるほど深く垂れている。上位5%のゲームが
+      全販売の${ks.map((k) => `${nm[k]} ${pct(c[k].top5_share)}`).join(" / ")}を持っていく —
+      <b>勝者総取りはジャンルを問わずSteamインディー市場の基本値</b>であり、コホート差は
+      その上の微細構造だ。
+      <br/><br/>レンズを分けると2つの指標が違う話をする。
+      ① <b>ジニ係数 (全区間の不平等)</b> — ${ks.map((k) => `${nm[k]} ${g(k).toFixed(3)}`).join(" / ")}:
+      ${nm[gMax]}が最も高い${gMax === "A" ? " — 特定のメガヒットなしでも全区間で広く勝敗が分かれる構造" : ""}。
+      ② <b>上位1%シェア (メガヒット集中)</b> — ${ks.map((k) => `${nm[k]} ${pct(t1(k))}`).join(" / ")}:
+      ${nm[t1Max]}のメガヒット偏重が最大${t1Max !== gMax ? ` — ジニ係数の1位(${nm[gMax]})と
+      異なる。${nm[t1Max] === "ナラティブ" ? "ナラティブは少数のブロックバスターが際立つ「スターシステム」型、" : ""}${gMax === "A" ? "Co-opは特定のスターなしに全面的に不平等な形だ" : ""}` : ""}。
+      <br/><br/><b>判定</b> — `;
+    t += ok
+      ? `Co-opのジニ係数がナラティブを上回り信頼区間も重ならない → <b>仮説3を支持</b> —
+         ただし上記の区分どおり「全区間の不平等」レンズ基準だ。`
+      : `Co-opのジニ係数が最も高いがナラティブと信頼区間が重なるため<b>まだ未確定</b>で、
+         メガヒットレンズではむしろナラティブ・ローグライクが先行する。「Co-opがより勝者総取り」
+         という元の仮説は、レンズによって答えが分かれる半分の支持にとどまる。`;
+    t += `早期消滅率(販売500本未満)は${ks.map((k) => `${nm[k]} ${pct(c[k].early_death_rate)}`).join(" / ")}
+      — ローレンツ曲線に入ることすらできなかったゲームの規模だ。`;
+    return t;
   },
   sumT: "数値サマリー",
   thA: "Co-op (A)",

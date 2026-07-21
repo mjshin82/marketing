@@ -6,6 +6,11 @@ const p3 = (x: number) => (x < 0.001 ? x.toExponential(1) : x.toFixed(3));
 const pct = (x: number) => (100 * x).toFixed(1) + "%";
 const f2 = (x: number) => x.toFixed(2);
 
+const sig2 = (x: number) => {
+  const m = Math.pow(10, Math.max(0, Math.floor(Math.log10(x)) - 1));
+  return (Math.round(x / m) * m).toLocaleString();
+};
+
 export function detectLocale(): Locale {
   try {
     const saved = localStorage.getItem("insight1-lang");
@@ -119,6 +124,19 @@ const ko = {
       기댓값"이라, 산술평균이 기하평균의 몇 배인가(코옵 ×${gap("A")}${hasR ? `, 로그라이크
       ×${gap("R")}` : ""}, 내러티브 ×${gap("B")})가 클수록 그 장르는 복권판에 가깝다.`;
   },
+  insightTitle: (name: string): string => `${name} 게임을 만든다면`,
+  insightCard: (d: any): string => `<ul>
+    <li><b>보통의 세계</b> — 기하평균 리뷰 ${sig2(d.geomean)}개, 판매로 치면 약
+      ${sig2(d.geomean * 35)}장 자릿수의 세계다 (Boxleiter ×35 기준).</li>
+    <li><b>절반의 현실</b> — 살아남은 게임의 절반은 리뷰 ${sig2(d.median)}개 미만에 머문다.</li>
+    <li><b>조기 소멸 위험</b> — 출시작의 ${(100 * d.early).toFixed(0)}%는 리뷰 10개도 못 모은다.</li>
+    <li><b>중간 성공 확률</b> — 조기 소멸을 넘긴 게임 중 ${(100 * d.middle).toFixed(0)}%가
+      리뷰 100–1,000개(판매 약 3.5천–3.5만 장) 구간에 안착한다.</li>
+    <li><b>복권 배수</b> — 산술평균은 기하평균의 ×${d.lot.toFixed(0)}. 크게 터지면
+      전형적 성과의 수십~수백 배를 가져가는 구조다.</li>
+    <li><b>승자독식 정도</b> — 상위 1% 게임이 전체 리뷰의 ${(100 * d.top1).toFixed(0)}%,
+      상위 5%가 ${(100 * d.top5).toFixed(0)}%를 점유한다.</li>
+  </ul>`,
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
   limitT: "한계",
@@ -264,6 +282,20 @@ const en: typeof ko = {
       arithmetic and geometric mean (co-op ×${gap("A")}${hasR ? `, roguelike ×${gap("R")}` : ""},
       narrative ×${gap("B")}), the more lottery-like the genre.`;
   },
+  insightTitle: (name) => `If you're making a ${name} game`,
+  insightCard: (d) => `<ul>
+    <li><b>The typical world</b> — geometric mean of ${sig2(d.geomean)} reviews, i.e. on the
+      order of ${sig2(d.geomean * 35)} copies sold (Boxleiter ×35).</li>
+    <li><b>Half the reality</b> — half of surviving games stay under ${sig2(d.median)} reviews.</li>
+    <li><b>Early-death risk</b> — ${(100 * d.early).toFixed(0)}% of releases never reach even
+      10 reviews.</li>
+    <li><b>Odds of a mid-tier hit</b> — among games that survive early death,
+      ${(100 * d.middle).toFixed(0)}% land in the 100–1,000 review band (~3.5k–35k copies).</li>
+    <li><b>Lottery multiplier</b> — the arithmetic mean is ×${d.lot.toFixed(0)} the geometric
+      mean: a real hit pays tens to hundreds of times the typical outcome.</li>
+    <li><b>Winner-take-all</b> — the top 1% of games capture ${(100 * d.top1).toFixed(0)}% of
+      all reviews; the top 5% capture ${(100 * d.top5).toFixed(0)}%.</li>
+  </ul>`,
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
   limitT: "Limitations",
@@ -404,6 +436,19 @@ const ja: typeof ko = {
       であり、算術平均が幾何平均の何倍か(Co-op ×${gap("A")}${hasR ? `、ローグライク
       ×${gap("R")}` : ""}、ナラティブ ×${gap("B")})が大きいほど、そのジャンルは宝くじに近い。`;
   },
+  insightTitle: (name) => `${name}ゲームを作るなら`,
+  insightCard: (d) => `<ul>
+    <li><b>普通の世界</b> — 幾何平均レビュー${sig2(d.geomean)}件、販売に換算すると約
+      ${sig2(d.geomean * 35)}本の桁の世界 (Boxleiter ×35基準)。</li>
+    <li><b>半分の現実</b> — 生き残ったゲームの半分はレビュー${sig2(d.median)}件未満にとどまる。</li>
+    <li><b>早期消滅リスク</b> — リリース作の${(100 * d.early).toFixed(0)}%はレビュー10件も集められない。</li>
+    <li><b>中堅ヒットの確率</b> — 早期消滅を越えたゲームのうち${(100 * d.middle).toFixed(0)}%が
+      レビュー100–1,000件(販売約3.5千–3.5万本)の帯に着地する。</li>
+    <li><b>宝くじ倍率</b> — 算術平均は幾何平均の×${d.lot.toFixed(0)}。大きく当たれば
+      典型的成果の数十~数百倍を持っていく構造だ。</li>
+    <li><b>勝者総取りの度合い</b> — 上位1%のゲームが全レビューの${(100 * d.top1).toFixed(0)}%、
+      上位5%が${(100 * d.top5).toFixed(0)}%を占有する。</li>
+  </ul>`,
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",
   limitT: "限界",

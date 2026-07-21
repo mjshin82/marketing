@@ -48,6 +48,15 @@
   const COLS = $derived(hasR ? ["A", "R", "B"] : ["A", "B"]);  // co-op / roguelike / narrative
   const DOT: Record<string, string> = { A: "da", R: "dr", B: "db" };
   const cohortName = (c: string) => (c === "A" ? L.cohortA : c === "R" ? L.cohortR : L.cohortB);
+  const insightOf = (c: string) => ({
+    geomean: R.concentration[c].geomean,
+    median: R.concentration[c].median,
+    lot: R.concentration[c].mean / R.concentration[c].geomean,
+    early: R.concentration[c].early_death_rate,
+    middle: R.middle[c].middle_share,
+    top1: R.concentration[c].top1_share,
+    top5: R.concentration[c].top5_share,
+  });
   const verdicts = $derived(
     !R ? null : {
       h1: R.tail.alpha_diff_A_minus_B.ci95[1] < 0,
@@ -250,6 +259,14 @@
         <p class="interp-t">{L.interpT}</p>
         <p>{@html L.sumNote(R.concentration, hasR)}</p>
       </div>
+      <div class="insight-grid">
+        {#each COLS as c}
+          <div class="insight">
+            <p class="insight-t"><span class="dot {DOT[c]}"></span>{L.insightTitle(cohortName(c))}</p>
+            {@html L.insightCard(insightOf(c))}
+          </div>
+        {/each}
+      </div>
     </section>
 
     {#if R.robustness?.price_bands && Object.keys(R.robustness.price_bands).length}
@@ -350,6 +367,14 @@
   .muted { color: var(--text-muted); }
   .foot { font-size: 0.78rem; margin: 12px 0 0; }
   .foot :global(a), .about-p :global(b) { color: inherit; }
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                  gap: 14px; margin-top: 14px; }
+  .insight { border: 1px solid var(--grid); border-radius: 8px; padding: 12px 14px; }
+  .insight-t { margin: 0 0 6px; font-weight: 650; font-size: 0.92rem; }
+  .insight :global(ul) { margin: 0; padding-left: 16px; color: var(--text-secondary);
+                         font-size: 0.85rem; }
+  .insight :global(li) { margin-bottom: 6px; }
+  .insight :global(li:last-child) { margin-bottom: 0; }
   .about-p { color: var(--text-secondary); font-size: 0.92rem; margin: 0 0 10px; }
   .about-links { display: flex; gap: 18px; flex-wrap: wrap; margin: 0; font-size: 0.9rem; }
   .about-links a { color: var(--series-b); text-decoration: none; font-weight: 600; }

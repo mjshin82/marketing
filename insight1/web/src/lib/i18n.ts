@@ -167,8 +167,6 @@ const ko = {
         로그라이크의 좋은 수치에는 장르의 구조적 특성만이 아니라 유행의 순풍이 섞여 있을 수
         있다 — 유행이 식으면 재현되지 않을 수 있는 부분이다. 연도별 강건성 분석(2022→2025
         추세)이 이 효과를 부분적으로 가려낼 수 있다.</li>
-      <li><b>다음 검증:</b> 코옵의 우위가 구성 효과를 넘어서는지는 전체 수집 후 같은 가격대끼리
-        비교(강건성 분석)했을 때도 유지되는지로 좁혀본다.</li>
     </ul>`;
   },
   limitT: "한계",
@@ -360,8 +358,6 @@ const en: typeof ko = {
         the roguelike boom. The genre's strong numbers may mix a structural property with a
         fashion tailwind — a part that may not replicate once the trend cools. The by-year
         robustness analysis (2022→2025 trend) can partially separate this.</li>
-      <li><b>Next check:</b> whether the co-op advantage survives a composition control —
-        comparing within the same price band once the full collection lands.</li>
     </ul>`;
   },
   limitT: "Limitations",
@@ -543,8 +539,6 @@ const ja: typeof ko = {
         ローグライクの良い数値には、ジャンルの構造的特性だけでなく流行の追い風が混ざっている
         可能性がある — 流行が冷めれば再現しない部分かもしれない。年別の頑健性分析(2022→2025の
         トレンド)がこの効果を部分的に切り分けられる。</li>
-      <li><b>次の検証:</b> Co-opの優位が構成効果を超えるかどうかは、全収集後に同じ価格帯同士で
-        比較(頑健性分析)しても維持されるかで絞り込む。</li>
     </ul>`;
   },
   limitT: "限界",

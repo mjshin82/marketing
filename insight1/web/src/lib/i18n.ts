@@ -297,6 +297,9 @@ const ko = {
      측정</b>됐을 수 있다. 반론도 있다 — 스팀 P2P 기반 코옵은 서버 유지비가 없어 죽은
      게임을 굳이 내릴 유인도 낮으므로, 이 편향이 실제로 코옵에 얼마나 유리하게 작용했는지는
      불확실하다.`,
+    `<b>코옵 표본 부족</b> — 코호트 A를 순수 멀티 코옵으로 좁히면서 표본이 다른 코호트의
+     1/5 수준으로 작다. 코옵 관련 지표(특히 상위 1% 점유율과 α)는 신뢰구간이 넓고 히트작
+     몇 개의 표본 포함 여부에 민감하므로, 점추정치보다 구간으로 읽어야 한다.`,
     `<b>2025 하반기 커버리지</b> — 하반기 출시작은 리뷰 누적 기간이 짧고(7–12개월) SteamSpy
      목록 편입 지연으로 표본이 얇다. 컷오프를 2025-06으로 좁혀도 결과는 사실상 동일했다
      (민감도 확인 완료).`,
@@ -640,6 +643,10 @@ const en: typeof ko = {
      are <b>measured only on survivors and thus biased upward</b>. The counterargument:
      Steam-P2P co-op has no server upkeep, so there is little incentive to delist a dead
      game either — how strongly this bias actually favors co-op is uncertain.`,
+    `<b>Small co-op sample</b> — narrowing cohort A to pure multiplayer co-op leaves it at
+     roughly one-fifth the size of the other cohorts. Co-op metrics (especially top-1% share
+     and α) have wide confidence intervals and are sensitive to whether a few hits land in
+     the sample — read intervals, not point estimates.`,
     `<b>H2-2025 coverage</b> — late-2025 releases have short review-accumulation windows
      (7–12 months) and SteamSpy lags on recent titles, so that slice is thin. Narrowing the
      cutoff to 2025-06 left the results essentially unchanged (sensitivity checked).`,
@@ -962,6 +969,9 @@ const ja: typeof ko = {
      <b>生存者だけを観測して実際より良く測定</b>されている可能性がある。反論もある —
      Steam P2Pベースのco-opはサーバー維持費がないため、死んだゲームをわざわざ取り下げる
      動機も薄い。このバイアスが実際どれほどCo-opに有利に働いたかは不確実だ。`,
+    `<b>Co-op標本の不足</b> — コホートAを純粋マルチCo-opに絞ったため、標本は他コホートの
+     約1/5と小さい。Co-op関連指標(特に上位1%シェアとα)は信頼区間が広く、少数のヒット作が
+     標本に入るかどうかに敏感なため、点推定値ではなく区間で読むべきだ。`,
     `<b>2025年下半期のカバレッジ</b> — 下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、
      SteamSpyの収録遅延で標本が薄い。カットオフを2025-06に狭めても結果は実質同じだった
      (感度確認済み)。`,

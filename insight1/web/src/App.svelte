@@ -358,22 +358,6 @@
       </section>
     {/if}
 
-    {#if R.review_check?.A && R.review_check?.B}
-      <section class="card">
-        <h3>{L.validT}</h3>
-        <p class="cap">{@html L.validCap(R.review_check)}</p>
-        <table>
-          <thead><tr><th>{L.validMetric}</th><th>{L.validMain}</th><th>{L.validCheck}</th><th>{L.validAgree}</th></tr></thead>
-          <tbody>
-            {#each L.validRows(R) as row}
-              <tr><td>{row.label}</td><td>{row.main}</td><td>{row.check}</td>
-                <td>{row.ok ? "✓" : "✗"}</td></tr>
-            {/each}
-          </tbody>
-        </table>
-      </section>
-    {/if}
-
     <section class="card">
       <h3>{L.marketT}</h3>
       <p class="cap">{@html L.marketCap}</p>

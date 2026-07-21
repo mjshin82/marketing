@@ -192,40 +192,6 @@ const ko = {
       더 많다. 최상위 구간에서 코옵의 비율 우위가 모수 격차를 뚫는다는 뜻이다. 단, 이 역시
       "코옵이라서"가 아니라 코옵을 만들 수 있는 팀의 역량 프리미엄(구성 효과)일 수 있다.`;
   },
-  validT: "검증 레이어 — 리뷰 원시 관측과의 대조",
-  validMetric: "지표", validMain: "판매 기준 (주)", validCheck: "리뷰 기준 (검증)", validAgree: "일치",
-  validCap: (rc: any): string => `주 분석(Gamalytic 판매 추정)의 결론이 모델 산물이 아닌지, 스팀
-    리뷰 수 <b>원시 관측</b>(SteamSpy/Steam 공식 API, 표본 ${(rc.n_total ?? 0).toLocaleString()}개
-    수집 기준)으로 같은 지표를 재계산해 대조한다. 척도가 달라 절대값은 다르지만,
-    <b>"어느 코호트가 1등인가"의 방향이 일치하면 결론은 척도에 강건</b>하다.`,
-  validRows: (R: any) => {
-    const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
-    const rc = R.review_check;
-    const pick = (obj: Record<string, number>, max: boolean) => {
-      const ks = Object.keys(obj);
-      return ks.sort((x, y) => max ? obj[y] - obj[x] : obj[x] - obj[y])[0];
-    };
-    const build = (label: string, mainVals: Record<string, number>,
-                   chkVals: Record<string, number>, max: boolean, fmt: (v: number) => string) => {
-      const mk = pick(mainVals, max), ck = pick(chkVals, max);
-      return { label, main: `${nm[mk]} (${fmt(mainVals[mk])})`,
-               check: `${nm[ck]} (${fmt(chkVals[ck])})`, ok: mk === ck };
-    };
-    const ks = ["A", "R", "B"].filter((k) => rc[k] && R.concentration[k]);
-    const gv = (f: (k: string) => number) => Object.fromEntries(ks.map((k) => [k, f(k)]));
-    return [
-      build("조기 소멸률 최다", gv((k) => R.concentration[k].early_death_rate),
-            gv((k) => rc[k].early_death_rate), true, pct),
-      build("중간층 비율 최저", gv((k) => R.middle[k].middle_share),
-            gv((k) => rc[k].middle_share), false, pct),
-      build("Gini 최고 (집중)", gv((k) => R.concentration[k].gini),
-            gv((k) => rc[k].gini), true, (v) => v.toFixed(3)),
-      build("전형 성과(기하평균) 최고", gv((k) => R.concentration[k].geomean),
-            gv((k) => rc[k].geomean), true, (v) => Math.round(v).toLocaleString()),
-      build("꼬리 최중 (α 최저)", gv((k) => R.tail[k].alpha),
-            gv((k) => rc[k].alpha), false, (v) => v.toFixed(2)),
-    ];
-  },
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
   robCap: `α가 작을수록 초대형 히트가 상대적으로 자주 나오는 "무거운 꼬리"다. 이 표는 같은
@@ -606,41 +572,6 @@ const en: typeof ko = {
       gap. As always, this may reflect the capability premium of teams able to ship co-op
       (composition effect), not co-op itself.`;
   },
-  validT: "Validation layer — against raw review counts",
-  validMetric: "Metric", validMain: "Sales-based (primary)", validCheck: "Review-based (check)", validAgree: "Agree",
-  validCap: (rc: any): string => `To ensure the primary conclusions are not artifacts of
-    Gamalytic's sales model, the same metrics are recomputed on <b>raw Steam review
-    counts</b> (SteamSpy/official API pipeline, ${(rc.n_total ?? 0).toLocaleString()} games
-    collected so far). Absolute values differ across scales — what matters is whether
-    <b>the winner of each metric agrees</b>; agreement means scale-robust conclusions.`,
-  validRows: (R: any) => {
-    const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
-    const rc = R.review_check;
-    const pick = (obj: Record<string, number>, max: boolean) => {
-      const ks = Object.keys(obj);
-      return ks.sort((x, y) => max ? obj[y] - obj[x] : obj[x] - obj[y])[0];
-    };
-    const build = (label: string, mainVals: Record<string, number>,
-                   chkVals: Record<string, number>, max: boolean, fmt: (v: number) => string) => {
-      const mk = pick(mainVals, max), ck = pick(chkVals, max);
-      return { label, main: `${nm[mk]} (${fmt(mainVals[mk])})`,
-               check: `${nm[ck]} (${fmt(chkVals[ck])})`, ok: mk === ck };
-    };
-    const ks = ["A", "R", "B"].filter((k) => rc[k] && R.concentration[k]);
-    const gv = (f: (k: string) => number) => Object.fromEntries(ks.map((k) => [k, f(k)]));
-    return [
-      build("Highest early-death rate", gv((k) => R.concentration[k].early_death_rate),
-            gv((k) => rc[k].early_death_rate), true, pct),
-      build("Thinnest middle band", gv((k) => R.middle[k].middle_share),
-            gv((k) => rc[k].middle_share), false, pct),
-      build("Highest Gini (concentration)", gv((k) => R.concentration[k].gini),
-            gv((k) => rc[k].gini), true, (v) => v.toFixed(3)),
-      build("Best typical outcome (geomean)", gv((k) => R.concentration[k].geomean),
-            gv((k) => rc[k].geomean), true, (v) => Math.round(v).toLocaleString()),
-      build("Heaviest tail (lowest α)", gv((k) => R.tail[k].alpha),
-            gv((k) => rc[k].alpha), false, (v) => v.toFixed(2)),
-    ];
-  },
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
   robCap: `A smaller α means a heavier tail — outsized hits come relatively more often. This
@@ -1017,40 +948,6 @@ const ja: typeof ko = {
       ミリオンセラーはより多い。最上位ではCo-opの比率優位が母数の差を突き破る。ただし例に
       よって、これも「Co-opだから」ではなくCo-opを作れるチームの力量プレミアム(構成効果)かも
       しれない。`;
-  },
-  validT: "検証レイヤー — レビュー生観測との対照",
-  validMetric: "指標", validMain: "販売基準 (主)", validCheck: "レビュー基準 (検証)", validAgree: "一致",
-  validCap: (rc: any): string => `主分析(Gamalytic販売推定)の結論がモデルの産物でないことを
-    確認するため、Steamレビュー数の<b>生観測</b>(SteamSpy/公式APIパイプライン、収集済み
-    ${(rc.n_total ?? 0).toLocaleString()}本基準)で同じ指標を再計算して対照する。尺度が違うため
-    絶対値は異なるが、<b>各指標の「1位コホート」が一致すれば結論は尺度に頑健</b>だ。`,
-  validRows: (R: any) => {
-    const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
-    const rc = R.review_check;
-    const pick = (obj: Record<string, number>, max: boolean) => {
-      const ks = Object.keys(obj);
-      return ks.sort((x, y) => max ? obj[y] - obj[x] : obj[x] - obj[y])[0];
-    };
-    const build = (label: string, mainVals: Record<string, number>,
-                   chkVals: Record<string, number>, max: boolean, fmt: (v: number) => string) => {
-      const mk = pick(mainVals, max), ck = pick(chkVals, max);
-      return { label, main: `${nm[mk]} (${fmt(mainVals[mk])})`,
-               check: `${nm[ck]} (${fmt(chkVals[ck])})`, ok: mk === ck };
-    };
-    const ks = ["A", "R", "B"].filter((k) => rc[k] && R.concentration[k]);
-    const gv = (f: (k: string) => number) => Object.fromEntries(ks.map((k) => [k, f(k)]));
-    return [
-      build("早期消滅率が最も高い", gv((k) => R.concentration[k].early_death_rate),
-            gv((k) => rc[k].early_death_rate), true, pct),
-      build("中間帯が最も薄い", gv((k) => R.middle[k].middle_share),
-            gv((k) => rc[k].middle_share), false, pct),
-      build("ジニ係数が最も高い", gv((k) => R.concentration[k].gini),
-            gv((k) => rc[k].gini), true, (v) => v.toFixed(3)),
-      build("典型成果(幾何平均)が最も高い", gv((k) => R.concentration[k].geomean),
-            gv((k) => rc[k].geomean), true, (v) => Math.round(v).toLocaleString()),
-      build("裾が最も重い (α最小)", gv((k) => R.tail[k].alpha),
-            gv((k) => rc[k].alpha), false, (v) => v.toFixed(2)),
-    ];
   },
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",

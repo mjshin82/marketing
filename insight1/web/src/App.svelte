@@ -45,6 +45,9 @@
 
   const R = $derived(data?.results);
   const hasR = $derived(!!(data?.series?.R && R?.tail?.R && R?.middle?.R && R?.concentration?.R));
+  const COLS = $derived(hasR ? ["A", "R", "B"] : ["A", "B"]);  // co-op / roguelike / narrative
+  const DOT: Record<string, string> = { A: "da", R: "dr", B: "db" };
+  const cohortName = (c: string) => (c === "A" ? L.cohortA : c === "R" ? L.cohortR : L.cohortB);
   const verdicts = $derived(
     !R ? null : {
       h1: R.tail.alpha_diff_A_minus_B.ci95[1] < 0,
@@ -89,16 +92,16 @@
       series: [
         { name: `${L.cohortA} α=${R.tail.A.alpha.toFixed(2)}`, type: "scatter", color: t.a,
           data: s.A.ccdf, symbolSize: 5, itemStyle: { opacity: 0.5 } },
-        { name: `${L.cohortB} α=${R.tail.B.alpha.toFixed(2)}`, type: "scatter", color: t.b,
-          data: s.B.ccdf, symbolSize: 5, itemStyle: { opacity: 0.5 } },
         ...(hasR ? [{ name: `${L.cohortR} α=${R.tail.R.alpha.toFixed(2)}`, type: "scatter",
           color: t.r, data: s.R.ccdf, symbolSize: 5, itemStyle: { opacity: 0.5 } }] : []),
+        { name: `${L.cohortB} α=${R.tail.B.alpha.toFixed(2)}`, type: "scatter", color: t.b,
+          data: s.B.ccdf, symbolSize: 5, itemStyle: { opacity: 0.5 } },
         { type: "line", data: s.A.fit, showSymbol: false, silent: true, color: t.a,
-          lineStyle: { width: 2, type: "dashed" }, tooltip: { show: false } },
-        { type: "line", data: s.B.fit, showSymbol: false, silent: true, color: t.b,
           lineStyle: { width: 2, type: "dashed" }, tooltip: { show: false } },
         ...(hasR ? [{ type: "line", data: s.R.fit, showSymbol: false, silent: true, color: t.r,
           lineStyle: { width: 2, type: "dashed" }, tooltip: { show: false } }] : []),
+        { type: "line", data: s.B.fit, showSymbol: false, silent: true, color: t.b,
+          lineStyle: { width: 2, type: "dashed" }, tooltip: { show: false } },
       ],
     } as EChartsOption;
   });
@@ -129,10 +132,10 @@
             label: { color: t.ink2, position: "insideTop" },
             data: [[{ name: L.bandLabel, xAxis: 2 }, { xAxis: 3 }]],
           } },
-        { name: L.cohortB, type: "line", data: s.B.kde, showSymbol: false, smooth: true, color: t.b,
-          lineStyle: { width: 2 }, areaStyle: { opacity: 0.14 } },
         ...(hasR ? [{ name: L.cohortR, type: "line", data: s.R.kde, showSymbol: false,
           smooth: true, color: t.r, lineStyle: { width: 2 }, areaStyle: { opacity: 0.14 } }] : []),
+        { name: L.cohortB, type: "line", data: s.B.kde, showSymbol: false, smooth: true, color: t.b,
+          lineStyle: { width: 2 }, areaStyle: { opacity: 0.14 } },
       ],
     } as EChartsOption;
   });
@@ -165,10 +168,10 @@
       series: [
         { name: `${L.cohortA} Gini ${C.A.gini.toFixed(2)}`, type: "line", data: s.A.lorenz,
           showSymbol: false, color: t.a, lineStyle: { width: 2 } },
-        { name: `${L.cohortB} Gini ${C.B.gini.toFixed(2)}`, type: "line", data: s.B.lorenz,
-          showSymbol: false, color: t.b, lineStyle: { width: 2 } },
         ...(hasR ? [{ name: `${L.cohortR} Gini ${C.R.gini.toFixed(2)}`, type: "line",
           data: s.R.lorenz, showSymbol: false, color: t.r, lineStyle: { width: 2 } }] : []),
+        { name: `${L.cohortB} Gini ${C.B.gini.toFixed(2)}`, type: "line", data: s.B.lorenz,
+          showSymbol: false, color: t.b, lineStyle: { width: 2 } },
         { name: L.equality, type: "line", data: [[0, 0], [1, 1]], showSymbol: false,
           silent: true, color: t.muted, lineStyle: { width: 1, type: "dashed" },
           tooltip: { show: false } },
@@ -194,32 +197,6 @@
       <p class="lede">{@html L.lede(data.meta)}</p>
     </header>
 
-    <section class="tiles">
-      <div class="tile">
-        <p class="tile-k">{L.tile1k}</p>
-        <p class="tile-v">α <span class="dot da"></span>{R.tail.A.alpha.toFixed(2)}
-          <span class="dot db"></span>{R.tail.B.alpha.toFixed(2)}{#if hasR}
-          <span class="dot dr"></span>{R.tail.R.alpha.toFixed(2)}{/if}</p>
-        <p class="tile-s">{L.tile1s(R.tail.alpha_diff_A_minus_B)}
-          · <b class={verdicts?.h1 ? "ok" : "na"}>{L.verdict(verdicts?.h1)}</b></p>
-      </div>
-      <div class="tile">
-        <p class="tile-k">{L.tile2k}</p>
-        <p class="tile-v"><span class="dot da"></span>{pct(R.middle.A.middle_share)}
-          <span class="dot db"></span>{pct(R.middle.B.middle_share)}{#if hasR}
-          <span class="dot dr"></span>{pct(R.middle.R.middle_share)}{/if}</p>
-        <p class="tile-s">{L.tile2s(R.middle)}
-          · <b class={verdicts?.h2 ? "ok" : "na"}>{L.verdict(verdicts?.h2)}</b></p>
-      </div>
-      <div class="tile">
-        <p class="tile-k">{L.tile3k}</p>
-        <p class="tile-v"><span class="dot da"></span>{R.concentration.A.gini.toFixed(2)}
-          <span class="dot db"></span>{R.concentration.B.gini.toFixed(2)}{#if hasR}
-          <span class="dot dr"></span>{R.concentration.R.gini.toFixed(2)}{/if}</p>
-        <p class="tile-s">{L.tile3s(R.concentration)}
-          · <b class={verdicts?.h3 ? "ok" : "na"}>{L.verdict(verdicts?.h3)}</b></p>
-      </div>
-    </section>
 
     <section class="card">
       <h3>{L.c1t}</h3>
@@ -254,19 +231,19 @@
     <section class="card">
       <h3>{L.sumT}</h3>
       <table>
-        <thead><tr><th></th><th><span class="dot da"></span>{L.thA}</th><th><span class="dot db"></span>{L.thB}</th>{#if hasR}<th><span class="dot dr"></span>{L.thR}</th>{/if}</tr></thead>
+        <thead><tr><th></th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>{c === "A" ? L.thA : c === "R" ? L.thR : L.thB}</th>{/each}</tr></thead>
         <tbody>
-          <tr><td>{L.rows.n}</td><td>{R.tail.A.n.toLocaleString()}</td><td>{R.tail.B.n.toLocaleString()}</td>{#if hasR}<td>{R.tail.R.n.toLocaleString()}</td>{/if}</tr>
-          <tr><td>{L.rows.alpha}</td><td>{R.tail.A.alpha.toFixed(3)} ({R.tail.A.alpha_se.toFixed(3)})</td><td>{R.tail.B.alpha.toFixed(3)} ({R.tail.B.alpha_se.toFixed(3)})</td>{#if hasR}<td>{R.tail.R.alpha.toFixed(3)} ({R.tail.R.alpha_se.toFixed(3)})</td>{/if}</tr>
-          <tr><td>{L.rows.xmin}</td><td>{R.tail.A.xmin.toLocaleString()} / {R.tail.A.n_tail}</td><td>{R.tail.B.xmin.toLocaleString()} / {R.tail.B.n_tail}</td>{#if hasR}<td>{R.tail.R.xmin.toLocaleString()} / {R.tail.R.n_tail}</td>{/if}</tr>
-          <tr><td>{L.rows.median}</td><td>{R.concentration.A.median.toLocaleString()}</td><td>{R.concentration.B.median.toLocaleString()}</td>{#if hasR}<td>{R.concentration.R.median.toLocaleString()}</td>{/if}</tr>
-          <tr><td>{L.rows.mean}</td><td>{Math.round(R.concentration.A.mean).toLocaleString()} (×{R.concentration.A.mean_over_median.toFixed(0)})</td><td>{Math.round(R.concentration.B.mean).toLocaleString()} (×{R.concentration.B.mean_over_median.toFixed(0)})</td>{#if hasR}<td>{Math.round(R.concentration.R.mean).toLocaleString()} (×{R.concentration.R.mean_over_median.toFixed(0)})</td>{/if}</tr>
-          <tr><td>{L.rows.geomean}</td><td>{Math.round(R.concentration.A.geomean).toLocaleString()}</td><td>{Math.round(R.concentration.B.geomean).toLocaleString()}</td>{#if hasR}<td>{Math.round(R.concentration.R.geomean).toLocaleString()}</td>{/if}</tr>
-          <tr><td>{L.rows.middle}</td><td>{pct(R.middle.A.middle_share)}</td><td>{pct(R.middle.B.middle_share)}</td>{#if hasR}<td>{pct(R.middle.R.middle_share)}</td>{/if}</tr>
-          <tr><td>{L.rows.dip}</td><td>{p3(R.middle.A.dip_p)}</td><td>{p3(R.middle.B.dip_p)}</td>{#if hasR}<td>{p3(R.middle.R.dip_p)}</td>{/if}</tr>
-          <tr><td>{L.rows.gini}</td><td>{R.concentration.A.gini.toFixed(3)} [{R.concentration.A.gini_ci[0].toFixed(3)}, {R.concentration.A.gini_ci[1].toFixed(3)}]</td><td>{R.concentration.B.gini.toFixed(3)} [{R.concentration.B.gini_ci[0].toFixed(3)}, {R.concentration.B.gini_ci[1].toFixed(3)}]</td>{#if hasR}<td>{R.concentration.R.gini.toFixed(3)} [{R.concentration.R.gini_ci[0].toFixed(3)}, {R.concentration.R.gini_ci[1].toFixed(3)}]</td>{/if}</tr>
-          <tr><td>{L.rows.top}</td><td>{pct(R.concentration.A.top1_share)} / {pct(R.concentration.A.top5_share)}</td><td>{pct(R.concentration.B.top1_share)} / {pct(R.concentration.B.top5_share)}</td>{#if hasR}<td>{pct(R.concentration.R.top1_share)} / {pct(R.concentration.R.top5_share)}</td>{/if}</tr>
-          <tr><td>{L.rows.death}</td><td>{pct(R.concentration.A.early_death_rate)}</td><td>{pct(R.concentration.B.early_death_rate)}</td>{#if hasR}<td>{pct(R.concentration.R.early_death_rate)}</td>{/if}</tr>
+          <tr><td>{L.rows.n}</td>{#each COLS as c}<td>{R.tail[c].n.toLocaleString()}</td>{/each}</tr>
+          <tr><td>{L.rows.alpha}</td>{#each COLS as c}<td>{R.tail[c].alpha.toFixed(3)} ({R.tail[c].alpha_se.toFixed(3)})</td>{/each}</tr>
+          <tr><td>{L.rows.xmin}</td>{#each COLS as c}<td>{R.tail[c].xmin.toLocaleString()} / {R.tail[c].n_tail}</td>{/each}</tr>
+          <tr><td>{L.rows.median}</td>{#each COLS as c}<td>{R.concentration[c].median.toLocaleString()}</td>{/each}</tr>
+          <tr><td>{L.rows.mean}</td>{#each COLS as c}<td>{Math.round(R.concentration[c].mean).toLocaleString()} (×{R.concentration[c].mean_over_median.toFixed(0)})</td>{/each}</tr>
+          <tr><td>{L.rows.geomean}</td>{#each COLS as c}<td>{Math.round(R.concentration[c].geomean).toLocaleString()}</td>{/each}</tr>
+          <tr><td>{L.rows.middle}</td>{#each COLS as c}<td>{pct(R.middle[c].middle_share)}</td>{/each}</tr>
+          <tr><td>{L.rows.dip}</td>{#each COLS as c}<td>{p3(R.middle[c].dip_p)}</td>{/each}</tr>
+          <tr><td>{L.rows.gini}</td>{#each COLS as c}<td>{R.concentration[c].gini.toFixed(3)} [{R.concentration[c].gini_ci[0].toFixed(3)}, {R.concentration[c].gini_ci[1].toFixed(3)}]</td>{/each}</tr>
+          <tr><td>{L.rows.top}</td>{#each COLS as c}<td>{pct(R.concentration[c].top1_share)} / {pct(R.concentration[c].top5_share)}</td>{/each}</tr>
+          <tr><td>{L.rows.death}</td>{#each COLS as c}<td>{pct(R.concentration[c].early_death_rate)}</td>{/each}</tr>
         </tbody>
       </table>
     </section>
@@ -276,13 +253,11 @@
         <h3>{L.robT}</h3>
         <div class="two-col">
           <table>
-            <thead><tr><th>{L.robPrice}</th><th><span class="dot da"></span>{L.robA}</th><th><span class="dot db"></span>{L.robB}</th>{#if hasR}<th><span class="dot dr"></span>{L.cohortR}</th>{/if}</tr></thead>
+            <thead><tr><th>{L.robYear}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>α {cohortName(c)}</th>{/each}</tr></thead>
             <tbody>
-              {#each Object.entries(R.robustness.price_bands) as [band, cell]}
-                <tr><td>{band}</td>
-                  <td>{(cell as any).A.alpha.toFixed(2)} ({(cell as any).A.n})</td>
-                  <td>{(cell as any).B.alpha.toFixed(2)} ({(cell as any).B.n})</td>
-                  {#if hasR}<td>{(cell as any).R ? `${(cell as any).R.alpha.toFixed(2)} (${(cell as any).R.n})` : "—"}</td>{/if}</tr>
+              {#each Object.entries(R.robustness.years) as [yr, cell]}
+                <tr><td>{yr}</td>
+                  {#each COLS as c}<td>{(cell as any)[c] ? `${(cell as any)[c].alpha.toFixed(2)} (${(cell as any)[c].n})` : "—"}</td>{/each}</tr>
               {/each}
             </tbody>
           </table>

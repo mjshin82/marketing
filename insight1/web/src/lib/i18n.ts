@@ -27,9 +27,9 @@ const ko = {
     구조다. supercritical 분기 과정이 예측하는 대로라면 코옵 코호트의 성공 분포는 싱글
     내러티브 게임보다 더 극단적이어야 한다 — 꼬리는 더 무겁고, 중간은 비어 있고, 집중도는
     더 높아야 한다. 스팀 리뷰 수(판매량 대리변수)로 세 가설을 검증했다.
-    코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>,
-    코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>${m.n_R
-      ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""}
+    코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>${m.n_R
+      ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""},
+    코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>
     (유료 · 초기가 &lt;$40 · 2022.01–2025.06 출시 · 리뷰 ≥10 · 코호트는 상호배타,
     분류 우선순위 코옵 &gt; 로그라이크 &gt; 내러티브).`,
   cohortA: "코옵 (온라인)",
@@ -152,9 +152,9 @@ const en: typeof ko = {
     prediction holds, the co-op cohort's success distribution should be more extreme than
     single-player narrative games: a heavier tail, a hollowed-out middle, and higher
     concentration. We test three hypotheses using Steam review counts (a sales proxy).
-    Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>,
-    cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>${m.n_R
-      ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""}
+    Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>${m.n_R
+      ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""},
+    cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>
     (paid · launch price &lt;$40 · released 2022.01–2025.06 · ≥10 reviews · cohorts are
     disjoint, classification priority co-op &gt; roguelike &gt; narrative).`,
   cohortA: "Co-op (online)",

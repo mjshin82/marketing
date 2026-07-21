@@ -323,6 +323,11 @@ const ko = {
      측정</b>됐을 수 있다. 반론도 있다 — 스팀 P2P 기반 코옵은 서버 유지비가 없어 죽은
      게임을 굳이 내릴 유인도 낮으므로, 이 편향이 실제로 코옵에 얼마나 유리하게 작용했는지는
      불확실하다.`,
+    `<b>장르 교집합은 제외</b> — 멀티 코옵이면서 로그라이크인 게임(예: Risk of Rain 계열)은
+     로그라이크 코호트에서 빠지고, Singleplayer 태그까지 있으면 어느 코호트에도 들어가지
+     않는다. 교집합 게임을 양쪽에 넣을 수도 있었지만 코호트를 상호배타로 유지해 검정을
+     단순하게 하려고 빼는 쪽을 택했다 — 그 결과 각 코호트는 "순수형"에 가깝고, 하이브리드
+     장르의 성과는 이 분석의 범위 밖이다.`,
     `<b>코옵 표본 부족</b> — 코호트 A를 순수 멀티 코옵으로 좁히면서 표본이 다른 코호트의
      1/5 수준으로 작다. 코옵 관련 지표(특히 상위 1% 점유율과 α)는 신뢰구간이 넓고 히트작
      몇 개의 표본 포함 여부에 민감하므로, 점추정치보다 구간으로 읽어야 한다.`,
@@ -697,6 +702,12 @@ const en: typeof ko = {
      are <b>measured only on survivors and thus biased upward</b>. The counterargument:
      Steam-P2P co-op has no server upkeep, so there is little incentive to delist a dead
      game either — how strongly this bias actually favors co-op is uncertain.`,
+    `<b>Genre intersections are dropped</b> — games that are both multiplayer co-op and
+     roguelike (e.g. the Risk of Rain series) fall out of the roguelike cohort, and if they
+     also carry the Singleplayer tag they end up in no cohort at all. We could have counted
+     intersection games in both cohorts, but chose to drop them to keep cohorts disjoint and
+     the tests simple — so each cohort is close to a "pure type", and hybrid-genre outcomes
+     sit outside this analysis.`,
     `<b>Small co-op sample</b> — narrowing cohort A to pure multiplayer co-op leaves it at
      roughly one-fifth the size of the other cohorts. Co-op metrics (especially top-1% share
      and α) have wide confidence intervals and are sensitive to whether a few hits land in
@@ -1049,6 +1060,11 @@ const ja: typeof ko = {
      <b>生存者だけを観測して実際より良く測定</b>されている可能性がある。反論もある —
      Steam P2Pベースのco-opはサーバー維持費がないため、死んだゲームをわざわざ取り下げる
      動機も薄い。このバイアスが実際どれほどCo-opに有利に働いたかは不確実だ。`,
+    `<b>ジャンルの交差は除外</b> — マルチCo-opかつローグライクのゲーム(例: Risk of Rain
+     シリーズ)はローグライクコホートから外れ、Singleplayerタグまで持つ場合はどのコホートにも
+     入らない。交差ゲームを両方に数える選択もあったが、コホートを互いに排他に保ち検定を
+     単純にするため除外する側を選んだ — その結果、各コホートは「純粋型」に近く、ハイブリッド
+     ジャンルの成果はこの分析の範囲外だ。`,
     `<b>Co-op標本の不足</b> — コホートAを純粋マルチCo-opに絞ったため、標本は他コホートの
      約1/5と小さい。Co-op関連指標(特に上位1%シェアとα)は信頼区間が広く、少数のヒット作が
      標本に入るかどうかに敏感なため、点推定値ではなく区間で読むべきだ。`,

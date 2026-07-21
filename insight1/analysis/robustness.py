@@ -51,9 +51,14 @@ def main():
             print(f"year {yr}: aA={cell['A']['alpha']:.2f}(n={cell['A']['n']}) "
                   f"aB={cell['B']['alpha']:.2f}(n={cell['B']['n']})")
 
-    b = df[df.cohort == "B"]
-    for name, tag in [("story_rich_only", "Story Rich"), ("puzzle_only", "Puzzle")]:
-        x = b[b.tags.apply(lambda t: tag in t)].total_reviews.values
+    # B is Story Rich-required; N holds the broad-OR remainder (Adventure/Puzzle, no SR)
+    broad = df[df.cohort.isin(["B", "N"])]
+    alts = [("broad_or_sr_adv_puz", broad.total_reviews.values),
+            ("adventure_only",
+             broad[broad.tags.apply(lambda t: "Adventure" in t)].total_reviews.values),
+            ("puzzle_only",
+             broad[broad.tags.apply(lambda t: "Puzzle" in t)].total_reviews.values)]
+    for name, x in alts:
         r = alpha_of(x)
         if r:
             out["alt_B"][name] = r

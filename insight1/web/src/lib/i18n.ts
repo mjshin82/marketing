@@ -201,9 +201,12 @@ const ko = {
         개가 만든 수치라 아직 흔들린다.</li>
       <li><b>안전하게 말할 수 있는 것:</b> 싱글 내러티브는 진입은 쉽지만 기대값이 가장 낮고
         조기 소멸(${(100 * c.B.early_death_rate).toFixed(0)}%)이 가장 흔한 세계다.
-        ${hasR ? `로그라이크는 내러티브보다 꼬리가 ${rbSig ? "통계적으로 유의하게 " : ""}무겁고
-        (α 차이 ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})
-        중간층도 두터운, 규모 대비 균형이 좋은 세계다.` : ""}</li>
+        ${hasR && rb ? (rb.point < 0
+          ? `로그라이크는 내러티브보다 꼬리가 ${rbSig ? "통계적으로 유의하게 " : ""}무겁다
+             (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`
+          : `로그라이크와 내러티브(스토리 중심)의 분포는 사실상 대등하다
+             (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
+        : ""}</li>
       <li><b>시대 효과 주의:</b> 분석 창(2022.01–2025.12)은 로그라이크 대유행기와 겹친다.
         로그라이크의 좋은 수치에는 장르의 구조적 특성만이 아니라 유행의 순풍이 섞여 있을 수
         있다 — 유행이 식으면 재현되지 않을 수 있는 부분이다. 연도별 강건성 분석(2022→2025
@@ -234,8 +237,7 @@ const ko = {
       <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
       <code>Roguevania</code>, <code>Traditional Roguelike</code> 중 하나 이상`,
       exc: `멀티/코옵 계열 전부` },
-    { c: "B", inc: `<code>Singleplayer</code> <b>그리고</b> (<code>Story Rich</code> 또는
-      <code>Adventure</code> 또는 <code>Puzzle</code> 중 하나 이상)`,
+    { c: "B", inc: `<code>Singleplayer</code> <b>그리고</b> <code>Story Rich</code>`,
       exc: `멀티/코옵 계열 전부` },
   ] as { c: string; inc: string; exc: string }[],
   defCommon: `멀티/코옵 계열 제외 태그 = <code>Co-op</code>, <code>Online Co-Op</code>,
@@ -243,7 +245,9 @@ const ko = {
     <code>Massively Multiplayer</code>. 태그는 SteamSpy가 제공하는 스팀 유저 태그 기준.
     코호트는 상호배타적이며 분류 우선순위는 <b>코옵 → 로그라이크 → 내러티브</b>
     (예: 스토리 있는 로그라이트는 로그라이크로 분류). 공통 필터: 유료 · 초기가 &lt;$40 ·
-    type=game · 2022-01~2025-12 출시 · 대형 퍼블리셔(EA, Ubisoft 등) 제외.`,
+    type=game · 2022-01~2025-12 출시 · 대형 퍼블리셔(EA, Ubisoft 등) 제외.
+    Story Rich 없이 <code>Adventure</code>/<code>Puzzle</code>만 가진 싱글 게임은 별도
+    코호트(N)로 계속 수집해 광의 정의에 대한 민감도 검증(강건성 분석)에 쓴다.`,
   aboutT: "만든 사람",
   aboutBody: `이 분석은 <b>Concode</b>의 개발자가 만들었습니다. 저희는 지금 스팀에서
     <b>Graytail</b>이라는 게임을 만들고 있어요. 이 리포트가 도움이 되었다면,
@@ -460,9 +464,12 @@ const en: typeof ko = {
       <li><b>What can be said safely:</b> single-player narrative is the easiest world to
         enter but has the lowest expectations and the highest early-death rate
         (${(100 * c.B.early_death_rate).toFixed(0)}%).
-        ${hasR ? `Roguelikes have a ${rbSig ? "statistically significantly " : ""}heavier tail
-        than narrative games (α diff ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})
-        plus a thick middle class — a well-balanced world for its scale.` : ""}</li>
+        ${hasR && rb ? (rb.point < 0
+          ? `Roguelikes have a ${rbSig ? "statistically significantly " : ""}heavier tail than
+             narrative games (α diff ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`
+          : `Roguelikes and (story-rich) narrative games show essentially comparable
+             distributions (α diff ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
+        : ""}</li>
       <li><b>Beware the era effect:</b> the analysis window (2022.01–2025.12) overlaps with
         the roguelike boom. The genre's strong numbers may mix a structural property with a
         fashion tailwind — a part that may not replicate once the trend cools. The by-year
@@ -496,8 +503,7 @@ const en: typeof ko = {
       <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
       <code>Roguevania</code>, <code>Traditional Roguelike</code>`,
       exc: `all multiplayer/co-op tags` },
-    { c: "B", inc: `<code>Singleplayer</code> <b>and</b> (<code>Story Rich</code> or
-      <code>Adventure</code> or <code>Puzzle</code>)`,
+    { c: "B", inc: `<code>Singleplayer</code> <b>and</b> <code>Story Rich</code>`,
       exc: `all multiplayer/co-op tags` },
   ],
   defCommon: `Multiplayer/co-op exclusion tags = <code>Co-op</code>, <code>Online Co-Op</code>,
@@ -506,7 +512,9 @@ const en: typeof ko = {
     Cohorts are disjoint with classification priority <b>co-op → roguelike → narrative</b>
     (e.g. a story-rich roguelite counts as roguelike). Common filters: paid · launch price
     &lt;$40 · type=game · released 2022-01..2025-12 · major publishers (EA, Ubisoft, …)
-    excluded.`,
+    excluded. Single-player games with only <code>Adventure</code>/<code>Puzzle</code> and no
+    Story Rich are still collected as a separate cohort (N) for the broad-definition
+    sensitivity check (robustness).`,
   aboutT: "Who made this",
   aboutBody: `This analysis was made by a developer at <b>Concode</b>. We are currently
     building a game called <b>Graytail</b> on Steam. If this report helped you, please
@@ -706,9 +714,12 @@ const ja: typeof ko = {
         作った数値でまだ不安定だ。</li>
       <li><b>安全に言えること:</b> シングル・ナラティブは参入は簡単だが期待値が最も低く、
         早期消滅(${(100 * c.B.early_death_rate).toFixed(0)}%)が最も多い世界だ。
-        ${hasR ? `ローグライクはナラティブより裾が${rbSig ? "統計的に有意に" : ""}重く
-        (α差 ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})、
-        中間層も厚い、規模のわりにバランスの良い世界だ。` : ""}</li>
+        ${hasR && rb ? (rb.point < 0
+          ? `ローグライクはナラティブより裾が${rbSig ? "統計的に有意に" : ""}重い
+             (α差 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}])。`
+          : `ローグライクと(ストーリー重視の)ナラティブの分布は実質的に対等だ
+             (α差 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}])。`)
+        : ""}</li>
       <li><b>時代効果に注意:</b> 分析ウィンドウ(2022.01–2025.12)はローグライク大流行期と重なる。
         ローグライクの良い数値には、ジャンルの構造的特性だけでなく流行の追い風が混ざっている
         可能性がある — 流行が冷めれば再現しない部分かもしれない。年別の頑健性分析(2022→2025の
@@ -740,8 +751,7 @@ const ja: typeof ko = {
       <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
       <code>Roguevania</code>, <code>Traditional Roguelike</code> のいずれか`,
       exc: `マルチ/Co-op系すべて` },
-    { c: "B", inc: `<code>Singleplayer</code> <b>かつ</b> (<code>Story Rich</code> または
-      <code>Adventure</code> または <code>Puzzle</code>)`,
+    { c: "B", inc: `<code>Singleplayer</code> <b>かつ</b> <code>Story Rich</code>`,
       exc: `マルチ/Co-op系すべて` },
   ],
   defCommon: `マルチ/Co-op系の除外タグ = <code>Co-op</code>, <code>Online Co-Op</code>,
@@ -749,7 +759,9 @@ const ja: typeof ko = {
     <code>Massively Multiplayer</code>。タグはSteamSpyが提供するSteamユーザータグ基準。
     コホートは互いに排他的で、分類優先順位は<b>Co-op → ローグライク → ナラティブ</b>
     (例: ストーリーのあるローグライトはローグライクに分類)。共通フィルター: 有料 ·
-    初期価格 &lt;$40 · type=game · 2022-01~2025-12リリース · 大手パブリッシャー除外。`,
+    初期価格 &lt;$40 · type=game · 2022-01~2025-12リリース · 大手パブリッシャー除外。
+    Story Richなしで<code>Adventure</code>/<code>Puzzle</code>のみのシングルゲームは別
+    コホート(N)として収集を続け、広義定義への感度検証(頑健性分析)に使う。`,
   aboutT: "作った人",
   aboutBody: `この分析は<b>Concode</b>の開発者が作りました。私たちは現在Steamで
     <b>Graytail</b>というゲームを開発しています。このレポートが役に立ったら、

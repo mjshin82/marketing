@@ -37,10 +37,13 @@ review counts as a sales proxy.
 - Review counts prefer the official Steam `appreviews` endpoint, falling back to
   SteamSpy positive+negative (see the `review_source` column).
 - Cohort A: tags ("Online Co-Op" ∨ "Co-op") ∧ "Multiplayer"
-- Cohort B: "Singleplayer" ∧ ("Story Rich" ∨ "Adventure" ∨ "Puzzle") ∧
-  ¬(any co-op/multiplayer tag)
+- Cohort B: "Singleplayer" ∧ "Story Rich" ∧ ¬(any co-op/multiplayer tag)
+- Cohort R: any roguelike tag ∧ ¬(any co-op/multiplayer tag)
+- Cohort N (alt-definition only): "Singleplayer" ∧ ("Adventure" ∨ "Puzzle") without
+  "Story Rich" — kept to test sensitivity to the broad narrative definition
+- Cohorts are disjoint; classification priority A > R > B > N
 - Common filters: paid, initial price < $40, type=game, released 2022-01-01 to
-  2025-06-30, major publishers excluded. Games with <10 reviews stay in the CSV
+  2025-12-31, major publishers excluded. Games with <10 reviews stay in the CSV
   but are used only for the early-death-rate comparison.
 
 ## Usage

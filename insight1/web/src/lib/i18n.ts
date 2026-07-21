@@ -213,7 +213,8 @@ const ko = {
       <li><b>사실:</b> 코옵 코호트는 보통의 세계(기하평균 ${sig2(c.A.geomean)} vs 내러티브
         ${sig2(c.B.geomean)}), 조기 소멸률(${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
-        보인다.</li>
+        보인다. 단, 실패한 코옵 게임은 매칭이 죽으면 스토어에서 내려가 관측에서 사라지기
+        쉬우므로(<b>생존 편향</b>, 한계 참조) 이 우위는 실제보다 부풀려졌을 수 있다.</li>
       <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
         그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
         <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
@@ -512,7 +513,9 @@ const en: typeof ko = {
       <li><b>The fact:</b> the co-op cohort performs best on most metrics — the typical world
         (geometric mean ${sig2(c.A.geomean)} vs narrative ${sig2(c.B.geomean)}), early-death
         rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more.</li>
+        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. Note, however, that failed co-op games tend to be delisted
+        once matchmaking dies and thus vanish from observation (<b>survivorship bias</b>,
+        see Limitations) — this advantage may be inflated.</li>
       <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
         the cohort contains far fewer hobbyist releases. The co-op advantage is likely
         <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
@@ -804,7 +807,9 @@ const ja: typeof ko = {
     <ul>
       <li><b>事実:</b> Co-opコホートは普通の世界(幾何平均 ${sig2(c.A.geomean)} vs ナラティブ
         ${sig2(c.B.geomean)})、早期消滅率(${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。</li>
+        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。 ただし、失敗したCo-opゲームはマッチングが死ぬとストアから
+        取り下げられ観測から消えやすいため(<b>生存バイアス</b>、限界を参照)、この優位は
+        実際より膨らんでいる可能性がある。</li>
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
         難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
         ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>

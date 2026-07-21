@@ -247,12 +247,6 @@ const ko = {
         그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
         <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
         바꿨을 때의 효과는 이 비교로 알 수 없다.</li>
-      <li><b>비용은 데이터에 없다:</b> 코옵의 기대 성과가 몇 배 높아도 비용이 그만큼 크면
-        비용 대비로는 뒤집힐 수 있다. 다만 스팀 백엔드(P2P·릴레이)를 쓰는 세션형 코옵은
-        서버비를 사실상 0으로 만들 수 있으므로, 실질적 비용 격차는 운영비보다
-        개발 복잡도(넷코드·동기화·QA) 쪽이다. 또한 코옵의 복권 배수(×${(c.A.mean / c.A.geomean).toFixed(0)})가
-        가장 크고 상위 1% 점유(${(100 * c.A.top1_share).toFixed(0)}%)는 소표본에서 히트작 몇
-        개가 만든 수치라 아직 흔들린다.</li>
       <li><b>안전하게 말할 수 있는 것:</b> ${(() => {
         const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
         const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
@@ -581,12 +575,6 @@ const en: typeof ko = {
         <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
         effect. What happens if the same team merely switches genre cannot be read off this
         comparison.</li>
-      <li><b>Costs are not in the data:</b> even a several-fold higher expected outcome can
-        flip once costs are counted. That said, session-based co-op built on Steam's backend
-        (P2P + relay) can push server costs to effectively zero — the real cost gap is
-        development complexity (netcode, sync, QA) rather than live-ops. Co-op also has the largest
-        lottery multiplier (×${(c.A.mean / c.A.geomean).toFixed(0)}) and its top-1% share
-        (${(100 * c.A.top1_share).toFixed(0)}%) rests on a few hits in a small sample.</li>
       <li><b>What can be said safely:</b> ${(() => {
         const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
         const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
@@ -903,12 +891,6 @@ const ja: typeof ko = {
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
         難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
         ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>
-      <li><b>コストはデータにない:</b> 期待成果が数倍高くてもコストがそれだけ大きければ
-        コスト対比では逆転しうる。ただしSteamバックエンド(P2P・リレー)を使うセッション型
-        Co-opはサーバー費を実質ゼロにできるため、実質的なコスト差は運営費よりも
-        開発の複雑さ(ネットコード・同期・QA)にある。またCo-opの宝くじ倍率(×${(c.A.mean / c.A.geomean).toFixed(0)})は
-        最大で、上位1%占有(${(100 * c.A.top1_share).toFixed(0)}%)は小標本の数本のヒットが
-        作った数値でまだ不安定だ。</li>
       <li><b>安全に言えること:</b> ${(() => {
         const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
         const ks = hasR ? ["A", "R", "B"] : ["A", "B"];

@@ -110,6 +110,15 @@ const ko = {
     top: "상위 1% / 5% 점유", death: "조기 소멸률 (<10 리뷰)",
     median: "중간값 (리뷰)", mean: "평균 (중간값의 배수)", geomean: "기하평균",
   },
+  sumNote: (c: any, hasR: boolean) => {
+    const gap = (k: string) => (c[k].mean / c[k].geomean).toFixed(0);
+    return `읽는 법 — <b>중간값</b>은 게임을 성과순으로 줄 세웠을 때 한가운데 게임의 리뷰 수다.
+      <b>기하평균</b>은 배수(로그) 스케일에서의 평균으로, "이 장르의 보통 게임이 어느 자릿수에서
+      사는가"를 가리키며 소수 히트작의 영향을 받지 않는다 — 이 데이터처럼 성과가 몇 배씩
+      벌어지는 분포에서의 올바른 평균이다. 반면 <b>산술평균</b>은 상위 1%가 지배하는 "복권
+      기댓값"이라, 산술평균이 기하평균의 몇 배인가(코옵 ×${gap("A")}${hasR ? `, 로그라이크
+      ×${gap("R")}` : ""}, 내러티브 ×${gap("B")})가 클수록 그 장르는 복권판에 가깝다.`;
+  },
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
   limitT: "한계",
@@ -244,6 +253,17 @@ const en: typeof ko = {
     top: "Top 1% / 5% share", death: "Early-death rate (<10 reviews)",
     median: "Median (reviews)", mean: "Mean (× median)", geomean: "Geometric mean",
   },
+  sumNote: (c, hasR) => {
+    const gap = (k: string) => (c[k].mean / c[k].geomean).toFixed(0);
+    return `How to read — the <b>median</b> is the review count of the middle game when you
+      line the cohort up by outcome. The <b>geometric mean</b> is the average on a
+      multiplicative (log) scale: it tells you what order of magnitude a typical game in the
+      genre lives at, and is immune to a few mega-hits — the right notion of "average" for
+      data that spreads by multiples. The <b>arithmetic mean</b>, by contrast, is a
+      lottery-style expected value dominated by the top 1%; the wider the gap between
+      arithmetic and geometric mean (co-op ×${gap("A")}${hasR ? `, roguelike ×${gap("R")}` : ""},
+      narrative ×${gap("B")}), the more lottery-like the genre.`;
+  },
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
   limitT: "Limitations",
@@ -374,6 +394,15 @@ const ja: typeof ko = {
     middle: "中間帯(100–1k)比率", dip: "Hartigan dip p", gini: "ジニ係数 [95% CI]",
     top: "上位1% / 5%シェア", death: "早期消滅率 (レビュー10件未満)",
     median: "中央値 (レビュー)", mean: "平均 (中央値の倍数)", geomean: "幾何平均",
+  },
+  sumNote: (c, hasR) => {
+    const gap = (k: string) => (c[k].mean / c[k].geomean).toFixed(0);
+    return `読み方 — <b>中央値</b>はコホートを成果順に並べたとき、真ん中のゲームのレビュー数。
+      <b>幾何平均</b>は倍数(対数)スケールでの平均で、「このジャンルの普通のゲームがどの桁で
+      生きているか」を示し、少数のメガヒットの影響を受けない — 成果が何倍も開くこのような
+      データにおける正しい「平均」だ。一方<b>算術平均</b>は上位1%に支配される「宝くじの期待値」
+      であり、算術平均が幾何平均の何倍か(Co-op ×${gap("A")}${hasR ? `、ローグライク
+      ×${gap("R")}` : ""}、ナラティブ ×${gap("B")})が大きいほど、そのジャンルは宝くじに近い。`;
   },
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",

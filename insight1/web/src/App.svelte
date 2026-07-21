@@ -246,6 +246,10 @@
           <tr><td>{L.rows.death}</td>{#each COLS as c}<td>{pct(R.concentration[c].early_death_rate)}</td>{/each}</tr>
         </tbody>
       </table>
+      <div class="interp">
+        <p class="interp-t">{L.interpT}</p>
+        <p>{@html L.sumNote(R.concentration, hasR)}</p>
+      </div>
     </section>
 
     {#if R.robustness?.price_bands && Object.keys(R.robustness.price_bands).length}

@@ -308,7 +308,7 @@
               <tr>
                 <td>{yr}</td>
                 {#each COLS as c}
-                  <td>{R.era.years[yr][c] ? Math.round(R.era.years[yr][c].geomean).toLocaleString() : "—"}</td>
+                  <td>{R.era.years[yr][c] ? `${Math.round(R.era.years[yr][c].geomean).toLocaleString()} (n${R.era.years[yr][c].n_full})` : "—"}</td>
                 {/each}
                 <td>{R.era.ratios[yr]?.A_over_B ? `×${R.era.ratios[yr].A_over_B.toFixed(1)}` : "—"}</td>
                 <td>{R.era.ratios[yr]?.R_over_B ? `×${R.era.ratios[yr].R_over_B.toFixed(1)}` : "—"}</td>
@@ -318,7 +318,7 @@
         </table>
         <div class="interp">
           <p class="interp-t">{L.interpT}</p>
-          <p>{@html L.eraNote(R.era.ratios)}</p>
+          <p>{@html L.eraNote(R.era)}</p>
         </div>
       </section>
     {/if}

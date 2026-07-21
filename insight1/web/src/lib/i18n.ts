@@ -142,19 +142,35 @@ const ko = {
   eraT: "시대 효과 — 연도별 추세",
   eraCap: `연도 간 절대값 비교는 리뷰 누적 기간 차이로 오염된다 (2022년작은 ~4년치, 2025년작은
     ~1년치 리뷰). 유효한 독법은 같은 연도 안에서 코호트끼리 비교하는 것 — 누적 기간이
-    상쇄된다. 배율(÷내러티브)의 연도별 추세가 장르 우위가 구조적인지 유행 순풍인지를 가른다.`,
-  eraNote: (ratios: any): string => {
+    상쇄된다. 이 시기 스팀 전체 출시량이 폭증했지만, 시장 전체의 공급 증가는 같은 시장을
+    공유하는 두 코호트의 배율에서 상쇄된다. 상쇄되지 않는 것은 코호트별 공급 증가 속도의
+    차이다 — 그래서 각 칸에 표본 출시작 수(n)를 함께 표시한다.`,
+  eraNote: (era: any): string => {
+    const ratios = era.ratios;
     const yrs = Object.keys(ratios).sort();
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
     const rb0 = ratios[f]?.R_over_B, rb1 = ratios[l]?.R_over_B;
     if (!rb0 || !rb1) return "";
     const fading = rb1 < rb0;
+    const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;  // last full-coverage year
+    const sup = (c: string) => {
+      const a = era.years[f]?.[c]?.n_full, b = era.years[ly]?.[c]?.n_full;
+      return a && b ? (b / a).toFixed(1) : null;
+    };
+    const sR = sup("R"), sB = sup("B");
+    let supTxt = "";
+    if (sR && sB) {
+      supTxt = ` 표본 기준 연간 출시작 수는 ${f}→${ly}년 사이 로그라이크 ×${sR},
+        내러티브 ×${sB}로 변했다 — ${parseFloat(sR) > parseFloat(sB) ? `로그라이크 쪽 공급이 더 빨리 불어났으므로,
+        배율 하락에는 수요(유행) 냉각만이 아니라 <b>공급 유입에 의한 경쟁 희석</b>이 섞여 있다.
+        이 데이터로는 두 효과를 분리할 수 없다` : `공급 증가 속도는 비슷해서, 배율 변화는
+        공급 희석보다 수요 쪽 요인일 가능성이 높다`}.`;
+    }
     return `로그라이크의 내러티브 대비 기하평균 배율은 ${f}년 ×${rb0.toFixed(1)} →
       ${l}년 ×${rb1.toFixed(1)}로 ${fading ? `매년 줄고 있다 — 우위의 일부가 유행 순풍이었고
-      그 순풍이 식어가는 중이라는 신호다. 공급(출시작 수)이 늘며 조기 소멸률도 함께 오르는
-      전형적인 과열 패턴이다` : `유지되고 있다 — 유행보다는 구조적 우위에 가깝다는 신호다`}.
-      단, 연간 표본이 작아 아직 방향성 수준으로 읽어야 한다.`;
+      그 순풍이 식어가는 중이라는 신호다` : `유지되고 있다 — 유행보다는 구조적 우위에
+      가깝다는 신호다`}.${supTxt} 연간 표본이 작아 아직 방향성 수준으로 읽어야 한다.`;
   },
   eraYear: "연도",
   eraRatioA: "코옵÷내러",
@@ -359,21 +375,39 @@ const en: typeof ko = {
   eraT: "Era effect — year-by-year trend",
   eraCap: `Comparing absolute levels across years is confounded by review-accumulation time
     (a 2022 release has had ~4 years of reviews, a 2025 release ~1 year). The valid reading
-    is the within-year comparison between cohorts — accumulation cancels out. The trend of
-    the ratio (÷narrative) across years separates a structural edge from a fashion tailwind.`,
-  eraNote: (ratios) => {
+    is the within-year comparison between cohorts — accumulation cancels out. Steam's overall
+    release volume exploded over this period, but market-wide supply growth also cancels in
+    the ratio, since both cohorts share the same market. What does NOT cancel is a
+    difference in supply growth between cohorts — hence each cell also shows the sample
+    release count (n).`,
+  eraNote: (era) => {
+    const ratios = era.ratios;
     const yrs = Object.keys(ratios).sort();
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
     const rb0 = ratios[f]?.R_over_B, rb1 = ratios[l]?.R_over_B;
     if (!rb0 || !rb1) return "";
     const fading = rb1 < rb0;
+    const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;  // last full-coverage year
+    const sup = (c: string) => {
+      const a = era.years[f]?.[c]?.n_full, b = era.years[ly]?.[c]?.n_full;
+      return a && b ? (b / a).toFixed(1) : null;
+    };
+    const sR = sup("R"), sB = sup("B");
+    let supTxt = "";
+    if (sR && sB) {
+      supTxt = ` Between ${f} and ${ly}, yearly release counts in our sample changed ×${sR}
+        for roguelikes vs ×${sB} for narrative — ${parseFloat(sR) > parseFloat(sB)
+        ? `roguelike supply grew faster, so the falling ratio mixes demand (fashion) cooling
+        with <b>competitive dilution from supply influx</b>; the two cannot be separated in
+        this data`
+        : `supply grew at a similar pace, so the ratio change is more likely demand-side`}.`;
+    }
     return `The roguelike-to-narrative geometric-mean ratio moved from ×${rb0.toFixed(1)} in
       ${f} to ×${rb1.toFixed(1)} in ${l}${fading ? ` — shrinking every year, a sign that part
-      of the genre's edge was a fashion tailwind that is cooling. Supply (release counts) is
-      rising while early-death rates climb — a classic overheating pattern` : ` — holding
-      steady, suggesting a structural rather than fashion-driven edge`}. Per-year samples are
-      small, so read this as a direction, not a verdict.`;
+      of the genre's edge was a fashion tailwind that is cooling` : ` — holding steady,
+      suggesting a structural rather than fashion-driven edge`}.${supTxt} Per-year samples
+      are small, so read this as a direction, not a verdict.`;
   },
   eraYear: "Year",
   eraRatioA: "Co-op ÷ narrative",
@@ -575,20 +609,35 @@ const ja: typeof ko = {
   eraT: "時代効果 — 年別トレンド",
   eraCap: `年をまたいだ絶対値の比較はレビュー蓄積期間の差で汚染される(2022年作は~4年分、
     2025年作は~1年分)。有効な読み方は同じ年の中でコホート同士を比較すること — 蓄積期間が
-    相殺される。倍率(÷ナラティブ)の年別トレンドが、ジャンルの優位が構造的なものか流行の
-    追い風かを分ける。`,
-  eraNote: (ratios) => {
+    相殺される。この期間、Steam全体のリリース数は爆発的に増えたが、市場全体の供給増加は
+    同じ市場を共有する両コホートの倍率では相殺される。相殺されないのはコホート間の供給
+    増加速度の差だ — そのため各セルに標本リリース数(n)も併記する。`,
+  eraNote: (era) => {
+    const ratios = era.ratios;
     const yrs = Object.keys(ratios).sort();
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
     const rb0 = ratios[f]?.R_over_B, rb1 = ratios[l]?.R_over_B;
     if (!rb0 || !rb1) return "";
     const fading = rb1 < rb0;
+    const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;  // last full-coverage year
+    const sup = (c: string) => {
+      const a = era.years[f]?.[c]?.n_full, b = era.years[ly]?.[c]?.n_full;
+      return a && b ? (b / a).toFixed(1) : null;
+    };
+    const sR = sup("R"), sB = sup("B");
+    let supTxt = "";
+    if (sR && sB) {
+      supTxt = `${f}→${ly}年の間、標本ベースの年間リリース数はローグライク×${sR}、
+        ナラティブ×${sB}に変化した — ${parseFloat(sR) > parseFloat(sB) ? `ローグライク側の供給がより速く膨らんだため、
+        倍率低下には需要(流行)の冷え込みだけでなく<b>供給流入による競争希釈</b>が混ざっている。
+        このデータでは両者を分離できない` : `供給の増加速度は同程度で、倍率の変化は需要側の
+        要因である可能性が高い`}。`;
+    }
     return `ローグライクのナラティブ比幾何平均倍率は${f}年の×${rb0.toFixed(1)}から${l}年の
       ×${rb1.toFixed(1)}へ${fading ? `毎年縮小している — 優位の一部が流行の追い風であり、
-      その追い風が冷めつつあるというシグナルだ。供給(リリース数)が増えつつ早期消滅率も
-      上がる、典型的な過熱パターンでもある` : `維持されている — 流行ではなく構造的優位に
-      近いというシグナルだ`}。ただし年別標本は小さく、まだ方向性として読むべきだ。`;
+      その追い風が冷めつつあるというシグナルだ` : `維持されている — 流行ではなく構造的優位に
+      近いというシグナルだ`}。${supTxt}年別標本は小さく、まだ方向性として読むべきだ。`;
   },
   eraYear: "年",
   eraRatioA: "Co-op÷ナラティブ",

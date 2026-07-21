@@ -36,7 +36,7 @@ const ko = {
     코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>${m.n_R
       ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""},
     코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>
-    (유료 · 가격 &lt;$40 · 2022.01–2025.12 출시 · AAA 제외 · 분석 표본은 판매 ≥300장 ·
+    (유료 · 가격 &lt;$40 · 2022.01–2025.12 출시 · AAA 제외 · 분석 표본은 판매 ≥500장 (저판매 구간의 추정 노이즈와 취미 수준 출시작 제외) ·
     코호트는 상호배타, 분류 우선순위 코옵 &gt; 로그라이크 &gt; 내러티브).`,
   cohortA: "코옵 (온라인)",
   cohortB: "싱글 내러티브",
@@ -107,7 +107,7 @@ const ko = {
     return t;
   },
   c3t: "가설 3 — 집중도: 로렌츠 곡선",
-  c3cap: (c: any) => `곡선이 아래로 처질수록 판매량이 소수 게임에 집중. 조기 소멸률(판매 <300장):
+  c3cap: (c: any) => `곡선이 아래로 처질수록 판매량이 소수 게임에 집중. 조기 소멸률(판매 <500장):
     코옵 ${pct(c.A.early_death_rate)} vs 싱글 ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c: any, ok: boolean | undefined) => {
@@ -118,7 +118,7 @@ const ko = {
     s += ok
       ? `두 Gini의 신뢰구간이 겹치지 않으므로 <b>가설 3 지지</b> — 코옵 시장이 구조적으로 더 승자독식이다. `
       : `다만 두 Gini의 신뢰구간이 겹쳐 <b>아직 불확정</b> — 방향은 가설과 일치하지만 표본이 더 필요하다. `;
-    s += `조기 소멸률(판매 300장 미만)은 코옵 ${pct(c.A.early_death_rate)} vs
+    s += `조기 소멸률(판매 500장 미만)은 코옵 ${pct(c.A.early_death_rate)} vs
       싱글 ${pct(c.B.early_death_rate)}로, "대부분 조기 소멸 + 소수 폭발" 구조의 앞부분을 보여준다.`;
     return s;
   },
@@ -127,9 +127,9 @@ const ko = {
   thB: "싱글 내러티브 (B)",
   thR: "로그라이크 (R)",
   rows: {
-    n: "표본 (판매 ≥300장)", alpha: "멱함수 지수 α (SE)", xmin: "xmin / 꼬리 표본",
+    n: "표본 (판매 ≥500장)", alpha: "멱함수 지수 α (SE)", xmin: "xmin / 꼬리 표본",
     middle: "중간 구간(3.5천~3.5만 장) 비율", dip: "Hartigan dip p", gini: "Gini [95% CI]",
-    top: "상위 1% / 5% 점유", death: "조기 소멸률 (<300장)",
+    top: "상위 1% / 5% 점유", death: "조기 소멸률 (<500장)",
     median: "중간값 (판매량)", mean: "평균 (기하평균의 배수)", geomean: "기하평균",
   },
   sumNote: (c: any, hasR: boolean) => {
@@ -146,7 +146,7 @@ const ko = {
     <li><b>보통의 세계</b> — 기하평균 판매 약 ${sig2(d.geomean)}장 자릿수의 세계다.</li>
     <li><b>절반의 현실</b> — 조기 소멸을 넘긴 게임의 절반은 판매 ${sig2(d.median)}장 미만에
       머문다.</li>
-    <li><b>조기 소멸 위험</b> — 출시작의 ${(100 * d.early).toFixed(0)}%는 판매 300장을
+    <li><b>조기 소멸 위험</b> — 출시작의 ${(100 * d.early).toFixed(0)}%는 판매 500장을
       못 넘긴다.</li>
     <li><b>중간 성공 확률</b> — 조기 소멸을 넘긴 게임 중 ${(100 * d.middle).toFixed(0)}%가
       판매 3.5천–3.5만 장(매출 $50K–500K대) 구간에 안착한다.</li>
@@ -404,8 +404,8 @@ const en: typeof ko = {
     Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>${m.n_R
       ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""},
     cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>
-    (paid · price &lt;$40 · released 2022.01–2025.12 · AAA excluded · analysis sample
-    ≥300 copies sold · cohorts disjoint, priority co-op &gt; roguelike &gt; narrative).`,
+    (paid · price &lt;$40 · released 2022.01–2025.12 · AAA excluded · analysis sample ≥500 copies sold (screening out
+    low-end estimate noise and hobbyist releases) · cohorts disjoint, priority co-op &gt; roguelike &gt; narrative).`,
   cohortA: "Co-op (online)",
   cohortB: "Single-player narrative",
   cohortR: "Roguelike",
@@ -481,7 +481,7 @@ const en: typeof ko = {
   },
   c3t: "Hypothesis 3 — concentration: Lorenz curves",
   c3cap: (c) => `The deeper the curve sags below the diagonal, the more sales concentrate in
-    a few games. Early-death rate (<300 copies):
+    a few games. Early-death rate (<500 copies):
     co-op ${pct(c.A.early_death_rate)} vs single-player ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c, ok) => {
@@ -495,7 +495,7 @@ const en: typeof ko = {
          the co-op market is structurally more winner-take-all. `
       : `However the two Gini confidence intervals overlap, so this is <b>still
          inconclusive</b> — the direction matches the hypothesis but more data is needed. `;
-    s += `Early-death rates (under 300 copies) are co-op ${pct(c.A.early_death_rate)} vs
+    s += `Early-death rates (under 500 copies) are co-op ${pct(c.A.early_death_rate)} vs
       single-player ${pct(c.B.early_death_rate)} — the front half of the
       "mostly die early + a few explode" structure.`;
     return s;
@@ -505,9 +505,9 @@ const en: typeof ko = {
   thB: "Single-player narrative (B)",
   thR: "Roguelike (R)",
   rows: {
-    n: "Sample (≥300 copies)", alpha: "Power-law exponent α (SE)", xmin: "xmin / tail size",
+    n: "Sample (≥500 copies)", alpha: "Power-law exponent α (SE)", xmin: "xmin / tail size",
     middle: "Middle band (3.5k–35k) share", dip: "Hartigan dip p", gini: "Gini [95% CI]",
-    top: "Top 1% / 5% share", death: "Early-death rate (<300 copies)",
+    top: "Top 1% / 5% share", death: "Early-death rate (<500 copies)",
     median: "Median (copies)", mean: "Mean (× geometric mean)", geomean: "Geometric mean",
   },
   sumNote: (c, hasR) => {
@@ -523,7 +523,7 @@ const en: typeof ko = {
     <li><b>The typical world</b> — a geometric mean of about ${sig2(d.geomean)} copies sold.</li>
     <li><b>Half the reality</b> — half of surviving games stay under ${sig2(d.median)} copies.</li>
     <li><b>Early-death risk</b> — ${(100 * d.early).toFixed(0)}% of releases never clear
-      300 copies.</li>
+      500 copies.</li>
     <li><b>Odds of a mid-tier hit</b> — among survivors, ${(100 * d.middle).toFixed(0)}% land
       in the 3.5k–35k copies band (~$50K–500K gross).</li>
     <li><b>Lottery multiplier</b> — the arithmetic mean is ×${d.lot.toFixed(0)} the geometric
@@ -787,7 +787,7 @@ const ja: typeof ko = {
     併用する。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>${m.n_R
       ? `、コホートR(ローグライク) <b>${m.n_R.toLocaleString()}本</b>` : ""}、
     コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>
-    (有料 · 価格 &lt;$40 · 2022.01–2025.12リリース · AAA除外 · 分析標本は販売300本以上 ·
+    (有料 · 価格 &lt;$40 · 2022.01–2025.12リリース · AAA除外 · 分析標本は販売500本以上 (低販売域の推定ノイズと趣味レベルのリリースを除外) ·
     コホートは互いに排他、優先順位はCo-op &gt; ローグライク &gt; ナラティブ)。`,
   cohortA: "Co-op (オンライン)",
   cohortB: "シングル・ナラティブ",
@@ -857,7 +857,7 @@ const ja: typeof ko = {
     return t;
   },
   c3t: "仮説3 — 集中度: ローレンツ曲線",
-  c3cap: (c) => `曲線が下に垂れるほど販売本数が少数のゲームに集中。早期消滅率(販売300本未満):
+  c3cap: (c) => `曲線が下に垂れるほど販売本数が少数のゲームに集中。早期消滅率(販売500本未満):
     Co-op ${pct(c.A.early_death_rate)} vs シングル ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)})。`,
   interp3: (c, ok) => {
@@ -870,7 +870,7 @@ const ja: typeof ko = {
          より勝者総取りだ。`
       : `ただし2つのジニ係数の信頼区間が重なるため<b>まだ未確定</b> — 方向は仮説と一致するが、
          より多くの標本が必要だ。`;
-    s += `早期消滅率(販売300本未満)はCo-op ${pct(c.A.early_death_rate)} vs
+    s += `早期消滅率(販売500本未満)はCo-op ${pct(c.A.early_death_rate)} vs
       シングル ${pct(c.B.early_death_rate)}で、「大半が早期消滅 + 少数が爆発」構造の
       前半部分を示している。`;
     return s;
@@ -880,9 +880,9 @@ const ja: typeof ko = {
   thB: "シングル・ナラティブ (B)",
   thR: "ローグライク (R)",
   rows: {
-    n: "標本 (販売300本以上)", alpha: "べき指数 α (SE)", xmin: "xmin / 裾の標本数",
+    n: "標本 (販売500本以上)", alpha: "べき指数 α (SE)", xmin: "xmin / 裾の標本数",
     middle: "中間帯(3.5千~3.5万本)比率", dip: "Hartigan dip p", gini: "ジニ係数 [95% CI]",
-    top: "上位1% / 5%シェア", death: "早期消滅率 (販売300本未満)",
+    top: "上位1% / 5%シェア", death: "早期消滅率 (販売500本未満)",
     median: "中央値 (販売本数)", mean: "平均 (幾何平均の倍数)", geomean: "幾何平均",
   },
   sumNote: (c, hasR) => {
@@ -898,7 +898,7 @@ const ja: typeof ko = {
   insightCard: (d) => `<ul>
     <li><b>普通の世界</b> — 幾何平均で約${sig2(d.geomean)}本の販売の桁の世界。</li>
     <li><b>半分の現実</b> — 生き残ったゲームの半分は販売${sig2(d.median)}本未満にとどまる。</li>
-    <li><b>早期消滅リスク</b> — リリース作の${(100 * d.early).toFixed(0)}%は販売300本を
+    <li><b>早期消滅リスク</b> — リリース作の${(100 * d.early).toFixed(0)}%は販売500本を
       越えられない。</li>
     <li><b>中堅ヒットの確率</b> — 生存作のうち${(100 * d.middle).toFixed(0)}%が
       販売3.5千–3.5万本(売上$50K–500K)の帯に着地する。</li>

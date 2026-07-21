@@ -14,7 +14,9 @@ import os
 MODE = os.environ.get("INSIGHT1_MODE", "sales")
 if MODE == "sales":
     CSV = ROOT / "data" / "games_sales.csv"
-    MIN_REVIEWS = 300            # early-death threshold (copies sold)
+    MIN_REVIEWS = 500            # early-death / analysis floor (copies sold):
+                                 # estimate noise is worst at the low end, and
+                                 # this also screens out hobbyist releases
     MIDDLE_LO, MIDDLE_HI = 3500, 35000  # mid-success band (copies ~ $50K-500K)
     FIXED_XMIN = 3500
     LOG_LO, LOG_HI = 2, 8        # log10 axis range for density plots

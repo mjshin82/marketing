@@ -251,7 +251,8 @@ const ko = {
     코호트(N)로 계속 수집해 광의 정의에 대한 민감도 검증(강건성 분석)에 쓴다.`,
   aboutT: "만든 사람",
   aboutBody: `이 분석은 <b>Concode</b>의 개발자가 만들었습니다. 저희는 지금 스팀에서
-    <b>Graytail</b>이라는 게임을 만들고 있어요. 이 리포트가 도움이 되었다면,
+    <b>Graytail</b>이라는 게임을 만들고 있어요 — 바로 이 분석의 <b>싱글 내러티브
+    (Story Rich)</b> 코호트에 속하는 게임입니다. 이 리포트가 도움이 되었다면,
     저희 게임 페이지도 한번 방문해 주세요 — 큰 힘이 됩니다.`,
   aboutSteam: "Graytail on Steam →",
   aboutRepo: "분석 코드 (GitHub) →",
@@ -520,8 +521,9 @@ const en: typeof ko = {
     sensitivity check (robustness).`,
   aboutT: "Who made this",
   aboutBody: `This analysis was made by a developer at <b>Concode</b>. We are currently
-    building a game called <b>Graytail</b> on Steam. If this report helped you, please
-    consider visiting our store page — it means a lot.`,
+    building a game called <b>Graytail</b> on Steam — a game that belongs squarely in this
+    report's <b>single-player narrative (Story Rich)</b> cohort. If this report helped you,
+    please consider visiting our store page — it means a lot.`,
   aboutSteam: "Graytail on Steam →",
   aboutRepo: "Analysis code (GitHub) →",
   axReviews: "Review count",
@@ -768,7 +770,8 @@ const ja: typeof ko = {
     コホート(N)として収集を続け、広義定義への感度検証(頑健性分析)に使う。`,
   aboutT: "作った人",
   aboutBody: `この分析は<b>Concode</b>の開発者が作りました。私たちは現在Steamで
-    <b>Graytail</b>というゲームを開発しています。このレポートが役に立ったら、
+    <b>Graytail</b>というゲームを開発しています — まさにこのレポートの<b>シングル・
+    ナラティブ(Story Rich)</b>コホートに属するゲームです。このレポートが役に立ったら、
     ぜひゲームのストアページにも遊びに来てください — 大きな励みになります。`,
   aboutSteam: "Graytail on Steam →",
   aboutRepo: "分析コード (GitHub) →",

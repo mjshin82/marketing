@@ -330,6 +330,23 @@
             {/each}
           </tbody>
         </table>
+        {#if R.concentration.million_sellers}
+          <details class="ms-list">
+            <summary>≥ 1,000,000 — {COLS.reduce((n, c) => n + (R.concentration.million_sellers[c]?.length ?? 0), 0)} games</summary>
+            <div class="ms-cols">
+              {#each COLS as c}
+                <div>
+                  <p class="ms-h"><span class="dot {DOT[c]}"></span>{cohortName(c)} ({R.concentration.million_sellers[c]?.length ?? 0})</p>
+                  <ol>
+                    {#each R.concentration.million_sellers[c] ?? [] as g}
+                      <li>{g.name} <span class="ms-n">{(g.copies / 1e6).toFixed(1)}M</span></li>
+                    {/each}
+                  </ol>
+                </div>
+              {/each}
+            </div>
+          </details>
+        {/if}
         <div class="interp">
           <p class="interp-t">{L.interpT}</p>
           <p>{@html L.countNote(R.concentration)}</p>
@@ -505,6 +522,17 @@
   .def-table :global(code) { background: var(--page); border: 1px solid var(--grid);
     border-radius: 4px; padding: 1px 5px; font-size: 0.8rem; color: var(--text-primary); }
   .def-common { margin-top: 10px; }
+  .ms-list { margin-top: 12px; border: 1px solid var(--grid); border-radius: 8px;
+             padding: 8px 12px; }
+  .ms-list summary { cursor: pointer; font-size: 0.86rem; font-weight: 600;
+                     color: var(--text-secondary); }
+  .ms-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+             gap: 16px; margin-top: 10px; }
+  .ms-h { margin: 0 0 4px; font-size: 0.84rem; font-weight: 650; }
+  .ms-cols ol { margin: 0; padding-left: 18px; font-size: 0.82rem;
+                color: var(--text-secondary); }
+  .ms-cols li { margin-bottom: 2px; }
+  .ms-n { color: var(--text-muted); font-variant-numeric: tabular-nums; }
   .concl { color: var(--text-secondary); font-size: 0.9rem; }
   .concl :global(p) { margin: 0 0 8px; }
   .concl :global(ul) { margin: 0; padding-left: 18px; }

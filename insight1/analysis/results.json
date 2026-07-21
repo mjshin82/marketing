@@ -242,6 +242,278 @@
       "A": 886,
       "B": 8071,
       "R": 3516
+    },
+    "million_sellers": {
+      "A": [
+        {
+          "name": "R.E.P.O.",
+          "copies": 19573833
+        },
+        {
+          "name": "PEAK",
+          "copies": 17886759
+        },
+        {
+          "name": "Chained Together",
+          "copies": 10016521
+        },
+        {
+          "name": "Schedule I",
+          "copies": 8691981
+        },
+        {
+          "name": "ARC Raiders",
+          "copies": 8644407
+        },
+        {
+          "name": "Liar's Bar",
+          "copies": 7918942
+        },
+        {
+          "name": "Party Animals",
+          "copies": 5668563
+        },
+        {
+          "name": "Content Warning",
+          "copies": 5653468
+        },
+        {
+          "name": "The Outlast Trials",
+          "copies": 4987145
+        },
+        {
+          "name": "Inside the Backrooms",
+          "copies": 3966171
+        },
+        {
+          "name": "Necesse",
+          "copies": 2180493
+        },
+        {
+          "name": "Foxhole",
+          "copies": 2110195
+        },
+        {
+          "name": "Abiotic Factor",
+          "copies": 1801360
+        },
+        {
+          "name": "Bodycam",
+          "copies": 1644287
+        },
+        {
+          "name": "The Past Within",
+          "copies": 1635835
+        },
+        {
+          "name": "Nuclear Nightmare",
+          "copies": 1630142
+        },
+        {
+          "name": "REMATCH",
+          "copies": 1604712
+        },
+        {
+          "name": "Gray Zone Warfare",
+          "copies": 1504384
+        },
+        {
+          "name": "We Were Here Expeditions: The FriendShip",
+          "copies": 1418588
+        },
+        {
+          "name": "Demonologist",
+          "copies": 1417423
+        },
+        {
+          "name": "We Were Here Forever",
+          "copies": 1384583
+        },
+        {
+          "name": "PAYDAY 3",
+          "copies": 1285600
+        },
+        {
+          "name": "MISERY",
+          "copies": 1226049
+        },
+        {
+          "name": "Deadside",
+          "copies": 1210082
+        },
+        {
+          "name": "Shape of Dreams",
+          "copies": 1193899
+        },
+        {
+          "name": "Sunkenland",
+          "copies": 1191246
+        },
+        {
+          "name": "Labyrinthine",
+          "copies": 1145055
+        },
+        {
+          "name": "Drive Beyond Horizons",
+          "copies": 1111668
+        },
+        {
+          "name": "PICO PARK 2",
+          "copies": 1053147
+        }
+      ],
+      "B": [
+        {
+          "name": "DAVE THE DIVER",
+          "copies": 7084244
+        },
+        {
+          "name": "\u9b3c\u8c37\u516b\u8352 Tale of Immortal",
+          "copies": 6557914
+        },
+        {
+          "name": "Hollow Knight: Silksong",
+          "copies": 5431214
+        },
+        {
+          "name": "Mirror 2: Project X",
+          "copies": 3634640
+        },
+        {
+          "name": "Dispatch",
+          "copies": 3137233
+        },
+        {
+          "name": "MiSide",
+          "copies": 2721687
+        },
+        {
+          "name": "NEEDY STREAMER OVERLOAD",
+          "copies": 2270893
+        },
+        {
+          "name": "DREDGE",
+          "copies": 2226251
+        },
+        {
+          "name": "FINAL FANTASY VII REMAKE INTERGRADE",
+          "copies": 2151188
+        },
+        {
+          "name": "Revenge on gold diggers ",
+          "copies": 1831531
+        },
+        {
+          "name": "Volcano Princess",
+          "copies": 1804983
+        },
+        {
+          "name": "DELTARUNE",
+          "copies": 1703560
+        },
+        {
+          "name": "FreshWomen - Season 1",
+          "copies": 1696549
+        },
+        {
+          "name": "\u89c5\u957f\u751f",
+          "copies": 1680982
+        },
+        {
+          "name": "Contraband Police",
+          "copies": 1558135
+        },
+        {
+          "name": "The Stanley Parable: Ultra Deluxe",
+          "copies": 1366456
+        },
+        {
+          "name": "Sultan's Game",
+          "copies": 1355863
+        },
+        {
+          "name": "Wandering Sword",
+          "copies": 1233994
+        },
+        {
+          "name": "Darkest Dungeon\u00ae II",
+          "copies": 1131476
+        },
+        {
+          "name": "House Party",
+          "copies": 1105395
+        },
+        {
+          "name": "RoboCop: Rogue City",
+          "copies": 1102188
+        }
+      ],
+      "R": [
+        {
+          "name": "Balatro",
+          "copies": 6240969
+        },
+        {
+          "name": "Cult of the Lamb",
+          "copies": 4874644
+        },
+        {
+          "name": "Escape From Duckov",
+          "copies": 4491375
+        },
+        {
+          "name": "Megabonk",
+          "copies": 4275972
+        },
+        {
+          "name": "Hades II",
+          "copies": 3618834
+        },
+        {
+          "name": "Deep Rock Galactic: Survivor",
+          "copies": 2279150
+        },
+        {
+          "name": "\u6696\u96ea Warm Snow",
+          "copies": 2159133
+        },
+        {
+          "name": "20 Minutes Till Dawn",
+          "copies": 1746002
+        },
+        {
+          "name": "Sifu",
+          "copies": 1586588
+        },
+        {
+          "name": "BALL x PIT",
+          "copies": 1469851
+        },
+        {
+          "name": "BlazBlue Entropy Effect",
+          "copies": 1406670
+        },
+        {
+          "name": "Halls of Torment",
+          "copies": 1368590
+        },
+        {
+          "name": "Soulstone Survivors",
+          "copies": 1350058
+        },
+        {
+          "name": "9 Kings",
+          "copies": 1094084
+        },
+        {
+          "name": "Death Must Die",
+          "copies": 1066229
+        },
+        {
+          "name": "Rogue Legacy 2",
+          "copies": 1048490
+        }
+      ]
     }
   },
   "robustness": {

@@ -48,6 +48,30 @@
   const COLS = $derived(hasR ? ["A", "R", "B"] : ["A", "B"]);  // co-op / roguelike / narrative
   const DOT: Record<string, string> = { A: "da", R: "dr", B: "db" };
   const cohortName = (c: string) => (c === "A" ? L.cohortA : c === "R" ? L.cohortR : L.cohortB);
+  // Steam-wide yearly release counts (SteamDB, rounded; methodology varies)
+  const MARKET: [string, number][] = [
+    ["2022", 11100], ["2023", 14500], ["2024", 18500], ["2025", 20000],
+  ];
+  const marketOption = $derived.by<EChartsOption>(() => ({
+    backgroundColor: "transparent",
+    tooltip: {
+      ...tooltipCommon(t), trigger: "item",
+      formatter: (p: any) => `${p.name}: ${Number(p.value).toLocaleString()}`,
+    },
+    grid: { left: 56, right: 16, top: 20, bottom: 28 },
+    xAxis: { type: "category", data: MARKET.map((m) => m[0]),
+             axisLine: { lineStyle: { color: t.axis } },
+             axisLabel: { color: t.muted }, axisTick: { show: false } },
+    yAxis: { type: "value", axisLabel: { color: t.muted },
+             splitLine: { lineStyle: { color: t.grid } } },
+    series: [{
+      type: "bar", data: MARKET.map((m) => m[1]), barWidth: "45%",
+      color: t.muted, itemStyle: { borderRadius: [4, 4, 0, 0], opacity: 0.75 },
+      label: { show: true, position: "top", color: t.ink2,
+               formatter: (p: any) => Number(p.value).toLocaleString() },
+    }],
+  } as EChartsOption));
+
   const insightOf = (c: string) => ({
     geomean: R.concentration[c].geomean,
     median: R.concentration[c].median,
@@ -296,6 +320,12 @@
         </div>
       </section>
     {/if}
+
+    <section class="card">
+      <h3>{L.marketT}</h3>
+      <p class="cap">{@html L.marketCap}</p>
+      <EChart option={marketOption} height={220} />
+    </section>
 
     {#if R.era?.years && Object.keys(R.era.years).length >= 2}
       <section class="card">

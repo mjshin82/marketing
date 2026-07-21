@@ -278,19 +278,26 @@ def worker_steamspy(conn_factory, target_per_cohort):
                           datetime.now(timezone.utc).isoformat()))
             conn.commit()
             continue
-        tags = data.get("tags") or {}
-        tags = list(tags.keys()) if isinstance(tags, dict) else []
-        cand = classify(tags)
-        if is_big_publisher(data.get("publisher")):
-            cand = "none"
-        conn.execute("""UPDATE games SET ss_status='done', ss_tags=?, ss_positive=?,
-            ss_negative=?, ss_price=?, ss_initialprice=?, ss_fetched_at=?, cand=?,
-            st_status=CASE WHEN ?='none' THEN NULL ELSE 'pending' END
-            WHERE appid=?""",
-            (json.dumps(tags), data.get("positive"), data.get("negative"),
-             int(data.get("price") or 0), int(data.get("initialprice") or 0),
-             datetime.now(timezone.utc).isoformat(), cand, cand, appid))
-        conn.commit()
+        try:
+            tags = data.get("tags") or {}
+            tags = list(tags.keys()) if isinstance(tags, dict) else []
+            cand = classify(tags)
+            if is_big_publisher(data.get("publisher")):
+                cand = "none"
+            conn.execute("""UPDATE games SET ss_status='done', ss_tags=?, ss_positive=?,
+                ss_negative=?, ss_price=?, ss_initialprice=?, ss_fetched_at=?, cand=?,
+                st_status=CASE WHEN ?='none' THEN NULL ELSE 'pending' END
+                WHERE appid=?""",
+                (json.dumps(tags), data.get("positive"), data.get("negative"),
+                 int(data.get("price") or 0), int(data.get("initialprice") or 0),
+                 datetime.now(timezone.utc).isoformat(), cand, cand, appid))
+            conn.commit()
+        except Exception as e:
+            conn.execute("UPDATE games SET ss_status='error' WHERE appid=?", (appid,))
+            conn.execute("INSERT OR REPLACE INTO skiplist VALUES(?,?,?,?)",
+                         (appid, "steamspy", f"exc:{type(e).__name__}",
+                          datetime.now(timezone.utc).isoformat()))
+            conn.commit()
     SS_FINISHED.set()
     conn.close()
 
@@ -334,35 +341,42 @@ def worker_store(conn_factory):
                          (appid,))
             conn.commit()
             continue
-        d = entry["data"]
-        rel = d.get("release_date") or {}
-        po = d.get("price_overview") or {}
-        cats = [c.get("description") for c in d.get("categories") or []]
-        genres = [g.get("description") for g in d.get("genres") or []]
-        release = parse_release(rel.get("date"))
-        base_ok = (
-            d.get("type") == "game"
-            and not rel.get("coming_soon")
-            and not d.get("is_free")
-            and release is not None
-            and (po.get("initial") is None or po.get("initial") <= MAX_PRICE_CENTS
-                 or po.get("currency") != "USD")
-        )
-        qualified = int(base_ok and RELEASE_MIN <= release <= RELEASE_MAX)
-        qualified_ext = int(base_ok and RELEASE_MIN <= release <= RELEASE_MAX_EXT)
-        conn.execute("""UPDATE games SET st_status='done', st_type=?, st_release_date=?,
-            st_coming_soon=?, st_is_free=?, st_price_initial=?, st_currency=?,
-            st_categories=?, st_genres=?, st_publishers=?, st_fetched_at=?,
-            qualified=?, qualified_ext=?,
-            ar_status=CASE WHEN ?=1 THEN 'pending' ELSE NULL END
-            WHERE appid=?""",
-            (d.get("type"), release, int(bool(rel.get("coming_soon"))),
-             int(bool(d.get("is_free"))), po.get("initial"), po.get("currency"),
-             json.dumps(cats), json.dumps(genres),
-             json.dumps(d.get("publishers") or []),
-             datetime.now(timezone.utc).isoformat(), qualified, qualified_ext,
-             qualified_ext, appid))
-        conn.commit()
+        try:
+            d = entry["data"]
+            rel = d.get("release_date") or {}
+            po = d.get("price_overview") or {}
+            cats = [c.get("description") for c in d.get("categories") or []]
+            genres = [g.get("description") for g in d.get("genres") or []]
+            release = parse_release(rel.get("date"))
+            base_ok = (
+                d.get("type") == "game"
+                and not rel.get("coming_soon")
+                and not d.get("is_free")
+                and release is not None
+                and (po.get("initial") is None or po.get("initial") <= MAX_PRICE_CENTS
+                     or po.get("currency") != "USD")
+            )
+            qualified = int(base_ok and RELEASE_MIN <= release <= RELEASE_MAX)
+            qualified_ext = int(base_ok and RELEASE_MIN <= release <= RELEASE_MAX_EXT)
+            conn.execute("""UPDATE games SET st_status='done', st_type=?, st_release_date=?,
+                st_coming_soon=?, st_is_free=?, st_price_initial=?, st_currency=?,
+                st_categories=?, st_genres=?, st_publishers=?, st_fetched_at=?,
+                qualified=?, qualified_ext=?,
+                ar_status=CASE WHEN ?=1 THEN 'pending' ELSE NULL END
+                WHERE appid=?""",
+                (d.get("type"), release, int(bool(rel.get("coming_soon"))),
+                 int(bool(d.get("is_free"))), po.get("initial"), po.get("currency"),
+                 json.dumps(cats), json.dumps(genres),
+                 json.dumps(d.get("publishers") or []),
+                 datetime.now(timezone.utc).isoformat(), qualified, qualified_ext,
+                 qualified_ext, appid))
+            conn.commit()
+        except Exception as e:
+            conn.execute("UPDATE games SET st_status='error' WHERE appid=?", (appid,))
+            conn.execute("INSERT OR REPLACE INTO skiplist VALUES(?,?,?,?)",
+                         (appid, "store", f"exc:{type(e).__name__}",
+                          datetime.now(timezone.utc).isoformat()))
+            conn.commit()
     conn.close()
 
 
@@ -406,14 +420,29 @@ def worker_reviews(conn_factory):
     conn.close()
 
 
+def _guarded(fn, name, *args, on_exit=None):
+    """Run a worker; log any crash and always fire on_exit so peers can drain."""
+    import traceback
+    try:
+        fn(*args)
+    except Exception:
+        print(f"[{name}] worker crashed:", flush=True)
+        traceback.print_exc()
+    finally:
+        if on_exit:
+            on_exit()
+
+
 def stage_enrich(target_per_cohort, max_seconds):
     conn = db()
     init_db(conn)
     conn.close()
     threads = [
-        threading.Thread(target=worker_steamspy, args=(db, target_per_cohort), name="ss"),
-        threading.Thread(target=worker_store, args=(db,), name="st"),
-        threading.Thread(target=worker_reviews, args=(db,), name="ar"),
+        threading.Thread(target=_guarded, name="ss",
+                         args=(worker_steamspy, "ss", db, target_per_cohort),
+                         kwargs={"on_exit": SS_FINISHED.set}),
+        threading.Thread(target=_guarded, name="st", args=(worker_store, "st", db)),
+        threading.Thread(target=_guarded, name="ar", args=(worker_reviews, "ar", db)),
     ]
     for t in threads:
         t.start()

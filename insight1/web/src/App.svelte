@@ -99,10 +99,12 @@
   });
   const verdicts = $derived(
     !R ? null : {
-      h1: R.tail.alpha_diff_A_minus_B.ci95[1] < 0,
-      h2: R.middle.A.middle_share < R.middle.B.middle_share &&
+      h1: (R.tail?.alpha_diff_A_minus_B?.ci95?.[1] ?? 1) < 0,
+      h2: !!(R.middle?.A && R.middle?.B && R.middle?.middle_share_test) &&
+          R.middle.A.middle_share < R.middle.B.middle_share &&
           R.middle.middle_share_test.chi2_p < 0.05,
-      h3: R.concentration.A.gini > R.concentration.B.gini &&
+      h3: !!(R.concentration?.A && R.concentration?.B) &&
+          R.concentration.A.gini > R.concentration.B.gini &&
           R.concentration.A.gini_ci[0] > R.concentration.B.gini_ci[1],
     },
   );

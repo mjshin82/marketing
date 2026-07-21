@@ -7,10 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
-from common import (COHORTS, COHORT_COLORS, COHORT_LABELS, FIG, MIN_REVIEWS,
+from common import (PAIRS, COHORTS, COHORT_COLORS, COHORT_LABELS, FIG, MIN_REVIEWS,
                     bootstrap_ci, gini, load, save_results, top_share)
 
-PAIRS = [("A", "B"), ("A", "R"), ("R", "B")]
 
 
 def lorenz(x):

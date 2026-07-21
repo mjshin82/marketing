@@ -10,12 +10,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import powerlaw
 
-from common import (COHORTS, COHORT_COLORS, COHORT_LABELS, FIG, load,
+from common import (PAIRS, COHORTS, COHORT_COLORS, COHORT_LABELS, FIG, load,
                     save_results)
 
 warnings.filterwarnings("ignore")
 
-PAIRS = [("A", "B"), ("A", "R"), ("R", "B")]
 
 
 def main(n_boot=1000):

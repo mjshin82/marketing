@@ -40,13 +40,6 @@ const ko = {
   cohortA: "코옵 (온라인)",
   cohortB: "싱글 내러티브",
   cohortR: "로그라이크",
-  verdict: (ok: boolean | undefined): string => (ok ? "지지" : "불확정"),
-  tile1k: "H1 · 더 무거운 꼬리",
-  tile1s: (d: any) => `차이 ${f2(d.point)} [${f2(d.ci95[0])}, ${f2(d.ci95[1])}]`,
-  tile2k: "H2 · 빈 허리 (리뷰 100–1k 비율)",
-  tile2s: (m: any) => `Fisher p=${p3(m.middle_share_test.fisher_p)} · dip p ${p3(m.A.dip_p)} / ${p3(m.B.dip_p)}`,
-  tile3k: "H3 · 집중도 (Gini)",
-  tile3s: (c: any) => `상위 1% 점유 ${pct(c.A.top1_share)} / ${pct(c.B.top1_share)}`,
   c1t: "가설 1 — 꼬리 비교: 로그-로그 CCDF",
   c1cap: (t: any) => `점은 관측 CCDF, 점선은 xmin 이상 구간의 멱함수 적합. 기울기가 완만할수록(α 작을수록)
     상위권으로 갈수록 확률이 천천히 줄어드는 무거운 꼬리.
@@ -259,8 +252,6 @@ const ko = {
     return parts.join("<br/><br/>");
   },
   eraYear: "연도",
-  eraRatioA: "코옵÷내러",
-  eraRatioR: "로그÷내러",
   windowT: "민감도 — 출시 기간 컷오프 (2025-06 vs 2025-12)",
   windowNote: (n: number): string => `확장 창(~2025-12)이 추가하는 2025 하반기 게임은 ${n}개뿐이다.
     하반기 출시작은 리뷰 누적 기간이 짧고(7~12개월), SteamSpy 마스터 목록의 최신작 편입
@@ -325,8 +316,9 @@ const ko = {
      불확실하다.`,
     `<b>장르 교집합은 제외</b> — 멀티 코옵이면서 로그라이크인 게임(예: Risk of Rain 계열)은
      로그라이크 코호트에서 빠지고, Singleplayer 태그까지 있으면 어느 코호트에도 들어가지
-     않는다. 교집합 게임을 양쪽에 넣을 수도 있었지만 코호트를 상호배타로 유지해 검정을
-     단순하게 하려고 빼는 쪽을 택했다 — 그 결과 각 코호트는 "순수형"에 가깝고, 하이브리드
+     않는다 (Singleplayer 태그가 없으면 분류 우선순위에 따라 코옵으로 분류된다). 교집합
+     게임을 양쪽에 넣을 수도 있었지만 코호트를 상호배타로 유지해 검정을 단순하게 하려고
+     빼는 쪽을 택했다 — 그 결과 각 코호트는 "순수형"에 가깝고, 하이브리드
      장르의 성과는 이 분석의 범위 밖이다.`,
     `<b>코옵 표본 부족</b> — 코호트 A를 순수 멀티 코옵으로 좁히면서 표본이 다른 코호트의
      1/5 수준으로 작다. 코옵 관련 지표(특히 상위 1% 점유율과 α)는 신뢰구간이 넓고 히트작
@@ -396,13 +388,6 @@ const en: typeof ko = {
   cohortA: "Co-op (online)",
   cohortB: "Single-player narrative",
   cohortR: "Roguelike",
-  verdict: (ok) => (ok ? "supported" : "inconclusive"),
-  tile1k: "H1 · Heavier tail",
-  tile1s: (d) => `diff ${f2(d.point)} [${f2(d.ci95[0])}, ${f2(d.ci95[1])}]`,
-  tile2k: "H2 · Missing middle (share at 100–1k reviews)",
-  tile2s: (m) => `Fisher p=${p3(m.middle_share_test.fisher_p)} · dip p ${p3(m.A.dip_p)} / ${p3(m.B.dip_p)}`,
-  tile3k: "H3 · Concentration (Gini)",
-  tile3s: (c) => `top-1% share ${pct(c.A.top1_share)} / ${pct(c.B.top1_share)}`,
   c1t: "Hypothesis 1 — tail comparison: log-log CCDF",
   c1cap: (t) => `Dots are the observed CCDF; dashed lines are the power-law fit above xmin.
     A flatter slope (smaller α) means a heavier tail — probability decays slowly toward
@@ -632,8 +617,6 @@ const en: typeof ko = {
     return parts.join("<br/><br/>");
   },
   eraYear: "Year",
-  eraRatioA: "Co-op ÷ narrative",
-  eraRatioR: "Roguelike ÷ narrative",
   windowT: "Sensitivity — release-window cutoff (2025-06 vs 2025-12)",
   windowNote: (n) => `The extended window (through 2025-12) adds only ${n} H2-2025 games.
     Those releases have short review-accumulation windows (7–12 months) and SteamSpy's
@@ -704,7 +687,8 @@ const en: typeof ko = {
      game either — how strongly this bias actually favors co-op is uncertain.`,
     `<b>Genre intersections are dropped</b> — games that are both multiplayer co-op and
      roguelike (e.g. the Risk of Rain series) fall out of the roguelike cohort, and if they
-     also carry the Singleplayer tag they end up in no cohort at all. We could have counted
+     also carry the Singleplayer tag they end up in no cohort at all (without the Singleplayer
+     tag they count as co-op, per classification priority). We could have counted
      intersection games in both cohorts, but chose to drop them to keep cohorts disjoint and
      the tests simple — so each cohort is close to a "pure type", and hybrid-genre outcomes
      sit outside this analysis.`,
@@ -777,13 +761,6 @@ const ja: typeof ko = {
   cohortA: "Co-op (オンライン)",
   cohortB: "シングル・ナラティブ",
   cohortR: "ローグライク",
-  verdict: (ok) => (ok ? "支持" : "未確定"),
-  tile1k: "H1 · より重い裾",
-  tile1s: (d) => `差 ${f2(d.point)} [${f2(d.ci95[0])}, ${f2(d.ci95[1])}]`,
-  tile2k: "H2 · 中間層の欠落 (レビュー100–1k比率)",
-  tile2s: (m) => `Fisher p=${p3(m.middle_share_test.fisher_p)} · dip p ${p3(m.A.dip_p)} / ${p3(m.B.dip_p)}`,
-  tile3k: "H3 · 集中度 (ジニ係数)",
-  tile3s: (c) => `上位1%シェア ${pct(c.A.top1_share)} / ${pct(c.B.top1_share)}`,
   c1t: "仮説1 — 裾の比較: 両対数CCDF",
   c1cap: (t) => `点は観測CCDF、破線はxmin以上の区間のべき乗則フィット。傾きが緩やかなほど(αが小さいほど)
     上位に行っても確率がゆっくり減る「重い裾」。べき乗則 vs 対数正規の尤度比:
@@ -997,8 +974,6 @@ const ja: typeof ko = {
     return parts.join("<br/><br/>");
   },
   eraYear: "年",
-  eraRatioA: "Co-op÷ナラティブ",
-  eraRatioR: "ローグライク÷ナラティブ",
   windowT: "感度分析 — リリース期間カットオフ (2025-06 vs 2025-12)",
   windowNote: (n) => `拡張ウィンドウ(~2025-12)が追加する2025年下半期のゲームは${n}本のみ。
     下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、SteamSpyのマスターリストは最新作の
@@ -1062,7 +1037,8 @@ const ja: typeof ko = {
      動機も薄い。このバイアスが実際どれほどCo-opに有利に働いたかは不確実だ。`,
     `<b>ジャンルの交差は除外</b> — マルチCo-opかつローグライクのゲーム(例: Risk of Rain
      シリーズ)はローグライクコホートから外れ、Singleplayerタグまで持つ場合はどのコホートにも
-     入らない。交差ゲームを両方に数える選択もあったが、コホートを互いに排他に保ち検定を
+     入らない (Singleplayerタグがなければ分類優先順位によりCo-opに分類される)。交差ゲームを
+     両方に数える選択もあったが、コホートを互いに排他に保ち検定を
      単純にするため除外する側を選んだ — その結果、各コホートは「純粋型」に近く、ハイブリッド
      ジャンルの成果はこの分析の範囲外だ。`,
     `<b>Co-op標本の不足</b> — コホートAを純粋マルチCo-opに絞ったため、標本は他コホートの

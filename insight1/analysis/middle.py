@@ -8,10 +8,9 @@ import numpy as np
 from diptest import diptest
 from scipy import stats
 
-from common import (COHORTS, COHORT_COLORS, COHORT_LABELS, FIG, MIDDLE_HI,
+from common import (PAIRS, COHORTS, COHORT_COLORS, COHORT_LABELS, FIG, MIDDLE_HI,
                     MIDDLE_LO, load, save_results)
 
-PAIRS = [("A", "B"), ("A", "R"), ("R", "B")]
 
 
 def main():

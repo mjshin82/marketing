@@ -307,7 +307,8 @@ const ko = {
   defCohort: "코호트", defInc: "포함 조건 (스팀 태그)", defExc: "제외 태그",
   defRows: [
     { c: "A", inc: `<code>Online Co-Op</code> 또는 <code>Co-op</code> 중 하나
-      <b>그리고</b> <code>Multiplayer</code>`, exc: `—` },
+      <b>그리고</b> <code>Multiplayer</code>`, exc: `<code>Singleplayer</code> —
+      싱글 겸용(스타듀 밸리형)은 제외, 순수 멀티 코옵만` },
     { c: "R", inc: `<code>Rogue-like</code>, <code>Rogue-lite</code>,
       <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
       <code>Roguevania</code>, <code>Traditional Roguelike</code> 중 하나 이상`,
@@ -649,7 +650,8 @@ const en: typeof ko = {
   defCohort: "Cohort", defInc: "Inclusion (Steam tags)", defExc: "Excluded tags",
   defRows: [
     { c: "A", inc: `<code>Online Co-Op</code> or <code>Co-op</code>,
-      <b>and</b> <code>Multiplayer</code>`, exc: `—` },
+      <b>and</b> <code>Multiplayer</code>`, exc: `<code>Singleplayer</code> — co-op-optional
+      singles (Stardew-likes) excluded; pure multiplayer co-op only` },
     { c: "R", inc: `any of <code>Rogue-like</code>, <code>Rogue-lite</code>,
       <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
       <code>Roguevania</code>, <code>Traditional Roguelike</code>`,
@@ -970,7 +972,8 @@ const ja: typeof ko = {
   defCohort: "コホート", defInc: "包含条件 (Steamタグ)", defExc: "除外タグ",
   defRows: [
     { c: "A", inc: `<code>Online Co-Op</code> または <code>Co-op</code>、
-      <b>かつ</b> <code>Multiplayer</code>`, exc: `—` },
+      <b>かつ</b> <code>Multiplayer</code>`, exc: `<code>Singleplayer</code> —
+      シングル兼用(スターデュー型)は除外、純粋マルチCo-opのみ` },
     { c: "R", inc: `<code>Rogue-like</code>, <code>Rogue-lite</code>,
       <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
       <code>Roguevania</code>, <code>Traditional Roguelike</code> のいずれか`,

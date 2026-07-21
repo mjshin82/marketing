@@ -36,7 +36,8 @@ review counts as a sales proxy.
   data supports unbiased interim analysis.
 - Review counts prefer the official Steam `appreviews` endpoint, falling back to
   SteamSpy positive+negative (see the `review_source` column).
-- Cohort A: tags ("Online Co-Op" ∨ "Co-op") ∧ "Multiplayer"
+- Cohort A: tags ("Online Co-Op" ∨ "Co-op") ∧ "Multiplayer" ∧ ¬"Singleplayer" —
+  pure multiplayer co-op; co-op-optional single-player games (Stardew-likes) excluded
 - Cohort B: "Singleplayer" ∧ "Story Rich" ∧ ¬(any co-op/multiplayer tag)
 - Cohort R: any roguelike tag ∧ ¬(any co-op/multiplayer tag)
 - Cohort N (alt-definition only): "Singleplayer" ∧ ("Adventure" ∨ "Puzzle") without

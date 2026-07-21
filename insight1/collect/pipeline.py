@@ -222,7 +222,9 @@ def classify(tags):
     """Disjoint cohorts, priority A (co-op) > R (roguelike) > B (story-rich single)
     > N (broad single narrative remainder, kept only for the alt-definition check)."""
     tagset = set(tags)
-    if (tagset & TAGS_A_COOP) and TAG_MULTI in tagset:
+    if ((tagset & TAGS_A_COOP) and TAG_MULTI in tagset
+            and TAG_SINGLE not in tagset):
+        # pure multiplayer co-op: co-op-optional singles (Stardew-likes) excluded
         return "A"
     if (tagset & TAGS_R_ROGUE) and not (tagset & TAGS_B_EXCLUDE):
         return "R"

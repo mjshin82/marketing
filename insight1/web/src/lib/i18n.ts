@@ -208,40 +208,54 @@ const ko = {
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
     const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;
-    const S = (c: string): number | null => era.S?.[ly]?.[c] ?? null;
+    const S = (yr: string, c: string): number | null => era.S?.[yr]?.[c] ?? null;
     const ab0 = era.ratios[f]?.A_over_B, ab1 = era.ratios[l]?.A_over_B;
     const rb0 = era.ratios[f]?.R_over_B, rb1 = era.ratios[l]?.R_over_B;
-    const sA = S("A"), sR = S("R"), sB = S("B");
+    const sA = S(ly, "A"), sR = S(ly, "R"), sB = S(ly, "B");
+    const phrase = (v: number) => v > 1.1 ? "시장보다 빠른 유입" : v >= 0.9 ? "시장과 비슷한 속도" : "시장보다 느린 증가(이탈)";
     const parts: string[] = [
       `성과 변화는 수요(유행)와 공급(경쟁)의 합성이다 — S가 공급 쪽을, 같은 연도 안의 성과
        배율 추세가 두 힘의 순효과를 보여준다 (S는 마지막 완전 연도 ${ly}년 기준).`,
     ];
     if (sA != null && ab0 && ab1) {
-      parts.push(`<b>코옵</b> — 공급 S ${sA.toFixed(2)}: 시장보다 ${sA > 1 ? "빠른 유입" : "느린 증가"}.
-        내러티브 대비 성과 배율 ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "상승" : "하락"}).
-        ${sA > 1 && ab1 >= ab0
+      parts.push(`<b>코옵</b> — 공급 S ${sA.toFixed(2)}: ${phrase(sA)}. 내러티브 대비 성과 배율
+        ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "상승" : "하락"}).
+        ${sA > 1.1 && ab1 >= ab0
           ? "공급이 몰리는데도 상대 성과가 유지·상승 — 수요(코옵 수요층 확장)가 공급 유입을 앞지르고 있다는 신호."
-          : sA > 1
-          ? "공급 유입과 상대 성과 하락이 겹침 — 경쟁 희석이 수요 성장을 앞지르는 신호."
-          : "공급 압력 없이 성과가 움직임 — 수요 쪽 요인이 지배적."}`);
+          : sA >= 0.9 && sA <= 1.1 && ab1 >= ab0
+          ? "공급이 시장 속도에 머무는 동안 상대 성과가 올랐다 — 경쟁 심화 없이 수요 쪽 확장이 주도한 그림."
+          : sA > 1.1
+          ? "공급 유입과 상대 성과 하락이 겹침 — 경쟁 희석 신호."
+          : "공급 압력이 크지 않은 상태 — 배율 변화는 수요 쪽 요인일 가능성."}`);
     }
     if (sR != null && rb0 && rb1) {
-      parts.push(`<b>로그라이크</b> — 공급 S ${sR.toFixed(2)}: 시장보다 ${sR > 1 ? "빠른 유입" : "느린 증가"}.
-        내러티브 대비 성과 배율 ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "상승" : "하락"}).
-        ${sR > 1 && rb1 < rb0
+      parts.push(`<b>로그라이크</b> — 공급 S ${sR.toFixed(2)}: ${phrase(sR)}. 내러티브 대비 성과 배율
+        ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "상승" : "하락"}).
+        ${sR > 1.1 && rb1 < rb0
           ? "공급은 몰리는데 상대 성과는 하락 — 유행이 부른 공급 유입이 수요 성장을 앞질러 경쟁이 희석되는, 과열기의 전형적 패턴. 수요 냉각과 공급 희석을 이 데이터만으로 분리할 수는 없다."
-          : sR > 1
+          : sR > 1.1
           ? "공급 유입에도 상대 성과 유지 — 수요가 아직 공급을 따라오고 있다."
-          : "공급 압력은 낮다 — 배율 변화는 수요 쪽 요인일 가능성."}`);
+          : rb1 < rb0
+          ? "공급 압력이 크지 않은데도 배율이 내려갔다 — 수요(유행) 냉각 쪽 요인에 무게."
+          : "공급 압력 낮음 — 배율 변화는 수요 쪽 요인일 가능성."}`);
     }
     if (sB != null) {
       parts.push(`<b>내러티브 (Story Rich)</b> — 배율의 기준 코호트(정의상 1). 공급 S ${sB.toFixed(2)}:
-        ${sB < 1
+        ${sB < 0.9
           ? "시장 평균보다 느리게 늘거나 줄고 있다 — 유행 장르로 개발자가 빠져나가는 공급 이탈로, 남아 있는 게임에겐 경쟁 완화 요인이다."
+          : sB <= 1.1
+          ? "시장 평균과 비슷한 속도로 늘고 있다."
           : "시장 평균보다 빠르게 늘고 있다 — 경쟁 심화 요인."}`);
     }
-    parts.push(`연간 표본이 작아 방향성 수준으로 읽을 것. 2025년 S는 SteamSpy 편입 지연으로
-      과소집계라 판단에서 제외했다.`);
+    const a25 = S(l, "A"), b25 = S(l, "B"), r25 = S(l, "R");
+    if (l !== ly && a25 != null && b25 != null) {
+      parts.push(`<b>${l}년의 조짐</b> — 절대값은 과소집계지만 같은 해 안에서 코호트끼리의 비교는
+        유효하다: S 코옵 ${a25.toFixed(2)}${r25 != null ? ` / 로그라이크 ${r25.toFixed(2)}` : ""} /
+        내러티브 ${b25.toFixed(2)}. ${a25 > b25 * 1.2
+          ? "내러티브 대비 코옵 쪽 유입이 상대적으로 빨라지는 추세가 보인다 — 결론 카드의 \"2026년 공급 증가 가능성\"과 맞물리는 신호다."
+          : "코호트 간 유입 속도에 뚜렷한 차이는 없다."}`);
+    }
+    parts.push(`연간 표본이 작아 방향성 수준으로 읽을 것.`);
     return parts.join("<br/><br/>");
   },
   eraYear: "연도",
@@ -561,41 +575,55 @@ const en: typeof ko = {
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
     const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;
-    const S = (c: string): number | null => era.S?.[ly]?.[c] ?? null;
+    const S = (yr: string, c: string): number | null => era.S?.[yr]?.[c] ?? null;
     const ab0 = era.ratios[f]?.A_over_B, ab1 = era.ratios[l]?.A_over_B;
     const rb0 = era.ratios[f]?.R_over_B, rb1 = era.ratios[l]?.R_over_B;
-    const sA = S("A"), sR = S("R"), sB = S("B");
+    const sA = S(ly, "A"), sR = S(ly, "R"), sB = S(ly, "B");
+    const phrase = (v: number) => v > 1.1 ? "inflowing faster than the market" : v >= 0.9 ? "tracking the market" : "growing slower than the market (exodus)";
     const parts: string[] = [
       `Outcome shifts are a composite of demand (fashion) and supply (competition) — S shows
        the supply side, and the within-year outcome-ratio trend shows the net of the two
-       forces (S as of ${ly}, the last fully-covered year).`,
+       (S as of ${ly}, the last fully-covered year).`,
     ];
     if (sA != null && ab0 && ab1) {
-      parts.push(`<b>Co-op</b> — supply S ${sA.toFixed(2)}: ${sA > 1 ? "flowing in faster than the market" : "growing slower than the market"}.
-        Outcome ratio vs narrative ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "rising" : "falling"}).
-        ${sA > 1 && ab1 >= ab0
-          ? "Relative outcomes held or rose despite supply influx — a sign demand (a growing co-op audience) is outpacing supply."
-          : sA > 1
-          ? "Supply influx coincides with falling relative outcomes — a competitive-dilution signal."
-          : "Outcomes moved without supply pressure — demand-side factors dominate."}`);
+      parts.push(`<b>Co-op</b> — supply S ${sA.toFixed(2)}: ${phrase(sA)}. Outcome ratio vs
+        narrative ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "rising" : "falling"}).
+        ${sA > 1.1 && ab1 >= ab0
+          ? "Relative outcomes held or rose despite influx — demand (a growing co-op audience) is outpacing supply."
+          : sA >= 0.9 && sA <= 1.1 && ab1 >= ab0
+          ? "Supply merely tracked the market while relative outcomes rose — a demand-led picture without intensifying competition."
+          : sA > 1.1
+          ? "Influx coincides with falling relative outcomes — a dilution signal."
+          : "Little supply pressure — ratio changes are more likely demand-side."}`);
     }
     if (sR != null && rb0 && rb1) {
-      parts.push(`<b>Roguelike</b> — supply S ${sR.toFixed(2)}: ${sR > 1 ? "flowing in faster than the market" : "growing slower than the market"}.
-        Outcome ratio vs narrative ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "rising" : "falling"}).
-        ${sR > 1 && rb1 < rb0
-          ? "Supply pours in while relative outcomes fall — the classic overheating pattern where fashion-driven influx outruns demand growth and dilutes competition. Demand cooling and supply dilution cannot be separated in this data alone."
-          : sR > 1
-          ? "Relative outcomes are holding despite influx — demand is still keeping up."
-          : "Supply pressure is low — ratio changes are more likely demand-side."}`);
+      parts.push(`<b>Roguelike</b> — supply S ${sR.toFixed(2)}: ${phrase(sR)}. Outcome ratio vs
+        narrative ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "rising" : "falling"}).
+        ${sR > 1.1 && rb1 < rb0
+          ? "Supply pours in while relative outcomes fall — the classic overheating pattern; demand cooling and dilution cannot be separated in this data."
+          : sR > 1.1
+          ? "Outcomes hold despite influx — demand is keeping up."
+          : rb1 < rb0
+          ? "The ratio fell without much supply pressure — weight shifts to demand (fashion) cooling."
+          : "Low supply pressure — changes are more likely demand-side."}`);
     }
     if (sB != null) {
       parts.push(`<b>Narrative (Story Rich)</b> — the reference cohort (ratio ≡ 1). Supply S ${sB.toFixed(2)}:
-        ${sB < 1
-          ? "growing slower than the market or shrinking — a supply exodus toward trendier genres, which eases competition for the games that remain."
-          : "growing faster than the market — a competition-intensifying factor."}`);
+        ${sB < 0.9
+          ? "growing slower than the market or shrinking — a supply exodus toward trendier genres, easing competition for the games that remain."
+          : sB <= 1.1
+          ? "growing at roughly market pace."
+          : "growing faster than the market — intensifying competition."}`);
     }
-    parts.push(`Per-year samples are small, so read directions, not verdicts. The 2025 S is
-      excluded from judgment — undercounted due to SteamSpy's indexing lag.`);
+    const a25 = S(l, "A"), b25 = S(l, "B"), r25 = S(l, "R");
+    if (l !== ly && a25 != null && b25 != null) {
+      parts.push(`<b>Early signs in ${l}</b> — absolute values are undercounted, but
+        within-year cross-cohort comparison remains valid: S co-op ${a25.toFixed(2)}${r25 != null ? ` / roguelike ${r25.toFixed(2)}` : ""} /
+        narrative ${b25.toFixed(2)}. ${a25 > b25 * 1.2
+          ? "Co-op inflow appears to be accelerating relative to narrative — consistent with the \"2026 supply growth\" note in the conclusions."
+          : "No clear divergence in inflow rates across cohorts."}`);
+    }
+    parts.push(`Per-year samples are small; read directions, not verdicts.`);
     return parts.join("<br/><br/>");
   },
   eraYear: "Year",
@@ -907,40 +935,54 @@ const ja: typeof ko = {
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
     const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;
-    const S = (c: string): number | null => era.S?.[ly]?.[c] ?? null;
+    const S = (yr: string, c: string): number | null => era.S?.[yr]?.[c] ?? null;
     const ab0 = era.ratios[f]?.A_over_B, ab1 = era.ratios[l]?.A_over_B;
     const rb0 = era.ratios[f]?.R_over_B, rb1 = era.ratios[l]?.R_over_B;
-    const sA = S("A"), sR = S("R"), sB = S("B");
+    const sA = S(ly, "A"), sR = S(ly, "R"), sB = S(ly, "B");
+    const phrase = (v: number) => v > 1.1 ? "市場より速い流入" : v >= 0.9 ? "市場並みの速度" : "市場より遅い増加(離脱)";
     const parts: string[] = [
       `成果の変化は需要(流行)と供給(競争)の合成だ — Sが供給側を、同一年内の成果倍率の
        トレンドが両者の正味効果を示す (Sは最後の完全カバー年${ly}年基準)。`,
     ];
     if (sA != null && ab0 && ab1) {
-      parts.push(`<b>Co-op</b> — 供給S ${sA.toFixed(2)}: 市場より${sA > 1 ? "速い流入" : "遅い増加"}。
-        ナラティブ比の成果倍率 ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "上昇" : "下落"})。
-        ${sA > 1 && ab1 >= ab0
-          ? "供給が流入しても相対成果が維持・上昇 — 需要(Co-opユーザー層の拡大)が供給流入を上回っているシグナル。"
-          : sA > 1
+      parts.push(`<b>Co-op</b> — 供給S ${sA.toFixed(2)}: ${phrase(sA)}。ナラティブ比の成果倍率
+        ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "上昇" : "下落"})。
+        ${sA > 1.1 && ab1 >= ab0
+          ? "供給が流入しても相対成果が維持・上昇 — 需要(Co-op層の拡大)が供給を上回っているシグナル。"
+          : sA >= 0.9 && sA <= 1.1 && ab1 >= ab0
+          ? "供給は市場並みに留まる間に相対成果が上昇 — 競争激化なしに需要側の拡大が主導する絵。"
+          : sA > 1.1
           ? "供給流入と相対成果の下落が重なる — 競争希釈のシグナル。"
-          : "供給圧力なしに成果が変動 — 需要側の要因が支配的。"}`);
+          : "供給圧力は小さい — 倍率の変化は需要側の要因の可能性。"}`);
     }
     if (sR != null && rb0 && rb1) {
-      parts.push(`<b>ローグライク</b> — 供給S ${sR.toFixed(2)}: 市場より${sR > 1 ? "速い流入" : "遅い増加"}。
-        ナラティブ比の成果倍率 ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "上昇" : "下落"})。
-        ${sR > 1 && rb1 < rb0
-          ? "供給は流入するのに相対成果は下落 — 流行による流入が需要成長を上回り競争が希釈される、過熱期の典型パターン。需要の冷え込みと供給希釈はこのデータだけでは分離できない。"
-          : sR > 1
-          ? "流入にもかかわらず相対成果は維持 — 需要がまだ供給に追いついている。"
-          : "供給圧力は低い — 倍率の変化は需要側の要因の可能性。"}`);
+      parts.push(`<b>ローグライク</b> — 供給S ${sR.toFixed(2)}: ${phrase(sR)}。ナラティブ比の成果倍率
+        ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "上昇" : "下落"})。
+        ${sR > 1.1 && rb1 < rb0
+          ? "供給は流入するのに相対成果は下落 — 過熱期の典型パターン。需要の冷え込みと供給希釈はこのデータだけでは分離できない。"
+          : sR > 1.1
+          ? "流入にもかかわらず相対成果は維持 — 需要が追いついている。"
+          : rb1 < rb0
+          ? "供給圧力が小さいのに倍率が下がった — 需要(流行)の冷え込み側に重み。"
+          : "供給圧力は低い — 変化は需要側の要因の可能性。"}`);
     }
     if (sB != null) {
       parts.push(`<b>ナラティブ (Story Rich)</b> — 倍率の基準コホート(定義上1)。供給S ${sB.toFixed(2)}:
-        ${sB < 1
-          ? "市場平均より遅い増加ないし減少 — 流行ジャンルへ開発者が流出する供給離脱であり、残るゲームには競争緩和要因だ。"
+        ${sB < 0.9
+          ? "市場平均より遅い増加ないし減少 — 流行ジャンルへの供給離脱で、残るゲームには競争緩和要因。"
+          : sB <= 1.1
+          ? "市場平均並みの速度で増えている。"
           : "市場平均より速く増加 — 競争激化要因。"}`);
     }
-    parts.push(`年別標本は小さいため方向性として読むこと。2025年のSはSteamSpyの収録遅延で
-      過小のため判断から除外した。`);
+    const a25 = S(l, "A"), b25 = S(l, "B"), r25 = S(l, "R");
+    if (l !== ly && a25 != null && b25 != null) {
+      parts.push(`<b>${l}年の兆し</b> — 絶対値は過小だが、同一年内のコホート間比較は有効だ:
+        S Co-op ${a25.toFixed(2)}${r25 != null ? ` / ローグライク ${r25.toFixed(2)}` : ""} /
+        ナラティブ ${b25.toFixed(2)}。${a25 > b25 * 1.2
+          ? "ナラティブ対比でCo-op側の流入が相対的に加速している兆しがある — 結論カードの「2026年の供給増加の可能性」と噛み合うシグナルだ。"
+          : "コホート間の流入速度に明確な差はない。"}`);
+    }
+    parts.push(`年別標本は小さいため方向性として読むこと。`);
     return parts.join("<br/><br/>");
   },
   eraYear: "年",

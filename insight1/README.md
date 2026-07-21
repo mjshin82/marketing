@@ -45,6 +45,13 @@ review counts as a sales proxy.
 - Common filters: paid, initial price < $40, type=game, released 2022-01-01 to
   2025-12-31, major publishers excluded. Games with <10 reviews stay in the CSV
   but are used only for the early-death-rate comparison.
+- Excluded publishers (case-insensitive substring match on the publisher name;
+  the < $40 price filter is the primary AAA defense, this list is the backstop):
+  Electronic Arts, Ubisoft, Activision, Bethesda, 2K / 2K Games, Square Enix,
+  Capcom, Bandai Namco, SEGA, Warner Bros, Xbox Game Studios, Sony Interactive,
+  Rockstar, Take-Two, CD Projekt Red, Blizzard. Mid-size publishers (Devolver,
+  Team17, Paradox, …) are intentionally NOT excluded — the comparison covers the
+  indie-to-mid-size market, not self-published games only.
 
 ## Usage
 

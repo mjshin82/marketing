@@ -139,6 +139,32 @@ const ko = {
   </ul>`,
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
+  robCap: `α가 작을수록 초대형 히트가 상대적으로 자주 나오는 "무거운 꼬리"다. 이 표는 같은
+    가격대·같은 연도 안에서만 코호트를 비교한다 — 코옵은 저가 전략이 흔해서 "코옵 꼬리가
+    무겁다"가 사실은 "싼 게임 꼬리가 무겁다"일 수 있고(가격 교란), 전 기간 합산 결과가 특정
+    연도의 우연일 수도 있기 때문(시기 교란)이다. "—"는 아직 코호트당 표본 100개 미만이라
+    적합을 생략한 칸.`,
+  robNote: (rb: any): string => {
+    const cells = { ...(rb.price_bands ?? {}), ...(rb.years ?? {}) };
+    const keys = Object.keys(cells);
+    if (!keys.length) return "";
+    let aMin = 0, total = 0;
+    for (const k of keys) {
+      const cell = cells[k];
+      if (!cell.A || !cell.B) continue;
+      total++;
+      const alphas = ["A", "B", "R"].filter((c) => cell[c]).map((c) => cell[c].alpha);
+      if (cell.A.alpha === Math.min(...alphas)) aMin++;
+    }
+    if (!total) return "";
+    return `<b>결론:</b> 현재 채워진 ${total}개 칸 중 ${aMin}개에서 코옵의 α가 가장 낮다(꼬리가
+      가장 무겁다). ${aMin === total
+        ? "즉 가격을 고정해도, 연도를 고정해도 코옵 꼬리 최중 순서가 유지된다 — 주 결론이 가격·시기 교란의 산물이 아니라는 뜻이다."
+        : aMin >= total / 2
+        ? "대체로 유지되지만 어긋나는 칸이 있다 — 해당 조건에서는 결론을 조심해서 읽어야 한다."
+        : "칸별로 순서가 자주 뒤집힌다 — 주 결론이 특정 가격대·연도에 의존하고 있다는 경고다."}
+      수집이 완료되면 더 많은 칸이 채워진다.`;
+  },
   marketT: "연도별 스팀 신작 수 (시장 전체)",
   marketCap: `분석 창 동안 스팀 전체 신작 공급이 거의 2배로 폭증했다 — 아래 "시대 효과"
     카드를 읽을 때의 배경이다. 출처:
@@ -439,6 +465,33 @@ const en: typeof ko = {
   </ul>`,
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
+  robCap: `A smaller α means a heavier tail — outsized hits come relatively more often. This
+    table compares cohorts only within the same price band and the same release year:
+    co-op games often price low, so "co-op has the heavier tail" could really be "cheap
+    games have heavier tails" (price confound), and a pooled result could be one year's
+    accident (era confound). "—" marks cells still under 100 games per cohort, where the
+    fit is skipped.`,
+  robNote: (rb) => {
+    const cells = { ...(rb.price_bands ?? {}), ...(rb.years ?? {}) };
+    const keys = Object.keys(cells);
+    if (!keys.length) return "";
+    let aMin = 0, total = 0;
+    for (const k of keys) {
+      const cell = cells[k];
+      if (!cell.A || !cell.B) continue;
+      total++;
+      const alphas = ["A", "B", "R"].filter((c) => cell[c]).map((c) => cell[c].alpha);
+      if (cell.A.alpha === Math.min(...alphas)) aMin++;
+    }
+    if (!total) return "";
+    return `<b>Conclusion:</b> in ${aMin} of the ${total} filled cells, co-op has the lowest
+      α (heaviest tail). ${aMin === total
+        ? "Holding price fixed or year fixed, the ordering survives — the headline result is not an artifact of pricing strategy or a single year."
+        : aMin >= total / 2
+        ? "The ordering mostly holds, but flips in some cells — read the conclusion with care under those conditions."
+        : "The ordering flips in many cells — a warning that the headline result depends on specific price bands or years."}
+      More cells fill in as collection completes.`;
+  },
   marketT: "New Steam releases per year (whole market)",
   marketCap: `Over the analysis window, Steam's overall release volume nearly doubled — the
     backdrop for the "era effect" card below. Source:
@@ -741,6 +794,31 @@ const ja: typeof ko = {
   </ul>`,
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",
+  robCap: `αが小さいほど超大型ヒットが相対的に頻繁に出る「重い裾」だ。この表は同じ価格帯・
+    同じリリース年の中だけでコホートを比較する — Co-opは低価格戦略が多く、「Co-opの裾が重い」
+    が実は「安いゲームの裾が重い」かもしれず(価格の交絡)、全期間合算の結果が特定年の偶然かも
+    しれない(時期の交絡)からだ。「—」はコホートあたり標本100本未満でフィットを省略したセル。`,
+  robNote: (rb) => {
+    const cells = { ...(rb.price_bands ?? {}), ...(rb.years ?? {}) };
+    const keys = Object.keys(cells);
+    if (!keys.length) return "";
+    let aMin = 0, total = 0;
+    for (const k of keys) {
+      const cell = cells[k];
+      if (!cell.A || !cell.B) continue;
+      total++;
+      const alphas = ["A", "B", "R"].filter((c) => cell[c]).map((c) => cell[c].alpha);
+      if (cell.A.alpha === Math.min(...alphas)) aMin++;
+    }
+    if (!total) return "";
+    return `<b>結論:</b> 現在埋まっている${total}セル中${aMin}セルでCo-opのαが最も低い
+      (裾が最も重い)。${aMin === total
+        ? "価格を固定しても年を固定しても順序が維持される — 主結論が価格戦略や特定年の産物ではないという意味だ。"
+        : aMin >= total / 2
+        ? "概ね維持されるが、覆るセルもある — その条件下では結論を慎重に読むべきだ。"
+        : "セルごとに順序が頻繁に覆る — 主結論が特定の価格帯・年に依存しているという警告だ。"}
+      収集が完了すればさらに多くのセルが埋まる。`;
+  },
   marketT: "年別Steam新作数 (市場全体)",
   marketCap: `分析ウィンドウの間に、Steam全体の新作供給はほぼ2倍に急増した — 下の
     「時代効果」カードを読む際の背景である。出典:

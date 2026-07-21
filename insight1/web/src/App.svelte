@@ -311,33 +311,6 @@
       </div>
     </section>
 
-    {#if R.robustness?.price_bands && Object.keys(R.robustness.price_bands).length}
-      <section class="card">
-        <h3>{L.robT}</h3>
-        <div class="two-col">
-          <table>
-            <thead><tr><th>{L.robYear}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>α {cohortName(c)}</th>{/each}</tr></thead>
-            <tbody>
-              {#each Object.entries(R.robustness.years) as [yr, cell]}
-                <tr><td>{yr}</td>
-                  {#each COLS as c}<td>{(cell as any)[c] ? `${(cell as any)[c].alpha.toFixed(2)} (${(cell as any)[c].n})` : "—"}</td>{/each}</tr>
-              {/each}
-            </tbody>
-          </table>
-          <table>
-            <thead><tr><th>{L.robYear}</th><th><span class="dot da"></span>{L.robA}</th><th><span class="dot db"></span>{L.robB}</th>{#if hasR}<th><span class="dot dr"></span>{L.cohortR}</th>{/if}</tr></thead>
-            <tbody>
-              {#each Object.entries(R.robustness.years) as [yr, cell]}
-                <tr><td>{yr}</td>
-                  <td>{(cell as any).A.alpha.toFixed(2)} ({(cell as any).A.n})</td>
-                  <td>{(cell as any).B.alpha.toFixed(2)} ({(cell as any).B.n})</td>
-                  {#if hasR}<td>{(cell as any).R ? `${(cell as any).R.alpha.toFixed(2)} (${(cell as any).R.n})` : "—"}</td>{/if}</tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    {/if}
 
     <section class="card">
       <h3>{L.marketT}</h3>
@@ -399,6 +372,37 @@
       <p class="cap def-common">{@html L.defCommon}</p>
     </section>
 
+    {#if R.robustness?.price_bands && Object.keys(R.robustness.price_bands).length}
+      <section class="card">
+        <h3>{L.robT}</h3>
+        <p class="cap">{L.robCap}</p>
+        <div class="rob-stack">
+          <table>
+            <thead><tr><th>{L.robPrice}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>α {cohortName(c)}</th>{/each}</tr></thead>
+            <tbody>
+              {#each Object.entries(R.robustness.price_bands) as [band, cell]}
+                <tr><td>{band}</td>
+                  {#each COLS as c}<td>{(cell as any)[c] ? `${(cell as any)[c].alpha.toFixed(2)} (${(cell as any)[c].n})` : "—"}</td>{/each}</tr>
+              {/each}
+            </tbody>
+          </table>
+          <table>
+            <thead><tr><th>{L.robYear}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>α {cohortName(c)}</th>{/each}</tr></thead>
+            <tbody>
+              {#each Object.entries(R.robustness.years) as [yr, cell]}
+                <tr><td>{yr}</td>
+                  {#each COLS as c}<td>{(cell as any)[c] ? `${(cell as any)[c].alpha.toFixed(2)} (${(cell as any)[c].n})` : "—"}</td>{/each}</tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+        <div class="interp">
+          <p class="interp-t">{L.interpT}</p>
+          <p>{@html L.robNote(R.robustness)}</p>
+        </div>
+      </section>
+    {/if}
+
     <section class="card about">
       <h3>{L.aboutT}</h3>
       <p class="about-p">{@html L.aboutBody}</p>
@@ -454,8 +458,7 @@
   .dot.da { background: var(--series-a); }
   .dot.db { background: var(--series-b); }
   .dot.dr { background: var(--series-r); }
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .rob-stack { display: grid; grid-template-columns: 1fr; gap: 20px; }
   .def-table th, .def-table td { text-align: left; font-variant-numeric: normal; }
   .def-table td { color: var(--text-secondary); font-size: 0.86rem; }
   .def-table :global(code) { background: var(--page); border: 1px solid var(--grid);

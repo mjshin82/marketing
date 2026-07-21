@@ -27,7 +27,7 @@ const ko = {
   loading: "report_data.json 로딩 중…",
   kicker: (label: string, date: string) => `Steam 인디게임 분포 연구 · ${label} · ${date}`,
   snapshot: { pilot: "파일럿 데이터", interim: "수집 진행 중 · 부분 데이터(무작위 표본)", full: "전체 데이터" } as Record<string, string>,
-  title: "코옵 게임의 성공은 정말 더 승자독식인가" as string,
+  title: "코옵 게임의 성공은 정말 더 승자독식일까?" as string,
   lede: (m: any) => `온라인 코옵 게임의 입소문은 "친구 그룹이 동시에 모여야 작동하는" 조정(coordination)
     구조다. supercritical 분기 과정이 예측하는 대로라면 코옵 코호트의 성공 분포는 싱글
     내러티브 게임보다 더 극단적이어야 한다 — 꼬리는 더 무겁고, 중간은 비어 있고, 집중도는

@@ -48,9 +48,9 @@
   const COLS = $derived(hasR ? ["A", "R", "B"] : ["A", "B"]);  // co-op / roguelike / narrative
   const DOT: Record<string, string> = { A: "da", R: "dr", B: "db" };
   const cohortName = (c: string) => (c === "A" ? L.cohortA : c === "R" ? L.cohortR : L.cohortB);
-  // Steam-wide yearly release counts (SteamDB, rounded; methodology varies)
+  // Steam-wide yearly release counts (SteamDB, exact as of 2026-07)
   const MARKET: [string, number][] = [
-    ["2022", 11100], ["2023", 14500], ["2024", 18500], ["2025", 20000],
+    ["2022", 12249], ["2023", 14038], ["2024", 18496], ["2025", 21382],
   ];
   const MARKET_MAP: Record<string, number> = Object.fromEntries(MARKET);
   // supply index: cohort release count rebased to first year, deflated by market growth

@@ -169,7 +169,7 @@ const ko = {
   marketCap: `분석 창 동안 스팀 전체 신작 공급이 거의 2배로 폭증했다 — 아래 "시대 효과"
     카드를 읽을 때의 배경이다. 출처:
     <a href="https://steamdb.info/stats/releases/" target="_blank" rel="noopener">SteamDB</a>
-    (집계 방식에 따라 수치가 다소 다를 수 있음, 2025년은 약 2만 종).`,
+.`,
   eraT: "시대 효과 — 연도별 추세",
   eraCap: `연도 간 절대값 비교는 리뷰 누적 기간 차이로 오염된다 (2022년작은 ~4년치, 2025년작은
     ~1년치 리뷰). 유효한 독법은 같은 연도 안에서 코호트끼리 비교하는 것 — 누적 기간이
@@ -492,7 +492,7 @@ const en: typeof ko = {
   marketCap: `Over the analysis window, Steam's overall release volume nearly doubled — the
     backdrop for the "era effect" card below. Source:
     <a href="https://steamdb.info/stats/releases/" target="_blank" rel="noopener">SteamDB</a>
-    (figures vary slightly by methodology; ~20k in 2025).`,
+.`,
   eraT: "Era effect — year-by-year trend",
   eraCap: `Comparing absolute levels across years is confounded by review-accumulation time
     (a 2022 release has had ~4 years of reviews, a 2025 release ~1 year). The valid reading
@@ -814,7 +814,7 @@ const ja: typeof ko = {
   marketCap: `分析ウィンドウの間に、Steam全体の新作供給はほぼ2倍に急増した — 下の
     「時代効果」カードを読む際の背景である。出典:
     <a href="https://steamdb.info/stats/releases/" target="_blank" rel="noopener">SteamDB</a>
-    (集計方法により数値は多少異なる。2025年は約2万本)。`,
+。`,
   eraT: "時代効果 — 年別トレンド",
   eraCap: `年をまたいだ絶対値の比較はレビュー蓄積期間の差で汚染される(2022年作は~4年分、
     2025年作は~1年分)。有効な読み方は同じ年の中でコホート同士を比較すること — 蓄積期間が

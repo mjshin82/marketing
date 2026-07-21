@@ -152,7 +152,8 @@ const ko = {
     차이다. 표의 숫자는 각 코호트의 <b>기하평균 리뷰 수</b>이고, 괄호의 <b>S는 공급 지수</b> —
     해당 코호트의 연간 신작 수를 2022년=1로 놓고 시장 전체 신작 증가(위 카드)로 나눠 보정한
     값이다. S&gt;1이면 그 장르로 공급이 시장 평균보다 빨리 몰리고 있다는 뜻.
-    2025년 S는 SteamSpy 편입 지연 때문에 과소집계이니 무시할 것.`,
+    2025년 행은 SteamSpy의 카탈로그 편입 지연(약 1년) 때문에 사실상 1~5월 출시작만
+    포함한다 — 2025년 S는 과소집계이니 무시할 것.`,
   eraNote: (era: any): string => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
@@ -443,7 +444,8 @@ const en: typeof ko = {
     <b>geometric-mean review count</b>; the <b>S in parentheses is a supply index</b> — the
     cohort's yearly release count rebased to 2022=1 and deflated by the market-wide release
     growth (card above). S&gt;1 means supply is flowing into the genre faster than the market
-    average. Ignore the 2025 S — it is undercounted due to SteamSpy's indexing lag.`,
+    average. Due to SteamSpy's catalog-indexing lag (~1 year), the 2025 row effectively
+    covers only Jan–May releases — ignore the 2025 S.`,
   eraNote: (era) => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
@@ -730,8 +732,9 @@ const ja: typeof ko = {
     同じ市場を共有する両コホートの倍率では相殺される。相殺されないのはコホート間の供給
     増加速度の差だ。表の数字は各コホートの<b>幾何平均レビュー数</b>で、括弧の<b>Sは供給指数</b> —
     そのコホートの年間新作数を2022年=1とし、市場全体の新作増加(上のカード)で割って補正した
-    値だ。S&gt;1ならそのジャンルへ市場平均より速く供給が流れ込んでいる。2025年のSは
-    SteamSpyの収録遅延により過小なので無視すること。`,
+    値だ。S&gt;1ならそのジャンルへ市場平均より速く供給が流れ込んでいる。SteamSpyの
+    カタログ収録遅延(約1年)のため、2025年の行は実質1~5月のリリースのみを含む —
+    2025年のSは過小なので無視すること。`,
   eraNote: (era) => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";

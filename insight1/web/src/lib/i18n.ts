@@ -355,8 +355,6 @@ const ko = {
      입력으로 쓰는 추정 모델이지 원시 관측이 아니다. 모델의 왜곡 가능성은 스팀 리뷰 수
      원시 관측(검증 레이어 카드)과의 대조로 상쇄한다 — 두 척도가 같은 방향이면 결론은
      모델 의존적이지 않다.`,
-    `<b>스트리밍 노출 교란</b> — 코옵 히트작은 트위치/유튜브 노출과 상호작용한다.
-     관측된 집중도를 "친구 조정" 메커니즘만으로 귀속할 수 없다.`,
     `<b>생존 편향 (방향은 불확실)</b> — 상장폐지된 게임은 카탈로그에서 빠져 모든 코호트의
      조기 소멸률이 과소추정된다. 온라인 코옵은 매칭이 죽으면 상품성이 사라져 내려갈 유인이
      있으나, 스팀 P2P 기반 코옵은 서버 유지비가 없어 내릴 유인도 낮다 — 편향의 크기와
@@ -759,9 +757,6 @@ const en: typeof ko = {
      model fed by review counts, playtime and more — not a raw observation. Potential model
      distortion is offset by the raw review-count validation layer (see the comparison
      card): where both scales agree, conclusions are not model-dependent.`,
-    `<b>Streaming-exposure confound</b> — co-op hits interact with Twitch/YouTube exposure.
-     The observed concentration cannot be attributed to the "friend coordination"
-     mechanism alone.`,
     `<b>Survivorship bias (direction uncertain)</b> — delisted games drop out of catalogs,
      so early-death rates are underestimated for every cohort. Dead-matchmaking co-op games
      have a delisting incentive, but Steam-P2P co-op has no server upkeep and thus little
@@ -1156,8 +1151,6 @@ const ja: typeof ko = {
     `<b>販売本数は推定値</b> — 主要結果変数のGamalytic copiesSoldはレビュー数・プレイタイム
      などを入力とする推定モデルであり、生の観測ではない。モデル歪みの可能性はSteamレビュー数の
      生観測(検証レイヤーカード)との対照で相殺する — 両尺度が同方向なら結論はモデル依存ではない。`,
-    `<b>配信露出の交絡</b> — Co-opのヒット作はTwitch/YouTube露出と相互作用する。観測された
-     集中度を「フレンド調整」メカニズムだけに帰属することはできない。`,
     `<b>生存バイアス (方向は不確実)</b> — ストアから削除されたゲームはカタログから消え、
      全コホートで早期消滅率が過小推定される。マッチングが死んだCo-opには取り下げ動機があるが、
      Steam P2PのCo-opはサーバー維持費がなく動機も薄い — バイアスの大きさと方向は不確実だ。`,

@@ -253,7 +253,12 @@ const ko = {
      관측된 집중도를 "친구 조정" 메커니즘만으로 귀속할 수 없다.`,
     `<b>SteamSpy 신선도</b> — 태그·가격은 SteamSpy 캐시 기준. 리뷰 수는 가능한 한
      스팀 공식 appreviews로 대체했다.`,
-    `<b>생존 편향</b> — 상장폐지된 게임은 스팀 API에서 빠져 조기 소멸률이 과소추정될 수 있다.`,
+    `<b>생존 편향 (코옵에 특히 불리하지 않게 작동)</b> — 상장폐지된 게임은 스팀 API에서 빠져
+     모든 코호트의 조기 소멸률이 과소추정된다. 특히 <b>온라인 코옵은 유저가 없으면 게임을
+     내릴 가능성이 높다</b> — 싱글 게임은 유저가 없어도 계속 팔 수 있지만, 코옵은 매칭이
+     죽으면 상품성이 사라지기 때문이다. 실패작이 코옵 쪽에서 더 많이 사라진다면 코옵
+     코호트의 성과 지표(기하평균·조기 소멸률 등)는 <b>생존자만 관측되어 실제보다 좋게
+     측정</b>됐을 수 있다.`,
     `<b>2025 하반기 커버리지</b> — 하반기 출시작은 리뷰 누적 기간이 짧고(7–12개월) SteamSpy
      목록 편입 지연으로 표본이 얇다. 컷오프를 2025-06으로 좁혀도 결과는 사실상 동일했다
      (민감도 확인 완료).`,
@@ -551,8 +556,13 @@ const en: typeof ko = {
      mechanism alone.`,
     `<b>SteamSpy freshness</b> — tags and prices come from SteamSpy's cache. Review counts
      were replaced with official Steam appreviews data wherever possible.`,
-    `<b>Survivorship bias</b> — delisted games disappear from the Steam API, so early-death
-     rates may be underestimated.`,
+    `<b>Survivorship bias (works in co-op's favor)</b> — delisted games disappear from the
+     Steam API, so early-death rates are underestimated for every cohort. Crucially,
+     <b>online co-op games are more likely to be taken down when the playerbase dies</b> —
+     a single-player game can keep selling with zero players, but a co-op game loses its
+     sellability once matchmaking is dead. If failures vanish disproportionately on the
+     co-op side, the co-op cohort's outcome metrics (geometric mean, early-death rate, …)
+     are <b>measured only on survivors and thus biased upward</b>.`,
     `<b>H2-2025 coverage</b> — late-2025 releases have short review-accumulation windows
      (7–12 months) and SteamSpy lags on recent titles, so that slice is thin. Narrowing the
      cutoff to 2025-06 left the results essentially unchanged (sensitivity checked).`,
@@ -833,8 +843,12 @@ const ja: typeof ko = {
      集中度を「フレンド調整」メカニズムだけに帰属することはできない。`,
     `<b>SteamSpyの鮮度</b> — タグ·価格はSteamSpyのキャッシュ基準。レビュー数は可能な限り
      Steam公式appreviewsで置き換えた。`,
-    `<b>生存バイアス</b> — ストアから削除されたゲームはSteam APIから消えるため、
-     早期消滅率は過小推定される可能性がある。`,
+    `<b>生存バイアス (Co-opに有利に働く)</b> — ストアから削除されたゲームはSteam APIから
+     消えるため、全コホートで早期消滅率が過小推定される。特に<b>オンラインCo-opはユーザーが
+     いなくなるとストアから取り下げられる可能性が高い</b> — シングルゲームはプレイヤーが
+     ゼロでも売り続けられるが、Co-opはマッチングが死ねば商品性を失うからだ。失敗作が
+     Co-op側で多く消えているなら、Co-opコホートの成果指標(幾何平均・早期消滅率など)は
+     <b>生存者だけを観測して実際より良く測定</b>されている可能性がある。`,
     `<b>2025年下半期のカバレッジ</b> — 下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、
      SteamSpyの収録遅延で標本が薄い。カットオフを2025-06に狭めても結果は実質同じだった
      (感度確認済み)。`,

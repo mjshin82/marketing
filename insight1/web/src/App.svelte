@@ -167,7 +167,7 @@
 {:else}
   <main class="wrap">
     <header>
-      <p class="kicker">Steam 인디게임 분포 연구 · {data.meta.label === "pilot" ? "파일럿 데이터" : "전체 데이터"} · {data.meta.generated.slice(0, 10)}</p>
+      <p class="kicker">Steam 인디게임 분포 연구 · {({ pilot: "파일럿 데이터", interim: "수집 진행 중 · 부분 데이터(무작위 표본)", full: "전체 데이터" } as Record<string, string>)[data.meta.label] ?? data.meta.label} · {data.meta.generated.slice(0, 10)}</p>
       <h1>코옵 게임의 성공은 정말 더 승자독식인가</h1>
       <p class="lede">
         온라인 코옵 게임의 입소문은 "친구 그룹이 동시에 모여야 작동하는" 조정(coordination)
@@ -341,6 +341,19 @@
         코드/재현: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank"
         rel="noopener">github.com/mjshin82/marketing</a></p>
     </section>
+
+    <section class="card about">
+      <h3>만든 사람</h3>
+      <p class="about-p">이 분석은 <b>Concode</b>의 개발자가 만들었습니다. 저희는 지금 스팀에서
+        <b>Graytail</b>이라는 게임을 만들고 있어요. 이 리포트가 도움이 되었다면,
+        저희 게임 페이지도 한번 방문해 주세요 — 큰 힘이 됩니다.</p>
+      <p class="about-links">
+        <a href="https://store.steampowered.com/app/2888960/Graytail/" target="_blank"
+           rel="noopener">Graytail on Steam →</a>
+        <a href="https://github.com/mjshin82/marketing" target="_blank"
+           rel="noopener">분석 코드 (GitHub) →</a>
+      </p>
+    </section>
   </main>
 {/if}
 
@@ -384,4 +397,8 @@
   .muted { color: var(--text-muted); }
   .foot { font-size: 0.78rem; margin: 12px 0 0; }
   .repo { color: var(--text-secondary); }
+  .about-p { color: var(--text-secondary); font-size: 0.92rem; margin: 0 0 10px; }
+  .about-links { display: flex; gap: 18px; flex-wrap: wrap; margin: 0; font-size: 0.9rem; }
+  .about-links a { color: var(--series-b); text-decoration: none; font-weight: 600; }
+  .about-links a:hover { text-decoration: underline; }
 </style>

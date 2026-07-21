@@ -52,6 +52,22 @@
   const MARKET: [string, number][] = [
     ["2022", 11100], ["2023", 14500], ["2024", 18500], ["2025", 20000],
   ];
+  const MARKET_MAP: Record<string, number> = Object.fromEntries(MARKET);
+  // supply index: cohort release count rebased to first year, deflated by market growth
+  const supplyIdx = (c: string, yr: string): number | null => {
+    const ys = Object.keys(R?.era?.years ?? {}).sort();
+    if (!ys.length) return null;
+    const y0 = ys[0];
+    const n0 = R.era.years[y0]?.[c]?.n_full, ny = R.era.years[yr]?.[c]?.n_full;
+    const m0 = MARKET_MAP[y0], my = MARKET_MAP[yr];
+    return n0 && ny && m0 && my ? (ny / n0) / (my / m0) : null;
+  };
+  const supplyTable = $derived.by<Record<string, Record<string, number | null>>>(() => {
+    const out: Record<string, Record<string, number | null>> = {};
+    for (const yr of Object.keys(R?.era?.years ?? {}))
+      out[yr] = { A: supplyIdx("A", yr), R: supplyIdx("R", yr), B: supplyIdx("B", yr) };
+    return out;
+  });
   const marketOption = $derived.by<EChartsOption>(() => ({
     backgroundColor: "transparent",
     tooltip: {
@@ -332,23 +348,21 @@
         <h3>{L.eraT}</h3>
         <p class="cap">{@html L.eraCap}</p>
         <table>
-          <thead><tr><th>{L.eraYear}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>{cohortName(c)}</th>{/each}<th>{L.eraRatioA}</th><th>{L.eraRatioR}</th></tr></thead>
+          <thead><tr><th>{L.eraYear}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>{cohortName(c)}</th>{/each}</tr></thead>
           <tbody>
             {#each Object.keys(R.era.years).sort() as yr}
               <tr>
                 <td>{yr}</td>
                 {#each COLS as c}
-                  <td>{R.era.years[yr][c] ? `${Math.round(R.era.years[yr][c].geomean).toLocaleString()} (n${R.era.years[yr][c].n_full})` : "—"}</td>
+                  <td>{R.era.years[yr][c] ? `${Math.round(R.era.years[yr][c].geomean).toLocaleString()} (S ${supplyTable[yr]?.[c]?.toFixed(2) ?? "—"})` : "—"}</td>
                 {/each}
-                <td>{R.era.ratios[yr]?.A_over_B ? `×${R.era.ratios[yr].A_over_B.toFixed(1)}` : "—"}</td>
-                <td>{R.era.ratios[yr]?.R_over_B ? `×${R.era.ratios[yr].R_over_B.toFixed(1)}` : "—"}</td>
               </tr>
             {/each}
           </tbody>
         </table>
         <div class="interp">
           <p class="interp-t">{L.interpT}</p>
-          <p>{@html L.eraNote(R.era)}</p>
+          <p>{@html L.eraNote({ ...R.era, S: supplyTable })}</p>
         </div>
       </section>
     {/if}

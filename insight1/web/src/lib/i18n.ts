@@ -112,8 +112,10 @@ const ko = {
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c: any, ok: boolean | undefined) => {
     let s = `로렌츠 곡선이 대각선(균등선)에서 멀수록 성공이 소수에 집중된 시장이다.
-      지금 수치로는 <b>코옵 상위 1% 게임이 코호트 전체 판매량의 ${pct(c.A.top1_share)}</b>를
-      가져가는 반면, 싱글 상위 1%는 ${pct(c.B.top1_share)}에 그친다.
+      상위 1% 점유는 코옵 ${pct(c.A.top1_share)} vs 싱글 ${pct(c.B.top1_share)}로
+      ${c.A.top1_share >= c.B.top1_share
+        ? "코옵의 초상위 집중이 더 크고,"
+        : "싱글 쪽 초대박 집중이 오히려 크지만, 전 구간 불평등을 재는 Gini는 코옵이 높다 —"}
       Gini 계수(0=완전 균등, 1=완전 독식)도 코옵 ${f2(c.A.gini)} vs 싱글 ${f2(c.B.gini)}. `;
     s += ok
       ? `두 Gini의 신뢰구간이 겹치지 않으므로 <b>가설 3 지지</b> — 코옵 시장이 구조적으로 더 승자독식이다. `
@@ -486,9 +488,10 @@ const en: typeof ko = {
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c, ok) => {
     let s = `The farther a Lorenz curve sits from the diagonal (equality line), the more
-      winner-take-all the market. Right now <b>the top 1% of co-op games take
-      ${pct(c.A.top1_share)} of all cohort sales</b>, versus ${pct(c.B.top1_share)} for
-      single-player. Gini (0=perfect equality, 1=total monopoly):
+      winner-take-all the market. Top-1% shares are co-op ${pct(c.A.top1_share)} vs single-player ${pct(c.B.top1_share)} —
+      ${c.A.top1_share >= c.B.top1_share
+        ? "co-op's mega-hit concentration is larger,"
+        : "single-player's mega-hits actually take a bigger slice, but Gini (whole-distribution inequality) is higher for co-op —"} Gini (0=perfect equality, 1=total monopoly):
       co-op ${f2(c.A.gini)} vs single-player ${f2(c.B.gini)}. `;
     s += ok
       ? `The two Gini confidence intervals do not overlap → <b>Hypothesis 3 supported</b> —
@@ -862,8 +865,10 @@ const ja: typeof ko = {
     (χ² p=${p3(c.early_death_test.p)})。`,
   interp3: (c, ok) => {
     let s = `ローレンツ曲線が対角線(均等線)から遠いほど、成功が少数に集中した市場だ。
-      現在の数値では<b>Co-op上位1%のゲームがコホート全体販売本数の ${pct(c.A.top1_share)}</b>を
-      持っていくのに対し、シングル上位1%は ${pct(c.B.top1_share)}にとどまる。
+      上位1%シェアはCo-op ${pct(c.A.top1_share)} vs シングル ${pct(c.B.top1_share)}で、
+      ${c.A.top1_share >= c.B.top1_share
+        ? "Co-opのメガヒット集中がより大きく、"
+        : "シングル側のメガヒット集中がむしろ大きいが、全区間の不平等を測るジニ係数はCo-opが高い —"}
       ジニ係数(0=完全均等、1=完全独占)もCo-op ${f2(c.A.gini)} vs シングル ${f2(c.B.gini)}。`;
     s += ok
       ? `2つのジニ係数の信頼区間が重ならないため<b>仮説3を支持</b> — Co-op市場は構造的に

@@ -433,6 +433,9 @@
   .insight :global(li) { margin-bottom: 6px; }
   .insight :global(li:last-child) { margin-bottom: 0; }
   .about-p { color: var(--text-secondary); font-size: 0.92rem; margin: 0 0 10px; }
+  .about-p :global(a) { color: inherit; text-decoration: underline; }
+  .about-p :global(code) { background: var(--page); border: 1px solid var(--grid);
+    border-radius: 4px; padding: 1px 5px; font-size: 0.8rem; color: var(--text-primary); }
   .about-links { display: flex; gap: 18px; flex-wrap: wrap; margin: 0; font-size: 0.9rem; }
   .about-links a { color: var(--series-b); text-decoration: none; font-weight: 600; }
   .about-links a:hover { text-decoration: underline; }

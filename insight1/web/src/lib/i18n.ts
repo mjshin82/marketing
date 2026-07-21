@@ -295,16 +295,7 @@ const ko = {
       <li><b>사실:</b> 코옵 코호트는 보통의 세계(기하평균 ${sig2(c.A.geomean)} vs 내러티브
         ${sig2(c.B.geomean)}), 조기 소멸률(${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
-        보인다. ${(() => {
-          const y26 = r.era?.years?.["2026"]?.A?.n_full, y25 = r.era?.years?.["2025"]?.A?.n_full;
-          return y26 && y25
-            ? `실제로 2026년 상반기에만 코옵 신작 ${y26}개가 나와 2025년 연간(${y25}개)의
-               ${Math.round(100 * y26 / y25)}%에 달한다 — 코옵 흥행작들(예: MECCHA CHAMELEON,
-               YAPYAP)이 부른 유입 가속이다. 경쟁이 이렇게 빨리 불어나는 만큼, 이 우위가
-               앞으로도 유지될지는 알 수 없다.`
-            : `2026년에는 코옵 흥행작들(예: MECCHA CHAMELEON, YAPYAP)의 영향으로 공급이 더
-               늘어날 확률이 높아, 이 우위가 유지될지는 알 수 없다.`;
-        })()}</li>
+        보인다. </li>
       <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
         그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
         <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
@@ -674,16 +665,7 @@ const en: typeof ko = {
       <li><b>The fact:</b> the co-op cohort performs best on most metrics — the typical world
         (geometric mean ${sig2(c.A.geomean)} vs narrative ${sig2(c.B.geomean)}), early-death
         rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. ${(() => {
-          const y26 = r.era?.years?.["2026"]?.A?.n_full, y25 = r.era?.years?.["2025"]?.A?.n_full;
-          return y26 && y25
-            ? ` In H1 2026 alone, ${y26} new co-op games shipped — ${Math.round(100 * y26 / y25)}%
-               of 2025's full-year count (${y25}) — an influx acceleration driven by co-op hits
-               (e.g. MECCHA CHAMELEON, YAPYAP). With competition growing this fast, whether the
-               advantage persists is unknown.`
-            : ` In 2026, co-op hits (e.g. MECCHA CHAMELEON, YAPYAP) have likely drawn even more
-               supply into the genre, so whether this advantage persists is unknown.`;
-        })()}</li>
+        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. </li>
       <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
         the cohort contains far fewer hobbyist releases. The co-op advantage is likely
         <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
@@ -1058,9 +1040,7 @@ const ja: typeof ko = {
     <ul>
       <li><b>事実:</b> Co-opコホートは普通の世界(幾何平均 ${sig2(c.A.geomean)} vs ナラティブ
         ${sig2(c.B.geomean)})、早期消滅率(${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。またこのデータは2025年
-        リリース作までだ — 2026年はCo-opヒット作(例: MECCHA CHAMELEON、YAPYAP)の影響で供給がさらに増えた(増える)
-        可能性が高く、この優位が今後も維持されるかは分からない。</li>
+        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。</li>
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
         難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
         ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>

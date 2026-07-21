@@ -207,10 +207,11 @@ const ko = {
           : `로그라이크와 내러티브(스토리 중심)의 분포는 사실상 대등하다
              (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
         : ""}</li>
-      <li><b>시대 효과 주의:</b> 분석 창(2022.01–2025.12)은 로그라이크 대유행기와 겹친다.
-        로그라이크의 좋은 수치에는 장르의 구조적 특성만이 아니라 유행의 순풍이 섞여 있을 수
-        있다 — 유행이 식으면 재현되지 않을 수 있는 부분이다. 연도별 강건성 분석(2022→2025
-        추세)이 이 효과를 부분적으로 가려낼 수 있다.</li>
+      <li><b>시대 효과 주의:</b> 이 분석 창(2022.01–2025.12)의 수치에는 각 장르의 구조적
+        특성만이 아니라 시대 효과 — 특정 장르의 유행과 그 냉각, 경쟁작의 대거 진입, 시장
+        전체의 공급 폭증 — 가 섞여 있다. 어느 코호트든 지금의 수치가 유행이 바뀐 뒤에도
+        그대로 재현된다는 보장은 없다. "시대 효과 — 연도별 추세" 섹션이 이를 부분적으로
+        가려낸다.</li>
     </ul>`;
   },
   limitT: "한계",
@@ -470,10 +471,12 @@ const en: typeof ko = {
           : `Roguelikes and (story-rich) narrative games show essentially comparable
              distributions (α diff ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
         : ""}</li>
-      <li><b>Beware the era effect:</b> the analysis window (2022.01–2025.12) overlaps with
-        the roguelike boom. The genre's strong numbers may mix a structural property with a
-        fashion tailwind — a part that may not replicate once the trend cools. The by-year
-        robustness analysis (2022→2025 trend) can partially separate this.</li>
+      <li><b>Beware era effects:</b> every number in this window (2022.01–2025.12) mixes
+        each genre's structural properties with era effects — genre fashions and their
+        cooling, mass influx of competitors, and the market-wide explosion in release
+        volume. For any cohort, there is no guarantee today's numbers replicate once the
+        fashion shifts. The "Era effect — year-by-year trend" section partially separates
+        this.</li>
     </ul>`;
   },
   limitT: "Limitations",
@@ -720,10 +723,11 @@ const ja: typeof ko = {
           : `ローグライクと(ストーリー重視の)ナラティブの分布は実質的に対等だ
              (α差 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}])。`)
         : ""}</li>
-      <li><b>時代効果に注意:</b> 分析ウィンドウ(2022.01–2025.12)はローグライク大流行期と重なる。
-        ローグライクの良い数値には、ジャンルの構造的特性だけでなく流行の追い風が混ざっている
-        可能性がある — 流行が冷めれば再現しない部分かもしれない。年別の頑健性分析(2022→2025の
-        トレンド)がこの効果を部分的に切り分けられる。</li>
+      <li><b>時代効果に注意:</b> このウィンドウ(2022.01–2025.12)の数値には、各ジャンルの
+        構造的特性だけでなく時代効果 — 特定ジャンルの流行とその冷え込み、競合作の大量参入、
+        市場全体のリリース量の爆発 — が混ざっている。どのコホートであれ、今の数値が流行が
+        変わった後も再現される保証はない。「時代効果 — 年別トレンド」セクションがこれを
+        部分的に切り分ける。</li>
     </ul>`;
   },
   limitT: "限界",

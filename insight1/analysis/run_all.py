@@ -180,6 +180,37 @@ def write_report():
                 f"| {yr} | {gm('A')} | {gm('R')} | {gm('B')} | "
                 f"{f'×{ab:.1f}' if ab else '—'} | {f'×{rb:.1f}' if rb else '—'} |")
         lines.append("")
+    ext = r.get("external")
+    if ext:
+        lines += [
+            "## 외부 검증 (Gamalytic)",
+            "",
+            f"출처: {ext['source']}. 카탈로그 편입 지연이 없는 외부 소스로 코호트 정의를 재현.",
+            "",
+            "**연도별 신작 수 (유료·<$40·AAA 제외):**",
+            "",
+            "| 코호트 | 2022 | 2023 | 2024 | 2025 | 2025 공급지수 S |",
+            "|---|---|---|---|---|---|",
+        ]
+        for k, label in [("A", "코옵"), ("R", "로그라이크"), ("B", "내러티브")]:
+            by = ext["supply_by_year"].get(k, {})
+            si = ext["supply_index"].get(k, {})
+            g = lambda y: by.get(str(y)) or by.get(y) or "—"
+            s25 = si.get("2025") or si.get(2025)
+            lines.append(f"| {label} | {g(2022)} | {g(2023)} | {g(2024)} | {g(2025)} | "
+                         f"{s25 if s25 else '—'} |")
+        lines += [
+            "",
+            "**리뷰→판매 배수 실측 (copiesSold ÷ 리뷰 수, 조인 표본):**",
+            "",
+            "| 코호트 | n | 중간값 | 기하평균 |",
+            "|---|---|---|---|",
+        ]
+        for k, label in [("A", "코옵"), ("R", "로그라이크"), ("B", "내러티브")]:
+            m = ext["sales_per_review"].get(k)
+            if m:
+                lines.append(f"| {label} | {m['n']} | ×{m['median']:.1f} | ×{m['geomean']:.1f} |")
+        lines.append("")
     lines += [
         "## 한계",
         "",
@@ -228,5 +259,7 @@ if __name__ == "__main__":
     run("concentration.py")
     run("robustness.py")
     run("era.py")
+    if (ROOT / "data" / "gamalytic.jsonl").exists():
+        run("gamalytic_check.py")
     write_report()
     run("export_web.py", label)

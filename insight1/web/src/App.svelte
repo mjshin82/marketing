@@ -337,7 +337,7 @@
         </table>
         <div class="interp">
           <p class="interp-t">{L.interpT}</p>
-          <p>{@html L.eraNote({ ...R.era, S: supplyTable })}</p>
+          <p>{@html L.eraNote({ ...R.era, S: supplyTable, ext: R.external })}</p>
         </div>
       </section>
     {/if}

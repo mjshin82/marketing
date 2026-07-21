@@ -18,21 +18,24 @@ export function detectLocale(): Locale {
 }
 
 const ko = {
-  docTitle: "코옵 vs 싱글: 승자독식 구조 검증",
+  docTitle: "코옵 vs 싱글 vs 로그라이크: 승자독식 구조 검증" as string,
   loading: "report_data.json 로딩 중…",
   kicker: (label: string, date: string) => `Steam 인디게임 분포 연구 · ${label} · ${date}`,
   snapshot: { pilot: "파일럿 데이터", interim: "수집 진행 중 · 부분 데이터(무작위 표본)", full: "전체 데이터" } as Record<string, string>,
-  title: "코옵 게임의 성공은 정말 더 승자독식인가",
+  title: "코옵 게임의 성공은 정말 더 승자독식인가" as string,
   lede: (m: any) => `온라인 코옵 게임의 입소문은 "친구 그룹이 동시에 모여야 작동하는" 조정(coordination)
     구조다. supercritical 분기 과정이 예측하는 대로라면 코옵 코호트의 성공 분포는 싱글
     내러티브 게임보다 더 극단적이어야 한다 — 꼬리는 더 무겁고, 중간은 비어 있고, 집중도는
     더 높아야 한다. 스팀 리뷰 수(판매량 대리변수)로 세 가설을 검증했다.
     코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>,
-    코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>
-    (유료 · 초기가 &lt;$40 · 2022.01–2025.06 출시 · 리뷰 ≥10).`,
+    코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>${m.n_R
+      ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""}
+    (유료 · 초기가 &lt;$40 · 2022.01–2025.06 출시 · 리뷰 ≥10 · 코호트는 상호배타,
+    분류 우선순위 코옵 &gt; 로그라이크 &gt; 내러티브).`,
   cohortA: "코옵 (온라인)",
   cohortB: "싱글 내러티브",
-  verdict: (ok: boolean | undefined) => (ok ? "지지" : "불확정"),
+  cohortR: "로그라이크",
+  verdict: (ok: boolean | undefined): string => (ok ? "지지" : "불확정"),
   tile1k: "H1 · 더 무거운 꼬리",
   tile1s: (d: any) => `차이 ${f2(d.point)} [${f2(d.ci95[0])}, ${f2(d.ci95[1])}]`,
   tile2k: "H2 · 빈 허리 (리뷰 100–1k 비율)",
@@ -100,6 +103,7 @@ const ko = {
   sumT: "수치 요약",
   thA: "코옵 (A)",
   thB: "싱글 내러티브 (B)",
+  thR: "로그라이크 (R)",
   rows: {
     n: "표본 (리뷰 ≥10)", alpha: "멱함수 지수 α (SE)", xmin: "xmin / 꼬리 표본",
     middle: "중간 구간(100–1k) 비율", dip: "Hartigan dip p", gini: "Gini [95% CI]",
@@ -148,10 +152,13 @@ const en: typeof ko = {
     single-player narrative games: a heavier tail, a hollowed-out middle, and higher
     concentration. We test three hypotheses using Steam review counts (a sales proxy).
     Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>,
-    cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>
-    (paid · launch price &lt;$40 · released 2022.01–2025.06 · ≥10 reviews).`,
+    cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>${m.n_R
+      ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""}
+    (paid · launch price &lt;$40 · released 2022.01–2025.06 · ≥10 reviews · cohorts are
+    disjoint, classification priority co-op &gt; roguelike &gt; narrative).`,
   cohortA: "Co-op (online)",
   cohortB: "Single-player narrative",
+  cohortR: "Roguelike",
   verdict: (ok) => (ok ? "supported" : "inconclusive"),
   tile1k: "H1 · Heavier tail",
   tile1s: (d) => `diff ${f2(d.point)} [${f2(d.ci95[0])}, ${f2(d.ci95[1])}]`,
@@ -229,6 +236,7 @@ const en: typeof ko = {
   sumT: "Summary of numbers",
   thA: "Co-op (A)",
   thB: "Single-player narrative (B)",
+  thR: "Roguelike (R)",
   rows: {
     n: "Sample (≥10 reviews)", alpha: "Power-law exponent α (SE)", xmin: "xmin / tail size",
     middle: "Middle band (100–1k) share", dip: "Hartigan dip p", gini: "Gini [95% CI]",
@@ -279,10 +287,13 @@ const ja: typeof ko = {
     成功分布はシングルプレイヤー・ナラティブゲームよりも極端になるはずだ — 裾はより重く、
     中間層は空洞化し、集中度はより高くなる。Steamレビュー数(販売量の代理変数)で3つの
     仮説を検証した。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>、
-    コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>
-    (有料 · 初期価格 &lt;$40 · 2022.01–2025.06リリース · レビュー10件以上)。`,
+    コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>${m.n_R
+      ? `、コホートR(ローグライク) <b>${m.n_R.toLocaleString()}本</b>` : ""}
+    (有料 · 初期価格 &lt;$40 · 2022.01–2025.06リリース · レビュー10件以上 ·
+    コホートは互いに排他的、分類優先順位はCo-op &gt; ローグライク &gt; ナラティブ)。`,
   cohortA: "Co-op (オンライン)",
   cohortB: "シングル・ナラティブ",
+  cohortR: "ローグライク",
   verdict: (ok) => (ok ? "支持" : "未確定"),
   tile1k: "H1 · より重い裾",
   tile1s: (d) => `差 ${f2(d.point)} [${f2(d.ci95[0])}, ${f2(d.ci95[1])}]`,
@@ -355,6 +366,7 @@ const ja: typeof ko = {
   sumT: "数値サマリー",
   thA: "Co-op (A)",
   thB: "シングル・ナラティブ (B)",
+  thR: "ローグライク (R)",
   rows: {
     n: "標本 (レビュー10件以上)", alpha: "べき指数 α (SE)", xmin: "xmin / 裾の標本数",
     middle: "中間帯(100–1k)比率", dip: "Hartigan dip p", gini: "ジニ係数 [95% CI]",

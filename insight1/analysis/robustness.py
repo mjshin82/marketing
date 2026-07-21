@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import powerlaw
 
-from common import gini, load, save_results
+from common import COHORTS, gini, load, save_results
 
 warnings.filterwarnings("ignore")
 
@@ -29,11 +29,11 @@ def main():
     df["price_band"] = (df.price // 5 * 5).clip(upper=35)
     for band, sub in df.groupby("price_band"):
         cell = {}
-        for c in ["A", "B"]:
+        for c in COHORTS:
             r = alpha_of(sub[sub.cohort == c].total_reviews.values)
             if r:
                 cell[c] = r
-        if len(cell) == 2:
+        if len(cell) >= 2 and "A" in cell and "B" in cell:
             out["price_bands"][f"${int(band)}-{int(band) + 5}"] = cell
             print(f"price ${int(band):>2}-{int(band) + 5}: "
                   f"aA={cell['A']['alpha']:.2f}(n={cell['A']['n']}) "
@@ -42,11 +42,11 @@ def main():
     df["year"] = pd.to_datetime(df.release_date).dt.year
     for yr, sub in df.groupby("year"):
         cell = {}
-        for c in ["A", "B"]:
+        for c in COHORTS:
             r = alpha_of(sub[sub.cohort == c].total_reviews.values)
             if r:
                 cell[c] = r
-        if len(cell) == 2:
+        if len(cell) >= 2 and "A" in cell and "B" in cell:
             out["years"][int(yr)] = cell
             print(f"year {yr}: aA={cell['A']['alpha']:.2f}(n={cell['A']['n']}) "
                   f"aB={cell['B']['alpha']:.2f}(n={cell['B']['n']})")

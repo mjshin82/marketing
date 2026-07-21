@@ -10,6 +10,7 @@
   --border: rgba(11, 11, 11, 0.1);
   --series-a: #eb6834; /* cohort A: co-op (orange, slot 2) */
   --series-b: #2a78d6; /* cohort B: single-player narrative (blue, slot 1) */
+  --series-r: #1baf7a; /* cohort R: roguelike (aqua, slot 3) */
   --good: #0ca30c;
 }
 @media (prefers-color-scheme: dark) {
@@ -25,6 +26,7 @@
     --border: rgba(255, 255, 255, 0.1);
     --series-a: #d95926;
     --series-b: #3987e5;
+    --series-r: #199e70;
   }
 }
 

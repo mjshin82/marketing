@@ -39,6 +39,8 @@ MAX_PRICE_CENTS = 3999  # exclude >= $40 (AAA proxy)
 TAGS_A_COOP = {"Online Co-Op", "Co-op"}
 TAG_MULTI = "Multiplayer"
 TAGS_B_NARRATIVE = {"Story Rich", "Adventure", "Puzzle"}
+TAGS_R_ROGUE = {"Rogue-like", "Rogue-lite", "Action Roguelike",
+                "Roguelike Deckbuilder", "Roguevania", "Traditional Roguelike"}
 TAG_SINGLE = "Singleplayer"
 TAGS_B_EXCLUDE = {
     "Co-op", "Online Co-Op", "Local Co-Op", "Co-op Campaign",
@@ -210,9 +212,12 @@ def is_big_publisher(pub):
 
 
 def classify(tags):
+    """Disjoint cohorts, priority A (co-op) > R (roguelike) > B (narrative single)."""
     tagset = set(tags)
     if (tagset & TAGS_A_COOP) and TAG_MULTI in tagset:
         return "A"
+    if (tagset & TAGS_R_ROGUE) and not (tagset & TAGS_B_EXCLUDE):
+        return "R"
     if (TAG_SINGLE in tagset and (tagset & TAGS_B_NARRATIVE)
             and not (tagset & TAGS_B_EXCLUDE)):
         return "B"
@@ -289,7 +294,8 @@ def worker_store(conn_factory):
     idle = 0
     while not STOP.is_set():
         row = conn.execute(
-            "SELECT appid FROM games WHERE st_status='pending' ORDER BY rnd LIMIT 1").fetchone()
+            """SELECT appid FROM games WHERE st_status='pending'
+               ORDER BY CASE WHEN cand='R' THEN 1 ELSE 0 END, rnd LIMIT 1""").fetchone()
         if not row:
             idle += 1
             if idle > 12 and SS_FINISHED.is_set():
@@ -355,7 +361,8 @@ def worker_reviews(conn_factory):
     idle = 0
     while not STOP.is_set():
         row = conn.execute(
-            "SELECT appid FROM games WHERE ar_status='pending' ORDER BY rnd LIMIT 1").fetchone()
+            """SELECT appid FROM games WHERE ar_status='pending'
+               ORDER BY CASE WHEN cand='R' THEN 1 ELSE 0 END, rnd LIMIT 1""").fetchone()
         if not row:
             idle += 1
             if idle > 12 and SS_FINISHED.is_set() and not conn.execute(
@@ -418,7 +425,7 @@ def stage_build():
                   st_price_initial, ss_initialprice, m_initialprice,
                   ss_tags, ss_positive, ss_negative, ar_total_reviews, ar_status,
                   st_publishers
-           FROM games WHERE qualified=1 AND cand IN ('A','B')"""
+           FROM games WHERE qualified=1 AND cand IN ('A','B','R')"""
     df = pd.read_sql(q, conn)
     # authoritative review count: appreviews; fallback steamspy positive+negative
     ss_total = df.ss_positive.fillna(0) + df.ss_negative.fillna(0)
@@ -433,7 +440,8 @@ def stage_build():
     CSV_PATH.parent.mkdir(exist_ok=True)
     out.to_csv(CSV_PATH, index=False)
     print(f"wrote {CSV_PATH}: {len(out)} games "
-          f"(A={len(out[out.cohort == 'A'])}, B={len(out[out.cohort == 'B'])})")
+          f"(A={len(out[out.cohort == 'A'])}, B={len(out[out.cohort == 'B'])}, "
+          f"R={len(out[out.cohort == 'R'])})")
     conn.close()
 
 
@@ -449,17 +457,17 @@ def print_status(prefix=""):
         WHERE m_initialprice > 0 AND m_initialprice <= ? GROUP BY ss_status""",
         (MAX_PRICE_CENTS,)))
     cand = dict(conn.execute(
-        "SELECT cand, COUNT(*) FROM games WHERE cand IN ('A','B') GROUP BY cand"))
+        "SELECT cand, COUNT(*) FROM games WHERE cand IN ('A','B','R') GROUP BY cand"))
     st = dict(conn.execute(
         "SELECT st_status, COUNT(*) FROM games WHERE st_status IS NOT NULL GROUP BY st_status"))
     qual = dict(conn.execute("""SELECT cand, COUNT(*) FROM games WHERE qualified=1
-        AND cand IN ('A','B') GROUP BY cand"""))
+        AND cand IN ('A','B','R') GROUP BY cand"""))
     ar = dict(conn.execute(
         "SELECT ar_status, COUNT(*) FROM games WHERE ar_status IS NOT NULL GROUP BY ar_status"))
     print(f"{prefix}master={n} pool={pool} ss_done={ss.get('done', 0)} "
-          f"ss_pending={ss.get('pending', 0)} cand A={cand.get('A', 0)} B={cand.get('B', 0)} | "
+          f"ss_pending={ss.get('pending', 0)} cand A={cand.get('A', 0)} B={cand.get('B', 0)} R={cand.get('R', 0)} | "
           f"store done={st.get('done', 0)} pend={st.get('pending', 0)} "
-          f"nodata={st.get('nodata', 0)} | qualified A={qual.get('A', 0)} B={qual.get('B', 0)} | "
+          f"nodata={st.get('nodata', 0)} | qualified A={qual.get('A', 0)} B={qual.get('B', 0)} R={qual.get('R', 0)} | "
           f"reviews done={ar.get('done', 0)} pend={ar.get('pending', 0)}", flush=True)
     conn.close()
 

@@ -35,7 +35,7 @@ def write_report():
         return "**지지됨**" if ok else "**기각/불확정**"
 
     lines = [
-        "# 코옵 vs 싱글플레이어: 승자독식 구조 검증 결과",
+        "# 코옵 vs 싱글 내러티브 vs 로그라이크: 승자독식 구조 검증 결과",
         "",
         f"_생성일: {date.today().isoformat()}_",
         "",
@@ -44,15 +44,19 @@ def write_report():
         "process)를 보인다.",
         "",
         "**데이터:** 스팀 리뷰 수를 판매량 대리변수로 사용 (Boxleiter 원재료). "
-        f"코호트 A(코옵) n={t['A']['n']}, 코호트 B(싱글 내러티브) n={t['B']['n']} "
-        "(리뷰 ≥10, 유료, <$40, 2022-01~2025-06 출시).",
+        f"코호트 A(코옵) n={t['A']['n']}, 코호트 B(싱글 내러티브) n={t['B']['n']}"
+        + (f", 코호트 R(로그라이크) n={t['R']['n']}" if 'R' in t else "")
+        + " (리뷰 ≥10, 유료, <$40, 2022-01~2025-06 출시). "
+        "코호트는 상호배타적이며 분류 우선순위는 A(코옵) > R(로그라이크) > B(내러티브).",
         "",
         "## 가설 1 — 더 무거운 꼬리 (α_coop < α_single): " + verdict(h1_supported),
         "",
         "| 코호트 | n | α | SE | xmin | n_tail | PL vs LN (R, p) |",
         "|---|---|---|---|---|---|---|",
     ]
-    for k, label in [("A", "코옵"), ("B", "싱글 내러티브")]:
+    for k, label in [("A", "코옵"), ("B", "싱글 내러티브"), ("R", "로그라이크")]:
+        if k not in t:
+            continue
         x = t[k]
         lines.append(
             f"| {label} | {x['n']} | {x['alpha']:.3f} | {x['alpha_se']:.3f} | "
@@ -62,6 +66,11 @@ def write_report():
         "",
         f"- α 차이 (A − B): **{d['point']:.3f}**, 부트스트랩 95% CI "
         f"[{d['ci95'][0]:.3f}, {d['ci95'][1]:.3f}] ({d['n_boot']}회 리샘플)",
+    ] + [
+        f"- α 차이 ({pair.replace('_minus_', ' − ')}): {v['point']:.3f}, "
+        f"95% CI [{v['ci95'][0]:.3f}, {v['ci95'][1]:.3f}]"
+        for pair, v in t.get("alpha_diffs", {}).items() if pair != "A_minus_B"
+    ] + [
         "- CI가 0을 제외하고 음수면 코옵 꼬리가 유의하게 더 무겁다는 뜻.",
         "- Clauset 스타일 정직성 체크: R>0이면 power law 우세, R<0이면 lognormal 우세 "
         "(p가 크면 판별 불가). 두 코호트 모두에서 lognormal이 기각되지 않으면 "
@@ -76,7 +85,9 @@ def write_report():
         "| 코호트 | 중간 구간 비율 | dip 통계량 | dip p |",
         "|---|---|---|---|",
     ]
-    for k, label in [("A", "코옵"), ("B", "싱글 내러티브")]:
+    for k, label in [("A", "코옵"), ("B", "싱글 내러티브"), ("R", "로그라이크")]:
+        if k not in m:
+            continue
         x = m[k]
         lines.append(f"| {label} | {x['middle_share']:.3f} ({x['middle_n']}/{x['n']}) | "
                      f"{x['dip_stat']:.4f} | {fmt_p(x['dip_p'])} |")
@@ -94,7 +105,9 @@ def write_report():
         "| 코호트 | Gini [95% CI] | 상위 1% 점유 | 상위 5% 점유 | 조기 소멸률(<10리뷰) |",
         "|---|---|---|---|---|",
     ]
-    for k, label in [("A", "코옵"), ("B", "싱글 내러티브")]:
+    for k, label in [("A", "코옵"), ("B", "싱글 내러티브"), ("R", "로그라이크")]:
+        if k not in c:
+            continue
         x = c[k]
         lines.append(
             f"| {label} | {x['gini']:.3f} [{x['gini_ci'][0]:.3f}, {x['gini_ci'][1]:.3f}] | "

@@ -12,8 +12,9 @@ RESULTS = ROOT / "analysis" / "results.json"
 
 MIN_REVIEWS = 10
 MIDDLE_LO, MIDDLE_HI = 100, 1000
-COHORT_LABELS = {"A": "Co-op (online)", "B": "Single-player narrative"}
-COHORT_COLORS = {"A": "#D95F02", "B": "#1B6CA8"}
+COHORTS = ["A", "B", "R"]
+COHORT_LABELS = {"A": "Co-op (online)", "B": "Single-player narrative", "R": "Roguelike"}
+COHORT_COLORS = {"A": "#eb6834", "B": "#2a78d6", "R": "#1baf7a"}
 
 rng = np.random.default_rng(42)
 

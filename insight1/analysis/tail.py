@@ -1,5 +1,6 @@
-"""Analysis 1 — tail comparison: power-law alpha per cohort, bootstrap CI of the
-difference, power law vs lognormal likelihood-ratio test, log-log CCDF plot."""
+"""Analysis 1 — tail comparison across cohorts: power-law alpha per cohort,
+bootstrap CIs for pairwise alpha differences (shared per-cohort replicates),
+power law vs lognormal likelihood-ratio test, log-log CCDF plot."""
 import sys
 import warnings
 
@@ -9,28 +10,31 @@ import matplotlib.pyplot as plt
 import numpy as np
 import powerlaw
 
-from common import (COHORT_COLORS, COHORT_LABELS, FIG, load, save_results)
+from common import (COHORTS, COHORT_COLORS, COHORT_LABELS, FIG, load,
+                    save_results)
 
 warnings.filterwarnings("ignore")
 
-
-def fit_alpha(x, xmin=None):
-    f = powerlaw.Fit(x, discrete=True, xmin=xmin, verbose=False)
-    return f
+PAIRS = [("A", "B"), ("A", "R"), ("R", "B")]
 
 
 def main(n_boot=1000):
     _, main_df = load()
     out = {}
     fits = {}
-    for c in ["A", "B"]:
+    xs = {}
+    for c in COHORTS:
         x = main_df[main_df.cohort == c].total_reviews.values
-        f = fit_alpha(x)
+        if len(x) < 30:
+            print(f"cohort {c}: n={len(x)} too small, skipped")
+            continue
+        f = powerlaw.Fit(x, discrete=True, verbose=False)
         R_ln, p_ln = f.distribution_compare("power_law", "lognormal",
                                             normalized_ratio=True)
         R_te, p_te = f.distribution_compare("power_law", "truncated_power_law",
                                             nested=True)
         fits[c] = f
+        xs[c] = x
         out[c] = {
             "n": int(len(x)),
             "alpha": f.power_law.alpha,
@@ -46,32 +50,38 @@ def main(n_boot=1000):
               f"±{f.power_law.sigma:.3f} xmin={f.power_law.xmin:.0f}"
               f" ntail={out[c]['n_tail']} | PL-vs-LN R={R_ln:.2f} p={p_ln:.3f}")
 
-    # bootstrap CI for alpha_A - alpha_B (refit xmin each resample)
+    # one bootstrap alpha array per cohort; pairwise diffs share replicates
     rng = np.random.default_rng(42)
-    xa = main_df[main_df.cohort == "A"].total_reviews.values
-    xb = main_df[main_df.cohort == "B"].total_reviews.values
-    diffs = []
-    for i in range(n_boot):
-        try:
-            fa = powerlaw.Fit(rng.choice(xa, len(xa), True), discrete=True, verbose=False)
-            fb = powerlaw.Fit(rng.choice(xb, len(xb), True), discrete=True, verbose=False)
-            diffs.append(fa.power_law.alpha - fb.power_law.alpha)
-        except Exception:
-            continue
-        if (i + 1) % 100 == 0:
-            print(f"  bootstrap {i + 1}/{n_boot}", flush=True)
-    lo, hi = np.percentile(diffs, [2.5, 97.5])
-    out["alpha_diff_A_minus_B"] = {
-        "point": out["A"]["alpha"] - out["B"]["alpha"],
-        "ci95": [lo, hi], "n_boot": len(diffs),
-    }
-    print(f"alpha_A - alpha_B = {out['alpha_diff_A_minus_B']['point']:.3f} "
-          f"[{lo:.3f}, {hi:.3f}]")
+    boot = {}
+    for c in xs:
+        vals = []
+        for i in range(n_boot):
+            try:
+                fb = powerlaw.Fit(rng.choice(xs[c], len(xs[c]), True),
+                                  discrete=True, verbose=False)
+                vals.append(fb.power_law.alpha)
+            except Exception:
+                continue
+        boot[c] = np.array(vals)
+        print(f"  bootstrap {c}: {len(vals)}/{n_boot}", flush=True)
 
-    # CCDF plot
+    out["alpha_diffs"] = {}
+    for a, b in PAIRS:
+        if a not in boot or b not in boot:
+            continue
+        n = min(len(boot[a]), len(boot[b]))
+        diffs = boot[a][:n] - boot[b][:n]
+        lo, hi = np.percentile(diffs, [2.5, 97.5])
+        entry = {"point": out[a]["alpha"] - out[b]["alpha"],
+                 "ci95": [lo, hi], "n_boot": int(n)}
+        out["alpha_diffs"][f"{a}_minus_{b}"] = entry
+        print(f"alpha_{a} - alpha_{b} = {entry['point']:.3f} [{lo:.3f}, {hi:.3f}]")
+    if "A_minus_B" in out["alpha_diffs"]:
+        out["alpha_diff_A_minus_B"] = out["alpha_diffs"]["A_minus_B"]  # back-compat
+
     fig, ax = plt.subplots(figsize=(7, 5.2))
-    for c in ["A", "B"]:
-        x = np.sort(main_df[main_df.cohort == c].total_reviews.values)
+    for c in xs:
+        x = np.sort(xs[c])
         ccdf = 1.0 - np.arange(len(x)) / len(x)
         ax.loglog(x, ccdf, ".", ms=3, alpha=0.5, color=COHORT_COLORS[c],
                   label=f"{COHORT_LABELS[c]} (α={out[c]['alpha']:.2f})")

@@ -29,10 +29,10 @@
   });
 
   const TOK = {
-    light: { a: "#eb6834", b: "#2a78d6", ink: "#0b0b0b", ink2: "#52514e",
+    light: { a: "#eb6834", b: "#2a78d6", r: "#1baf7a", ink: "#0b0b0b", ink2: "#52514e",
              muted: "#898781", grid: "#e1e0d9", axis: "#c3c2b7",
              surface: "#fcfcfb", band: "rgba(137,135,129,0.10)" },
-    dark:  { a: "#d95926", b: "#3987e5", ink: "#ffffff", ink2: "#c3c2b7",
+    dark:  { a: "#d95926", b: "#3987e5", r: "#199e70", ink: "#ffffff", ink2: "#c3c2b7",
              muted: "#898781", grid: "#2c2c2a", axis: "#383835",
              surface: "#1a1a19", band: "rgba(137,135,129,0.14)" },
   };
@@ -44,6 +44,7 @@
     ({ 0: "1", 1: "10", 2: "100", 3: "1k", 4: "10k", 5: "100k", 6: "1M" })[v] ?? "";
 
   const R = $derived(data?.results);
+  const hasR = $derived(!!(data?.series?.R && R?.tail?.R && R?.middle?.R && R?.concentration?.R));
   const verdicts = $derived(
     !R ? null : {
       h1: R.tail.alpha_diff_A_minus_B.ci95[1] < 0,
@@ -90,10 +91,14 @@
           data: s.A.ccdf, symbolSize: 5, itemStyle: { opacity: 0.5 } },
         { name: `${L.cohortB} α=${R.tail.B.alpha.toFixed(2)}`, type: "scatter", color: t.b,
           data: s.B.ccdf, symbolSize: 5, itemStyle: { opacity: 0.5 } },
+        ...(hasR ? [{ name: `${L.cohortR} α=${R.tail.R.alpha.toFixed(2)}`, type: "scatter",
+          color: t.r, data: s.R.ccdf, symbolSize: 5, itemStyle: { opacity: 0.5 } }] : []),
         { type: "line", data: s.A.fit, showSymbol: false, silent: true, color: t.a,
           lineStyle: { width: 2, type: "dashed" }, tooltip: { show: false } },
         { type: "line", data: s.B.fit, showSymbol: false, silent: true, color: t.b,
           lineStyle: { width: 2, type: "dashed" }, tooltip: { show: false } },
+        ...(hasR ? [{ type: "line", data: s.R.fit, showSymbol: false, silent: true, color: t.r,
+          lineStyle: { width: 2, type: "dashed" }, tooltip: { show: false } }] : []),
       ],
     } as EChartsOption;
   });
@@ -126,6 +131,8 @@
           } },
         { name: L.cohortB, type: "line", data: s.B.kde, showSymbol: false, smooth: true, color: t.b,
           lineStyle: { width: 2 }, areaStyle: { opacity: 0.14 } },
+        ...(hasR ? [{ name: L.cohortR, type: "line", data: s.R.kde, showSymbol: false,
+          smooth: true, color: t.r, lineStyle: { width: 2 }, areaStyle: { opacity: 0.14 } }] : []),
       ],
     } as EChartsOption;
   });
@@ -160,6 +167,8 @@
           showSymbol: false, color: t.a, lineStyle: { width: 2 } },
         { name: `${L.cohortB} Gini ${C.B.gini.toFixed(2)}`, type: "line", data: s.B.lorenz,
           showSymbol: false, color: t.b, lineStyle: { width: 2 } },
+        ...(hasR ? [{ name: `${L.cohortR} Gini ${C.R.gini.toFixed(2)}`, type: "line",
+          data: s.R.lorenz, showSymbol: false, color: t.r, lineStyle: { width: 2 } }] : []),
         { name: L.equality, type: "line", data: [[0, 0], [1, 1]], showSymbol: false,
           silent: true, color: t.muted, lineStyle: { width: 1, type: "dashed" },
           tooltip: { show: false } },
@@ -188,19 +197,25 @@
     <section class="tiles">
       <div class="tile">
         <p class="tile-k">{L.tile1k}</p>
-        <p class="tile-v">α {R.tail.A.alpha.toFixed(2)} <span class="vs">vs</span> {R.tail.B.alpha.toFixed(2)}</p>
+        <p class="tile-v">α <span class="dot da"></span>{R.tail.A.alpha.toFixed(2)}
+          <span class="dot db"></span>{R.tail.B.alpha.toFixed(2)}{#if hasR}
+          <span class="dot dr"></span>{R.tail.R.alpha.toFixed(2)}{/if}</p>
         <p class="tile-s">{L.tile1s(R.tail.alpha_diff_A_minus_B)}
           · <b class={verdicts?.h1 ? "ok" : "na"}>{L.verdict(verdicts?.h1)}</b></p>
       </div>
       <div class="tile">
         <p class="tile-k">{L.tile2k}</p>
-        <p class="tile-v">{pct(R.middle.A.middle_share)} <span class="vs">vs</span> {pct(R.middle.B.middle_share)}</p>
+        <p class="tile-v"><span class="dot da"></span>{pct(R.middle.A.middle_share)}
+          <span class="dot db"></span>{pct(R.middle.B.middle_share)}{#if hasR}
+          <span class="dot dr"></span>{pct(R.middle.R.middle_share)}{/if}</p>
         <p class="tile-s">{L.tile2s(R.middle)}
           · <b class={verdicts?.h2 ? "ok" : "na"}>{L.verdict(verdicts?.h2)}</b></p>
       </div>
       <div class="tile">
         <p class="tile-k">{L.tile3k}</p>
-        <p class="tile-v">{R.concentration.A.gini.toFixed(2)} <span class="vs">vs</span> {R.concentration.B.gini.toFixed(2)}</p>
+        <p class="tile-v"><span class="dot da"></span>{R.concentration.A.gini.toFixed(2)}
+          <span class="dot db"></span>{R.concentration.B.gini.toFixed(2)}{#if hasR}
+          <span class="dot dr"></span>{R.concentration.R.gini.toFixed(2)}{/if}</p>
         <p class="tile-s">{L.tile3s(R.concentration)}
           · <b class={verdicts?.h3 ? "ok" : "na"}>{L.verdict(verdicts?.h3)}</b></p>
       </div>
@@ -239,16 +254,16 @@
     <section class="card">
       <h3>{L.sumT}</h3>
       <table>
-        <thead><tr><th></th><th><span class="dot da"></span>{L.thA}</th><th><span class="dot db"></span>{L.thB}</th></tr></thead>
+        <thead><tr><th></th><th><span class="dot da"></span>{L.thA}</th><th><span class="dot db"></span>{L.thB}</th>{#if hasR}<th><span class="dot dr"></span>{L.thR}</th>{/if}</tr></thead>
         <tbody>
-          <tr><td>{L.rows.n}</td><td>{R.tail.A.n.toLocaleString()}</td><td>{R.tail.B.n.toLocaleString()}</td></tr>
-          <tr><td>{L.rows.alpha}</td><td>{R.tail.A.alpha.toFixed(3)} ({R.tail.A.alpha_se.toFixed(3)})</td><td>{R.tail.B.alpha.toFixed(3)} ({R.tail.B.alpha_se.toFixed(3)})</td></tr>
-          <tr><td>{L.rows.xmin}</td><td>{R.tail.A.xmin.toLocaleString()} / {R.tail.A.n_tail}</td><td>{R.tail.B.xmin.toLocaleString()} / {R.tail.B.n_tail}</td></tr>
-          <tr><td>{L.rows.middle}</td><td>{pct(R.middle.A.middle_share)}</td><td>{pct(R.middle.B.middle_share)}</td></tr>
-          <tr><td>{L.rows.dip}</td><td>{p3(R.middle.A.dip_p)}</td><td>{p3(R.middle.B.dip_p)}</td></tr>
-          <tr><td>{L.rows.gini}</td><td>{R.concentration.A.gini.toFixed(3)} [{R.concentration.A.gini_ci[0].toFixed(3)}, {R.concentration.A.gini_ci[1].toFixed(3)}]</td><td>{R.concentration.B.gini.toFixed(3)} [{R.concentration.B.gini_ci[0].toFixed(3)}, {R.concentration.B.gini_ci[1].toFixed(3)}]</td></tr>
-          <tr><td>{L.rows.top}</td><td>{pct(R.concentration.A.top1_share)} / {pct(R.concentration.A.top5_share)}</td><td>{pct(R.concentration.B.top1_share)} / {pct(R.concentration.B.top5_share)}</td></tr>
-          <tr><td>{L.rows.death}</td><td>{pct(R.concentration.A.early_death_rate)}</td><td>{pct(R.concentration.B.early_death_rate)}</td></tr>
+          <tr><td>{L.rows.n}</td><td>{R.tail.A.n.toLocaleString()}</td><td>{R.tail.B.n.toLocaleString()}</td>{#if hasR}<td>{R.tail.R.n.toLocaleString()}</td>{/if}</tr>
+          <tr><td>{L.rows.alpha}</td><td>{R.tail.A.alpha.toFixed(3)} ({R.tail.A.alpha_se.toFixed(3)})</td><td>{R.tail.B.alpha.toFixed(3)} ({R.tail.B.alpha_se.toFixed(3)})</td>{#if hasR}<td>{R.tail.R.alpha.toFixed(3)} ({R.tail.R.alpha_se.toFixed(3)})</td>{/if}</tr>
+          <tr><td>{L.rows.xmin}</td><td>{R.tail.A.xmin.toLocaleString()} / {R.tail.A.n_tail}</td><td>{R.tail.B.xmin.toLocaleString()} / {R.tail.B.n_tail}</td>{#if hasR}<td>{R.tail.R.xmin.toLocaleString()} / {R.tail.R.n_tail}</td>{/if}</tr>
+          <tr><td>{L.rows.middle}</td><td>{pct(R.middle.A.middle_share)}</td><td>{pct(R.middle.B.middle_share)}</td>{#if hasR}<td>{pct(R.middle.R.middle_share)}</td>{/if}</tr>
+          <tr><td>{L.rows.dip}</td><td>{p3(R.middle.A.dip_p)}</td><td>{p3(R.middle.B.dip_p)}</td>{#if hasR}<td>{p3(R.middle.R.dip_p)}</td>{/if}</tr>
+          <tr><td>{L.rows.gini}</td><td>{R.concentration.A.gini.toFixed(3)} [{R.concentration.A.gini_ci[0].toFixed(3)}, {R.concentration.A.gini_ci[1].toFixed(3)}]</td><td>{R.concentration.B.gini.toFixed(3)} [{R.concentration.B.gini_ci[0].toFixed(3)}, {R.concentration.B.gini_ci[1].toFixed(3)}]</td>{#if hasR}<td>{R.concentration.R.gini.toFixed(3)} [{R.concentration.R.gini_ci[0].toFixed(3)}, {R.concentration.R.gini_ci[1].toFixed(3)}]</td>{/if}</tr>
+          <tr><td>{L.rows.top}</td><td>{pct(R.concentration.A.top1_share)} / {pct(R.concentration.A.top5_share)}</td><td>{pct(R.concentration.B.top1_share)} / {pct(R.concentration.B.top5_share)}</td>{#if hasR}<td>{pct(R.concentration.R.top1_share)} / {pct(R.concentration.R.top5_share)}</td>{/if}</tr>
+          <tr><td>{L.rows.death}</td><td>{pct(R.concentration.A.early_death_rate)}</td><td>{pct(R.concentration.B.early_death_rate)}</td>{#if hasR}<td>{pct(R.concentration.R.early_death_rate)}</td>{/if}</tr>
         </tbody>
       </table>
     </section>
@@ -258,22 +273,24 @@
         <h3>{L.robT}</h3>
         <div class="two-col">
           <table>
-            <thead><tr><th>{L.robPrice}</th><th><span class="dot da"></span>{L.robA}</th><th><span class="dot db"></span>{L.robB}</th></tr></thead>
+            <thead><tr><th>{L.robPrice}</th><th><span class="dot da"></span>{L.robA}</th><th><span class="dot db"></span>{L.robB}</th>{#if hasR}<th><span class="dot dr"></span>{L.cohortR}</th>{/if}</tr></thead>
             <tbody>
               {#each Object.entries(R.robustness.price_bands) as [band, cell]}
                 <tr><td>{band}</td>
                   <td>{(cell as any).A.alpha.toFixed(2)} ({(cell as any).A.n})</td>
-                  <td>{(cell as any).B.alpha.toFixed(2)} ({(cell as any).B.n})</td></tr>
+                  <td>{(cell as any).B.alpha.toFixed(2)} ({(cell as any).B.n})</td>
+                  {#if hasR}<td>{(cell as any).R ? `${(cell as any).R.alpha.toFixed(2)} (${(cell as any).R.n})` : "—"}</td>{/if}</tr>
               {/each}
             </tbody>
           </table>
           <table>
-            <thead><tr><th>{L.robYear}</th><th><span class="dot da"></span>{L.robA}</th><th><span class="dot db"></span>{L.robB}</th></tr></thead>
+            <thead><tr><th>{L.robYear}</th><th><span class="dot da"></span>{L.robA}</th><th><span class="dot db"></span>{L.robB}</th>{#if hasR}<th><span class="dot dr"></span>{L.cohortR}</th>{/if}</tr></thead>
             <tbody>
               {#each Object.entries(R.robustness.years) as [yr, cell]}
                 <tr><td>{yr}</td>
                   <td>{(cell as any).A.alpha.toFixed(2)} ({(cell as any).A.n})</td>
-                  <td>{(cell as any).B.alpha.toFixed(2)} ({(cell as any).B.n})</td></tr>
+                  <td>{(cell as any).B.alpha.toFixed(2)} ({(cell as any).B.n})</td>
+                  {#if hasR}<td>{(cell as any).R ? `${(cell as any).R.alpha.toFixed(2)} (${(cell as any).R.n})` : "—"}</td>{/if}</tr>
               {/each}
             </tbody>
           </table>
@@ -339,10 +356,11 @@
            font-variant-numeric: tabular-nums; }
   th:first-child, td:first-child { text-align: left; color: var(--text-secondary); }
   thead th { color: var(--text-muted); font-weight: 600; }
-  th .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px;
-            margin-right: 6px; vertical-align: baseline; }
-  th .dot.da { background: var(--series-a); }
-  th .dot.db { background: var(--series-b); }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px;
+         margin-right: 6px; vertical-align: baseline; }
+  .dot.da { background: var(--series-a); }
+  .dot.db { background: var(--series-b); }
+  .dot.dr { background: var(--series-r); }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
   .limits { color: var(--text-secondary); font-size: 0.9rem; padding-left: 18px; }

@@ -38,8 +38,10 @@ def main(label="full"):
     centers = (edges[:-1] + edges[1:]) / 2
     kde_grid = np.linspace(1, 6, 240)
     series = {}
-    for c in ["A", "B"]:
+    for c in ["A", "B", "R"]:
         x = main_df[main_df.cohort == c].total_reviews.values
+        if len(x) < 30 or c not in r["tail"]:
+            continue
         lx = np.log10(x)
         hist, _ = np.histogram(lx, bins=edges, density=True)
         kde = stats.gaussian_kde(lx)(kde_grid)
@@ -62,8 +64,10 @@ def main(label="full"):
             "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "n_A": int((main_df.cohort == "A").sum()),
             "n_B": int((main_df.cohort == "B").sum()),
+            "n_R": int((main_df.cohort == "R").sum()),
             "n_full_A": int((full.cohort == "A").sum()),
             "n_full_B": int((full.cohort == "B").sum()),
+            "n_full_R": int((full.cohort == "R").sum()),
             "middle_band": [MIDDLE_LO, MIDDLE_HI],
         },
         "results": r,

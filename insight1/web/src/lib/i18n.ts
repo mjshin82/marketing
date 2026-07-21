@@ -75,19 +75,30 @@ const ko = {
   c2cap: () => `회색 음영이 중간 성공 구간(리뷰 100–1,000개 ≈ 판매 3.5천–3.5만 장, Boxleiter ×35).
     쌍봉(대부분 조기 소멸 + 소수 폭발)이면 이 구간이 얇아진다.`,
   interp2: (m: any, ok: boolean | undefined) => {
-    let s = `가설이 맞다면 코옵은 "적당히 성공"(회색 구간)이 드물어야 한다 —
-      친구 그룹이 모이지 못하면 조기 소멸하고, 모이기 시작하면 폭발하기 때문에
-      중간에 머물 이유가 없다는 논리다. 실제 중간 구간 비율은 코옵 ${pct(m.A.middle_share)} vs
-      싱글 ${pct(m.B.middle_share)}`;
-    s += ok
-      ? `로 코옵이 유의하게 얇다 (Fisher p=${p3(m.middle_share_test.fisher_p)}) → <b>가설 2 지지</b>. `
-      : `이며, 이 차이는 아직 통계적으로 유의하지 않다
-         (Fisher p=${p3(m.middle_share_test.fisher_p)}) → <b>불확정</b>. `;
-    s += `쌍봉성(dip test)은 코옵 p=${p3(m.A.dip_p)}, 싱글 p=${p3(m.B.dip_p)} — `;
-    s += m.A.dip_p < 0.05
-      ? `코옵 분포는 봉우리가 하나가 아니라는 증거가 있다 (조기 소멸 그룹과 폭발 그룹으로 갈라짐).`
-      : `p가 0.05보다 크면 "봉우리가 하나뿐"이라는 가설을 기각하지 못한다는 뜻이다.`;
-    return s;
+    const sh = (k: string) => pct(m[k].middle_share);
+    const ks = ["A", "R", "B"].filter((k) => m[k]);
+    const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
+    const dipSig = ks.filter((k) => m[k].dip_p < 0.05);
+    let t = `가설이 맞다면 코옵 곡선은 회색 구간(중간 성공)이 움푹 꺼지고, 분포에 봉우리가
+      두 개 생겨야 한다 — "대부분 조기 소멸 + 소수 폭발"이라면 중간에 머무는 게임이 드물어야
+      하기 때문이다. 표에서 확인할 것은 두 가지다.
+      <br/><br/>① <b>허리 두께</b> — 회색 구간에 안착한 비율은 ${ks.map((k) => `${nm[k]} ${sh(k)}`).join(" / ")}. `;
+    t += ok
+      ? `코옵이 유의하게 얇다 (Fisher p=${p3(m.middle_share_test.fisher_p)}) — 가설이 예측한 방향이다.`
+      : `코호트 간 차이가 몇 %p 수준으로 작고, 통계적으로도 구분되지 않는다
+         (Fisher p=${p3(m.middle_share_test.fisher_p)}). 코옵의 허리가 특별히 비어 있지 않다.`;
+    t += `<br/><br/>② <b>봉우리 개수</b> (dip test) — `;
+    t += dipSig.length
+      ? `${dipSig.map((k) => nm[k]).join("·")}에서 봉우리가 하나가 아니라는 증거가 있다
+         (p<0.05) — 조기 소멸 그룹과 성공 그룹으로 갈라진다는 신호다.`
+      : `세 코호트 모두 p>0.05로 "봉우리는 하나"라는 가설을 기각하지 못한다 — 쌍봉이 아니라
+         한 덩어리 분포다.`;
+    if (!ok && !dipSig.length) {
+      t += `<br/><br/><b>정리:</b> 세 장르 모두 "낮은 구간에 몰려 있다가 위로 갈수록 매끄럽게
+        줄어드는" 같은 모양이며, 코옵이라고 중간이 비어 있지 않다 — 빈 허리 가설(가설 2)은
+        현재 데이터에서 지지되지 않는다.`;
+    }
+    return t;
   },
   c3t: "가설 3 — 집중도: 로렌츠 곡선",
   c3cap: (c: any) => `곡선이 아래로 처질수록 리뷰(≈판매)가 소수 게임에 집중. 조기 소멸률(리뷰 <10):
@@ -387,21 +398,31 @@ const en: typeof ko = {
   c2cap: () => `The gray band is the mid-success zone (100–1,000 reviews ≈ 3.5k–35k copies,
     Boxleiter ×35). A bimodal shape (mostly early deaths + a few explosions) thins this band.`,
   interp2: (m, ok) => {
-    let s = `If the hypothesis holds, "moderate success" (the gray band) should be rare for
-      co-op — when the friend group fails to converge the game dies early, and once it
-      converges it explodes, so there is little reason to sit in the middle. The observed
-      middle share is co-op ${pct(m.A.middle_share)} vs single-player ${pct(m.B.middle_share)}`;
-    s += ok
-      ? `, significantly thinner for co-op (Fisher p=${p3(m.middle_share_test.fisher_p)})
-         → <b>Hypothesis 2 supported</b>. `
-      : `, and the difference is not yet statistically significant
-         (Fisher p=${p3(m.middle_share_test.fisher_p)}) → <b>inconclusive</b>. `;
-    s += `Bimodality (dip test): co-op p=${p3(m.A.dip_p)}, single-player p=${p3(m.B.dip_p)} — `;
-    s += m.A.dip_p < 0.05
-      ? `there is evidence the co-op distribution has more than one peak (an early-death
-         group and an explosion group).`
-      : `p above 0.05 means we cannot reject "a single peak".`;
-    return s;
+    const sh = (k: string) => pct(m[k].middle_share);
+    const ks = ["A", "R", "B"].filter((k) => m[k]);
+    const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
+    const dipSig = ks.filter((k) => m[k].dip_p < 0.05);
+    let t = `If the hypothesis holds, the co-op curve should dip in the gray band (mid-tier
+      success) and show two peaks — under "mostly early deaths + a few explosions", few games
+      should linger in the middle. The chart offers two checks.
+      <br/><br/>① <b>Waist thickness</b> — the share landing in the gray band is ${ks.map((k) => `${nm[k]} ${sh(k)}`).join(" / ")}. `;
+    t += ok
+      ? `Co-op is significantly thinner (Fisher p=${p3(m.middle_share_test.fisher_p)}) — the
+         direction the hypothesis predicts.`
+      : `The differences are a few percentage points and statistically indistinguishable
+         (Fisher p=${p3(m.middle_share_test.fisher_p)}). Co-op's waist is not especially hollow.`;
+    t += `<br/><br/>② <b>Number of peaks</b> (dip test) — `;
+    t += dipSig.length
+      ? `${dipSig.map((k) => nm[k]).join(", ")} show evidence of more than one peak (p<0.05) —
+         a sign of splitting into an early-death group and a success group.`
+      : `all three cohorts have p>0.05, so "one peak" cannot be rejected — these are
+         single-lump distributions, not bimodal ones.`;
+    if (!ok && !dipSig.length) {
+      t += `<br/><br/><b>Bottom line:</b> all three genres share the same shape — piled up at
+        the low end, thinning smoothly upward. Co-op's middle is not missing; Hypothesis 2 is
+        not supported in the current data.`;
+    }
+    return t;
   },
   c3t: "Hypothesis 3 — concentration: Lorenz curves",
   c3cap: (c) => `The deeper the curve sags below the diagonal, the more reviews (≈sales)
@@ -717,20 +738,29 @@ const ja: typeof ko = {
   c2cap: () => `灰色の帯が中間的成功ゾーン(レビュー100–1,000件 ≈ 販売3.5千–3.5万本、Boxleiter ×35)。
     二峰型(大半が早期消滅 + 少数が爆発)ならこの帯が薄くなる。`,
   interp2: (m, ok) => {
-    let s = `仮説が正しければ、Co-opでは「そこそこの成功」(灰色の帯)が稀になるはずだ —
-      フレンドグループが集まらなければ早期に消滅し、集まり始めれば爆発するため、
-      中間に留まる理由がないという論理だ。実際の中間帯比率はCo-op ${pct(m.A.middle_share)} vs
-      シングル ${pct(m.B.middle_share)}`;
-    s += ok
-      ? `で、Co-opが有意に薄い (Fisher p=${p3(m.middle_share_test.fisher_p)})
-         → <b>仮説2を支持</b>。`
-      : `で、この差はまだ統計的に有意ではない
-         (Fisher p=${p3(m.middle_share_test.fisher_p)}) → <b>未確定</b>。`;
-    s += `二峰性(dip検定)はCo-op p=${p3(m.A.dip_p)}、シングル p=${p3(m.B.dip_p)} — `;
-    s += m.A.dip_p < 0.05
-      ? `Co-opの分布はピークが1つではないという証拠がある(早期消滅グループと爆発グループに分裂)。`
-      : `pが0.05より大きい場合、「ピークは1つだけ」という仮説を棄却できないという意味だ。`;
-    return s;
+    const sh = (k: string) => pct(m[k].middle_share);
+    const ks = ["A", "R", "B"].filter((k) => m[k]);
+    const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
+    const dipSig = ks.filter((k) => m[k].dip_p < 0.05);
+    let t = `仮説が正しければ、Co-opの曲線は灰色の帯(中間的成功)で凹み、分布に山が2つ
+      現れるはずだ — 「大半が早期消滅 + 少数が爆発」なら中間に留まるゲームは稀なはずだから。
+      表で確認することは2つ。
+      <br/><br/>① <b>くびれの厚さ</b> — 灰色の帯に着地した比率は${ks.map((k) => `${nm[k]} ${sh(k)}`).join(" / ")}。`;
+    t += ok
+      ? `Co-opが有意に薄い (Fisher p=${p3(m.middle_share_test.fisher_p)}) — 仮説の予測方向だ。`
+      : `コホート間の差は数%ポイントで、統計的にも区別できない
+         (Fisher p=${p3(m.middle_share_test.fisher_p)})。Co-opのくびれが特に空洞ではない。`;
+    t += `<br/><br/>② <b>山の数</b> (dip検定) — `;
+    t += dipSig.length
+      ? `${dipSig.map((k) => nm[k]).join("・")}で山が1つではない証拠がある (p<0.05) —
+         早期消滅グループと成功グループに分裂しているシグナルだ。`
+      : `3コホートすべてp>0.05で「山は1つ」を棄却できない — 二峰ではなく一塊の分布だ。`;
+    if (!ok && !dipSig.length) {
+      t += `<br/><br/><b>まとめ:</b> 3ジャンルとも「低い区間に集まり、上に行くほど滑らかに
+        減っていく」同じ形であり、Co-opだからといって中間が空いてはいない — 中間層欠落の
+        仮説(仮説2)は現在のデータでは支持されない。`;
+    }
+    return t;
   },
   c3t: "仮説3 — 集中度: ローレンツ曲線",
   c3cap: (c) => `曲線が下に垂れるほどレビュー(≈販売)が少数のゲームに集中。早期消滅率(レビュー10件未満):

@@ -246,270 +246,336 @@
     "million_sellers": {
       "A": [
         {
+          "appid": 3241660,
           "name": "R.E.P.O.",
           "copies": 19573833
         },
         {
+          "appid": 3527290,
           "name": "PEAK",
           "copies": 17886759
         },
         {
+          "appid": 2567870,
           "name": "Chained Together",
           "copies": 10016521
         },
         {
+          "appid": 3164500,
           "name": "Schedule I",
           "copies": 8691981
         },
         {
+          "appid": 1808500,
           "name": "ARC Raiders",
           "copies": 8644407
         },
         {
+          "appid": 3097560,
           "name": "Liar's Bar",
           "copies": 7918942
         },
         {
+          "appid": 1260320,
           "name": "Party Animals",
           "copies": 5668563
         },
         {
+          "appid": 2881650,
           "name": "Content Warning",
           "copies": 5653468
         },
         {
+          "appid": 1304930,
           "name": "The Outlast Trials",
           "copies": 4987145
         },
         {
+          "appid": 1987080,
           "name": "Inside the Backrooms",
           "copies": 3966171
         },
         {
+          "appid": 1169040,
           "name": "Necesse",
           "copies": 2180493
         },
         {
+          "appid": 505460,
           "name": "Foxhole",
           "copies": 2110195
         },
         {
+          "appid": 427410,
           "name": "Abiotic Factor",
           "copies": 1801360
         },
         {
+          "appid": 2406770,
           "name": "Bodycam",
           "copies": 1644287
         },
         {
+          "appid": 1515210,
           "name": "The Past Within",
           "copies": 1635835
         },
         {
+          "appid": 2909110,
           "name": "Nuclear Nightmare",
           "copies": 1630142
         },
         {
+          "appid": 2138720,
           "name": "REMATCH",
           "copies": 1604712
         },
         {
+          "appid": 2479810,
           "name": "Gray Zone Warfare",
           "copies": 1504384
         },
         {
+          "appid": 2296990,
           "name": "We Were Here Expeditions: The FriendShip",
           "copies": 1418588
         },
         {
+          "appid": 1929610,
           "name": "Demonologist",
           "copies": 1417423
         },
         {
+          "appid": 1341290,
           "name": "We Were Here Forever",
           "copies": 1384583
         },
         {
+          "appid": 1272080,
           "name": "PAYDAY 3",
           "copies": 1285600
         },
         {
+          "appid": 2119830,
           "name": "MISERY",
           "copies": 1226049
         },
         {
+          "appid": 895400,
           "name": "Deadside",
           "copies": 1210082
         },
         {
+          "appid": 2444750,
           "name": "Shape of Dreams",
           "copies": 1193899
         },
         {
+          "appid": 2080690,
           "name": "Sunkenland",
           "copies": 1191246
         },
         {
+          "appid": 1302240,
           "name": "Labyrinthine",
           "copies": 1145055
         },
         {
+          "appid": 2625420,
           "name": "Drive Beyond Horizons",
           "copies": 1111668
         },
         {
+          "appid": 2644470,
           "name": "PICO PARK 2",
           "copies": 1053147
         }
       ],
       "B": [
         {
+          "appid": 1868140,
           "name": "DAVE THE DIVER",
           "copies": 7084244
         },
         {
+          "appid": 1468810,
           "name": "\u9b3c\u8c37\u516b\u8352 Tale of Immortal",
           "copies": 6557914
         },
         {
+          "appid": 1030300,
           "name": "Hollow Knight: Silksong",
           "copies": 5431214
         },
         {
+          "appid": 1832640,
           "name": "Mirror 2: Project X",
           "copies": 3634640
         },
         {
+          "appid": 2592160,
           "name": "Dispatch",
           "copies": 3137233
         },
         {
+          "appid": 2527500,
           "name": "MiSide",
           "copies": 2721687
         },
         {
+          "appid": 1451940,
           "name": "NEEDY STREAMER OVERLOAD",
           "copies": 2270893
         },
         {
+          "appid": 1562430,
           "name": "DREDGE",
           "copies": 2226251
         },
         {
+          "appid": 1462040,
           "name": "FINAL FANTASY VII REMAKE INTERGRADE",
           "copies": 2151188
         },
         {
+          "appid": 3350200,
           "name": "Revenge on gold diggers ",
           "copies": 1831531
         },
         {
+          "appid": 1669980,
           "name": "Volcano Princess",
           "copies": 1804983
         },
         {
+          "appid": 1671210,
           "name": "DELTARUNE",
           "copies": 1703560
         },
         {
+          "appid": 1350650,
           "name": "FreshWomen - Season 1",
           "copies": 1696549
         },
         {
+          "appid": 1189490,
           "name": "\u89c5\u957f\u751f",
           "copies": 1680982
         },
         {
+          "appid": 756800,
           "name": "Contraband Police",
           "copies": 1558135
         },
         {
+          "appid": 1703340,
           "name": "The Stanley Parable: Ultra Deluxe",
           "copies": 1366456
         },
         {
+          "appid": 3117820,
           "name": "Sultan's Game",
           "copies": 1355863
         },
         {
+          "appid": 1876890,
           "name": "Wandering Sword",
           "copies": 1233994
         },
         {
+          "appid": 1940340,
           "name": "Darkest Dungeon\u00ae II",
           "copies": 1131476
         },
         {
+          "appid": 611790,
           "name": "House Party",
           "copies": 1105395
         },
         {
+          "appid": 1681430,
           "name": "RoboCop: Rogue City",
           "copies": 1102188
         }
       ],
       "R": [
         {
+          "appid": 2379780,
           "name": "Balatro",
           "copies": 6240969
         },
         {
+          "appid": 1313140,
           "name": "Cult of the Lamb",
           "copies": 4874644
         },
         {
+          "appid": 3167020,
           "name": "Escape From Duckov",
           "copies": 4491375
         },
         {
+          "appid": 3405340,
           "name": "Megabonk",
           "copies": 4275972
         },
         {
+          "appid": 1145350,
           "name": "Hades II",
           "copies": 3618834
         },
         {
+          "appid": 2321470,
           "name": "Deep Rock Galactic: Survivor",
           "copies": 2279150
         },
         {
+          "appid": 1296830,
           "name": "\u6696\u96ea Warm Snow",
           "copies": 2159133
         },
         {
+          "appid": 1966900,
           "name": "20 Minutes Till Dawn",
           "copies": 1746002
         },
         {
+          "appid": 2138710,
           "name": "Sifu",
           "copies": 1586588
         },
         {
+          "appid": 2062430,
           "name": "BALL x PIT",
           "copies": 1469851
         },
         {
+          "appid": 2273430,
           "name": "BlazBlue Entropy Effect",
           "copies": 1406670
         },
         {
+          "appid": 2218750,
           "name": "Halls of Torment",
           "copies": 1368590
         },
         {
+          "appid": 2066020,
           "name": "Soulstone Survivors",
           "copies": 1350058
         },
         {
+          "appid": 2784470,
           "name": "9 Kings",
           "copies": 1094084
         },
         {
+          "appid": 2334730,
           "name": "Death Must Die",
           "copies": 1066229
         },
         {
+          "appid": 1253920,
           "name": "Rogue Legacy 2",
           "copies": 1048490
         }

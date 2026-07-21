@@ -68,7 +68,8 @@ def main():
         g = full[(full.cohort == c) & (full.total_reviews >= 1000000)]
         g = g.sort_values("total_reviews", ascending=False)
         out["million_sellers"][c] = [
-            {"name": str(r["name"]), "copies": int(r.total_reviews)}
+            {"appid": int(r.appid), "name": str(r["name"]),
+             "copies": int(r.total_reviews)}
             for _, r in g.iterrows()]
 
     fig, ax = plt.subplots(figsize=(6, 6))

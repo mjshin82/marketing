@@ -339,7 +339,11 @@
                   <p class="ms-h"><span class="dot {DOT[c]}"></span>{cohortName(c)} ({R.concentration.million_sellers[c]?.length ?? 0})</p>
                   <ol>
                     {#each R.concentration.million_sellers[c] ?? [] as g}
-                      <li>{g.name} <span class="ms-n">{(g.copies / 1e6).toFixed(1)}M</span></li>
+                      <li>
+                        <a href="https://store.steampowered.com/app/{g.appid}/" target="_blank"
+                           rel="noopener">{g.name}</a>
+                        <span class="ms-n">{(g.copies / 1e6).toFixed(1)}M</span>
+                      </li>
                     {/each}
                   </ol>
                 </div>
@@ -533,6 +537,8 @@
                 color: var(--text-secondary); }
   .ms-cols li { margin-bottom: 2px; }
   .ms-n { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .ms-cols a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--grid); }
+  .ms-cols a:hover { color: var(--text-primary); border-bottom-color: var(--text-muted); }
   .concl { color: var(--text-secondary); font-size: 0.9rem; }
   .concl :global(p) { margin: 0 0 8px; }
   .concl :global(ul) { margin: 0; padding-left: 18px; }

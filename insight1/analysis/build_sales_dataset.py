@@ -2,7 +2,7 @@
 
 Cohorts via tag-set algebra (mirrors collect/pipeline.py priorities):
   A = pure multiplayer co-op, R = roguelike (no MP), B = story-rich single - R.
-Filters: paid, price < $40, publisherClass != AAA, released 2022-01..2025-12.
+Filters: paid, price < $40, publisherClass != AAA, released 2022-01..2026-06.
 
 Output: data/games_sales.csv with the same column layout the analysis suite
 expects — `total` is copiesSold (the outcome variable in sales mode)."""
@@ -16,7 +16,7 @@ from common import ROOT
 
 SRC = ROOT / "data" / "gamalytic.jsonl"
 OUT = ROOT / "data" / "games_sales.csv"
-W0, W1 = 1640995200000, 1767225599000  # 2022-01-01 .. 2025-12-31 (ms, UTC)
+W0, W1 = 1640995200000, 1782863999000  # 2022-01-01 .. 2026-06-30 (ms, UTC)
 
 
 def main():

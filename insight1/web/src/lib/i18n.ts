@@ -36,7 +36,7 @@ const ko = {
     코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>${m.n_R
       ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""},
     코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>
-    (유료 · 가격 &lt;$40 · 2022.01–2025.12 출시 · AAA 제외 · 분석 표본은 판매 ≥500장 (저판매 구간의 추정 노이즈와 취미 수준 출시작 제외) ·
+    (유료 · 가격 &lt;$40 · 2022.01–2026.06 출시 · AAA 제외 · 분석 표본은 판매 ≥500장 (저판매 구간의 추정 노이즈와 취미 수준 출시작 제외) ·
     코호트는 상호배타, 분류 우선순위 코옵 &gt; 로그라이크 &gt; 내러티브).`,
   cohortA: "코옵 (온라인)",
   cohortB: "싱글 내러티브",
@@ -231,8 +231,9 @@ const ko = {
     상쇄되며, 상쇄되지 않는 것은 코호트별 공급 증가 속도의 차이다. 표의 숫자는 각 코호트의
     <b>기하평균 판매량</b>, 괄호의 <b>S는 공급 지수</b> — 해당 코호트의 연간 신작 수를
     2022년=1로 놓고 시장 전체 신작 증가(위 카드)로 나눠 보정한 값. S&gt;1이면 그 장르로
-    공급이 시장 평균보다 빨리 몰리고 있다는 뜻이다. 주 데이터는 카탈로그 편입 지연이 없어
-    2025년 행까지 유효하다.`,
+    공급이 시장 평균보다 빨리 몰리고 있다는 뜻이다. 2026년 행은 상반기(1~6월) 출시작만 포함하며, 최근 출시작일수록 판매 누적 기간이
+    짧아 조기 소멸·기하평균이 불리하게 측정된다 — 연도 간 절대 비교 금지 원칙이 특히
+    2026년 행에 적용된다. 2026년 S는 시장 전체 연간치가 미확정이라 표시하지 않는다.`,
   eraNote: (era: any): string => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
@@ -296,9 +297,16 @@ const ko = {
         ${sig2(c.B.geomean)}), 조기 소멸률(${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
         보인다. 단, 코옵 게임은 <b>생존 편향</b>이 있을 수 있어(한계 참조) 이 우위는 실제보다
-        부풀려졌을 수 있다. 또한 이 데이터는 2025년 출시작까지다 — 2026년에는 코옵
-        흥행작들(예: MECCHA CHAMELEON, YAPYAP)의 영향으로 공급이 더 늘었거나 늘어날 확률이 높아, 이 우위가 앞으로도
-        유지될지는 알 수 없다.</li>
+        부풀려졌을 수 있다. ${(() => {
+          const y26 = r.era?.years?.["2026"]?.A?.n_full, y25 = r.era?.years?.["2025"]?.A?.n_full;
+          return y26 && y25
+            ? `실제로 2026년 상반기에만 코옵 신작 ${y26}개가 나와 2025년 연간(${y25}개)의
+               ${Math.round(100 * y26 / y25)}%에 달한다 — 코옵 흥행작들(예: MECCHA CHAMELEON,
+               YAPYAP)이 부른 유입 가속이다. 경쟁이 이렇게 빨리 불어나는 만큼, 이 우위가
+               앞으로도 유지될지는 알 수 없다.`
+            : `2026년에는 코옵 흥행작들(예: MECCHA CHAMELEON, YAPYAP)의 영향으로 공급이 더
+               늘어날 확률이 높아, 이 우위가 유지될지는 알 수 없다.`;
+        })()}</li>
       <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
         그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
         <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
@@ -319,7 +327,7 @@ const ko = {
           : `로그라이크와 내러티브(스토리 중심)의 꼬리 분포는 사실상 대등하다
              (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
         : ""}</li>
-      <li><b>시대 효과 주의:</b> 이 분석 창(2022.01–2025.12)의 수치에는 각 장르의 구조적
+      <li><b>시대 효과 주의:</b> 이 분석 창(2022.01–2026.06)의 수치에는 각 장르의 구조적
         특성만이 아니라 시대 효과 — 특정 장르의 유행과 그 냉각, 경쟁작의 대거 진입, 시장
         전체의 공급 폭증 — 가 섞여 있다. 어느 코호트든 지금의 수치가 유행이 바뀐 뒤에도
         그대로 재현된다는 보장은 없다. "시대 효과 — 연도별 추세" 섹션이 이를 부분적으로
@@ -369,7 +377,7 @@ const ko = {
     <code>Massively Multiplayer</code>. 태그는 SteamSpy가 제공하는 스팀 유저 태그 기준.
     코호트는 상호배타적이며 분류 우선순위는 <b>코옵 → 로그라이크 → 내러티브</b>
     (예: 스토리 있는 로그라이트는 로그라이크로 분류). 공통 필터: 유료 · 초기가 &lt;$40 ·
-    type=game · 2022-01~2025-12 출시 · 대형 퍼블리셔(EA, Ubisoft 등) 제외.
+    type=game · 2022-01~2026-06 출시 · 대형 퍼블리셔(EA, Ubisoft 등) 제외.
     Story Rich 없이 <code>Adventure</code>/<code>Puzzle</code>만 가진 싱글 게임은 별도
     코호트(N)로 계속 수집해 광의 정의에 대한 민감도 검증(강건성 분석)에 쓴다.`,
   aboutT: "만든 사람",
@@ -406,7 +414,7 @@ const en: typeof ko = {
     Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>${m.n_R
       ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""},
     cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>
-    (paid · price &lt;$40 · released 2022.01–2025.12 · AAA excluded · analysis sample ≥500 copies sold (screening out
+    (paid · price &lt;$40 · released 2022.01–2026.06 · AAA excluded · analysis sample ≥500 copies sold (screening out
     low-end estimate noise and hobbyist releases) · cohorts disjoint, priority co-op &gt; roguelike &gt; narrative).`,
   cohortA: "Co-op (online)",
   cohortB: "Single-player narrative",
@@ -612,7 +620,9 @@ const en: typeof ko = {
     numbers are each cohort's <b>geometric-mean copies sold</b>; the <b>S in parentheses is
     a supply index</b> — yearly release count rebased to 2022=1 and deflated by market-wide
     growth (card above). S&gt;1 means supply flows into the genre faster than the market.
-    The primary catalog has no indexing lag, so the 2025 row is valid.`,
+    The 2026 row covers H1 releases only, and the newest games have had the least time to
+    accumulate sales — the "no absolute cross-year comparison" rule applies doubly to it.
+    The 2026 S is omitted (full-year market total not yet known).`,
   eraNote: (era) => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
@@ -677,9 +687,16 @@ const en: typeof ko = {
         (geometric mean ${sig2(c.A.geomean)} vs narrative ${sig2(c.B.geomean)}), early-death
         rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. Note, however, that co-op games may carry <b>survivorship
-        bias</b> (see Limitations), so this advantage may be inflated. Also, the data covers
-        releases through 2025 — in 2026, co-op hits (e.g. MECCHA CHAMELEON, YAPYAP) have likely drawn (or will draw)
-        even more supply into the genre, so whether this advantage persists is unknown.</li>
+        bias</b> (see Limitations), so this advantage may be inflated. ${(() => {
+          const y26 = r.era?.years?.["2026"]?.A?.n_full, y25 = r.era?.years?.["2025"]?.A?.n_full;
+          return y26 && y25
+            ? ` In H1 2026 alone, ${y26} new co-op games shipped — ${Math.round(100 * y26 / y25)}%
+               of 2025's full-year count (${y25}) — an influx acceleration driven by co-op hits
+               (e.g. MECCHA CHAMELEON, YAPYAP). With competition growing this fast, whether the
+               advantage persists is unknown.`
+            : ` In 2026, co-op hits (e.g. MECCHA CHAMELEON, YAPYAP) have likely drawn even more
+               supply into the genre, so whether this advantage persists is unknown.`;
+        })()}</li>
       <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
         the cohort contains far fewer hobbyist releases. The co-op advantage is likely
         <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
@@ -754,7 +771,7 @@ const en: typeof ko = {
     <code>Massively Multiplayer</code>. Tags are Steam user tags as served by SteamSpy.
     Cohorts are disjoint with classification priority <b>co-op → roguelike → narrative</b>
     (e.g. a story-rich roguelite counts as roguelike). Common filters: paid · launch price
-    &lt;$40 · type=game · released 2022-01..2025-12 · major publishers (EA, Ubisoft, …)
+    &lt;$40 · type=game · released 2022-01..2026-06 · major publishers (EA, Ubisoft, …)
     excluded. Single-player games with only <code>Adventure</code>/<code>Puzzle</code> and no
     Story Rich are still collected as a separate cohort (N) for the broad-definition
     sensitivity check (robustness).`,
@@ -790,7 +807,7 @@ const ja: typeof ko = {
     併用する。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>${m.n_R
       ? `、コホートR(ローグライク) <b>${m.n_R.toLocaleString()}本</b>` : ""}、
     コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>
-    (有料 · 価格 &lt;$40 · 2022.01–2025.12リリース · AAA除外 · 分析標本は販売500本以上 (低販売域の推定ノイズと趣味レベルのリリースを除外) ·
+    (有料 · 価格 &lt;$40 · 2022.01–2026.06リリース · AAA除外 · 分析標本は販売500本以上 (低販売域の推定ノイズと趣味レベルのリリースを除外) ·
     コホートは互いに排他、優先順位はCo-op &gt; ローグライク &gt; ナラティブ)。`,
   cohortA: "Co-op (オンライン)",
   cohortB: "シングル・ナラティブ",
@@ -984,7 +1001,9 @@ const ja: typeof ko = {
     される。市場全体の供給増加も倍率では相殺され、相殺されないのはコホート間の供給増加速度の
     差だ。表の数字は各コホートの<b>幾何平均販売本数</b>、括弧の<b>Sは供給指数</b> — 年間新作数を
     2022年=1とし市場全体の増加(上のカード)で割った値。S&gt;1ならそのジャンルへ市場平均より
-    速く供給が流入している。主データはカタログ収録遅延がないため2025年の行まで有効だ。`,
+    速く供給が流入している。2026年の行は上半期(1~6月)のみを含み、新しい作品ほど販売の蓄積期間が短いため
+    早期消滅・幾何平均が不利に測定される — 年間の絶対比較禁止の原則は2026年の行に
+    特に当てはまる。2026年のSは市場全体の年間値が未確定のため表示しない。`,
   eraNote: (era) => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
@@ -1134,7 +1153,7 @@ const ja: typeof ko = {
     <code>Massively Multiplayer</code>。タグはSteamSpyが提供するSteamユーザータグ基準。
     コホートは互いに排他的で、分類優先順位は<b>Co-op → ローグライク → ナラティブ</b>
     (例: ストーリーのあるローグライトはローグライクに分類)。共通フィルター: 有料 ·
-    初期価格 &lt;$40 · type=game · 2022-01~2025-12リリース · 大手パブリッシャー除外。
+    初期価格 &lt;$40 · type=game · 2022-01~2026-06リリース · 大手パブリッシャー除外。
     Story Richなしで<code>Adventure</code>/<code>Puzzle</code>のみのシングルゲームは別
     コホート(N)として収集を続け、広義定義への感度検証(頑健性分析)に使う。`,
   aboutT: "作った人",

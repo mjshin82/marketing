@@ -72,9 +72,44 @@ def main():
                        "median": float(np.median(rows)),
                        "geomean": float(np.exp(np.mean(np.log(rows))))}
 
+    # full sales-based replication of the distribution metrics (copiesSold as
+    # the outcome variable; early death = < 300 copies ~ 10 reviews x multiplier)
+    import warnings
+    warnings.filterwarnings("ignore")
+    import powerlaw
+
+    def gini(x):
+        x = np.sort(np.asarray(x, float))
+        n = len(x)
+        cum = np.cumsum(x)
+        return float((n + 1 - 2 * (cum / cum[-1]).sum()) / n)
+
+    replication = {}
+    for c, S in cohorts.items():
+        pool = [games[s] for s in S if ok(s)
+                and games[s].get("copiesSold") is not None]
+        sold = np.array([g["copiesSold"] for g in pool], float)
+        if len(sold) < 50:
+            continue
+        live = sold[sold >= 300]
+        fit = powerlaw.Fit(live, discrete=True, verbose=False)
+        top1 = float(np.sort(live)[::-1][:max(1, int(np.ceil(len(live) * .01)))].sum()
+                     / live.sum())
+        replication[c] = {
+            "n_full": int(len(sold)),
+            "early_death_lt300": float((sold < 300).mean()),
+            "n": int(len(live)),
+            "median": float(np.median(live)),
+            "geomean": float(np.exp(np.mean(np.log(live)))),
+            "gini": gini(live),
+            "top1_share": top1,
+            "middle_share_3500_35000": float(((live >= 3500) & (live <= 35000)).mean()),
+            "alpha": float(fit.power_law.alpha),
+        }
+
     out = {"source": "gamalytic.com free API (harvested 2026-07-21)",
            "supply_by_year": supply, "supply_index": s_index,
-           "sales_per_review": mult}
+           "sales_per_review": mult, "replication": replication}
     for c in ["A", "R", "B"]:
         print(c, "supply:", supply.get(c), "| S:", s_index.get(c),
               "| mult:", {k: round(v, 1) if isinstance(v, float) else v

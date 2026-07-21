@@ -210,6 +210,30 @@ def write_report():
             m = ext["sales_per_review"].get(k)
             if m:
                 lines.append(f"| {label} | {m['n']} | ×{m['median']:.1f} | ×{m['geomean']:.1f} |")
+        rep = ext.get("replication")
+        if rep:
+            lines += [
+                "**판매량 기준 병렬 복제 (copiesSold, 조기 소멸 = 판매 <300장):**",
+                "",
+                "| 코호트 | n | 조기 소멸 | 중간값 | 기하평균 | Gini | 상위 1% | 중간층(3.5천~3.5만 장) | α |",
+                "|---|---|---|---|---|---|---|---|---|",
+            ]
+            for k, label in [("A", "코옵"), ("R", "로그라이크"), ("B", "내러티브")]:
+                m = rep.get(k)
+                if m:
+                    lines.append(
+                        f"| {label} | {m['n_full']} | {m['early_death_lt300']:.1%} | "
+                        f"{m['median']:,.0f} | {m['geomean']:,.0f} | {m['gini']:.3f} | "
+                        f"{m['top1_share']:.1%} | {m['middle_share_3500_35000']:.1%} | "
+                        f"{m['alpha']:.2f} |")
+            lines += [
+                "",
+                "주의: Gamalytic 판매 추정은 리뷰 수를 입력으로 쓰는 모델이라 완전히 독립적인 "
+                "복제는 아니다. 그럼에도 리뷰 기반 주 분석과 방향이 일치하는 항목(로그라이크 "
+                "조기 소멸 최다, 코옵 중간층 최저·집중도 최고·전형 성과 최고)은 신뢰도가 "
+                "올라간다.",
+                "",
+            ]
         lines.append("")
     lines += [
         "## 한계",

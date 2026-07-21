@@ -24,7 +24,21 @@ def alpha_of(x):
 
 def main():
     _, df = load()
-    out = {"price_bands": {}, "years": {}, "alt_B": {}}
+    out = {"price_bands": {}, "years": {}, "alt_B": {}, "fixed_xmin": {}}
+
+    # alpha with a common fixed xmin: removes the "different fitting regime"
+    # objection when comparing tail exponents across cohorts
+    for c in ["A", "B", "R"]:
+        x = df[df.cohort == c].total_reviews.values
+        x = x[x >= 100]
+        if len(x) < 50:
+            continue
+        f = powerlaw.Fit(x, xmin=100, discrete=True, verbose=False)
+        out["fixed_xmin"][c] = {"alpha": f.power_law.alpha,
+                                "alpha_se": f.power_law.sigma,
+                                "n_tail": int(len(x))}
+        print(f"fixed-xmin(100) {c}: alpha={f.power_law.alpha:.3f}"
+              f"±{f.power_law.sigma:.3f} ntail={len(x)}")
 
     df["price_band"] = (df.price // 5 * 5).clip(upper=35)
     for band, sub in df.groupby("price_band"):

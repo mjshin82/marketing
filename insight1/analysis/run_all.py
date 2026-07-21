@@ -139,6 +139,15 @@ def write_report():
             lines.append(f"| {yr} | {cell['A']['alpha']:.2f} ({cell['A']['n']}) | "
                          f"{cell['B']['alpha']:.2f} ({cell['B']['n']}) |")
         lines.append("")
+    if rb.get("fixed_xmin"):
+        lines += ["**공통 xmin=100 고정 α (적합 구간 차이 제거):**", "",
+                  "| 코호트 | α (SE) | 꼬리 표본 |", "|---|---|---|"]
+        for k, label in [("A", "코옵"), ("B", "싱글 내러티브"), ("R", "로그라이크")]:
+            if k in rb["fixed_xmin"]:
+                c2 = rb["fixed_xmin"][k]
+                lines.append(f"| {label} | {c2['alpha']:.3f} ({c2['alpha_se']:.3f}) | "
+                             f"{c2['n_tail']} |")
+        lines.append("")
     if rb.get("alt_B"):
         lines += ["**코호트 B 대안 정의 민감도:**", "",
                   "| 정의 | n | α | Gini |", "|---|---|---|---|"]

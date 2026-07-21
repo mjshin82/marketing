@@ -46,7 +46,7 @@ def write_report():
         "**데이터:** 스팀 리뷰 수를 판매량 대리변수로 사용 (Boxleiter 원재료). "
         f"코호트 A(코옵) n={t['A']['n']}, 코호트 B(싱글 내러티브) n={t['B']['n']}"
         + (f", 코호트 R(로그라이크) n={t['R']['n']}" if 'R' in t else "")
-        + " (리뷰 ≥10, 유료, <$40, 2022-01~2025-06 출시). "
+        + " (리뷰 ≥10, 유료, <$40, 2022-01~2025-12 출시). "
         "코호트는 상호배타적이며 분류 우선순위는 A(코옵) > R(로그라이크) > B(내러티브).",
         "",
         "## 가설 1 — 더 무거운 꼬리 (α_coop < α_single): " + verdict(h1_supported),
@@ -147,25 +147,29 @@ def write_report():
                 lines.append(f"| {name} | {cell['n']} | {cell['alpha']:.2f} | "
                              f"{cell['gini']:.3f} |")
         lines.append("")
-    ws = r.get("window_sensitivity")
-    if ws:
+    era = r.get("era")
+    if era and era.get("years"):
         lines += [
-            "## 출시 기간 민감도 (컷오프 2025-06 vs 2025-12)",
+            "## 시대 효과 — 연도별 추세",
             "",
-            f"확장 창이 추가하는 2025 하반기 게임: {ws['h2_2025_games']}개. "
-            "주의: 2025 하반기는 리뷰 누적 기간이 짧고(7~12개월), SteamSpy 마스터 목록의 "
-            "최신작 편입 지연으로 커버리지 자체가 얇다 — 확장 창 수치는 참고용.",
+            "연도 간 절대값 비교는 리뷰 누적 기간 차이로 오염된다 (2022년작은 ~4년치, "
+            "2025년작은 ~1년치). 유효한 독법은 **같은 연도 안에서 코호트끼리 비교** — "
+            "누적 기간이 상쇄된다. 배율의 연도별 추세가 장르 우위가 구조적인지 "
+            "유행 순풍인지를 가른다.",
             "",
-            "| 코호트 | α (기본→확장) | Gini (기본→확장) | 기하평균 (기본→확장) |",
-            "|---|---|---|---|",
+            "| 연도 | 기하평균 코옵 | 로그라이크 | 내러티브 | 코옵÷내러 | 로그÷내러 |",
+            "|---|---|---|---|---|---|",
         ]
-        for k, label in [("A", "코옵"), ("B", "싱글 내러티브"), ("R", "로그라이크")]:
-            if k in ws["primary"] and k in ws["extended"]:
-                pw, ew = ws["primary"][k], ws["extended"][k]
-                lines.append(
-                    f"| {label} | {pw['alpha']:.2f} → {ew['alpha']:.2f} | "
-                    f"{pw['gini']:.3f} → {ew['gini']:.3f} | "
-                    f"{pw['geomean']:.0f} → {ew['geomean']:.0f} |")
+        for yr in sorted(era["years"]):
+            cell = era["years"][yr]
+            rat = era["ratios"].get(str(yr)) or era["ratios"].get(yr) or {}
+            def gm(c):
+                return f"{cell[c]['geomean']:.0f}" if c in cell else "—"
+            ab = rat.get("A_over_B")
+            rb = rat.get("R_over_B")
+            lines.append(
+                f"| {yr} | {gm('A')} | {gm('R')} | {gm('B')} | "
+                f"{f'×{ab:.1f}' if ab else '—'} | {f'×{rb:.1f}' if rb else '—'} |")
         lines.append("")
     lines += [
         "## 한계",
@@ -182,6 +186,9 @@ def write_report():
         "제외된다. 실패작이 계통적으로 빠지면 두 코호트 모두 조기 소멸률이 과소추정된다.",
         "- **태그는 자기선택:** 태그는 유저/개발자가 붙인다. 경계 사례(코옵 '가능'하지만 "
         "본질적으로 싱글 게임 등)의 오분류 가능성.",
+        "- **2025 하반기 커버리지:** 컷오프를 2025-12로 두었지만 하반기 출시작은 리뷰 누적 "
+        "기간이 7~12개월로 짧고 SteamSpy 마스터 목록의 최신작 편입 지연으로 표본 자체가 "
+        "얇다. 컷오프를 2025-06으로 좁혀도 결과는 사실상 동일했다 (민감도 확인 완료).",
         "",
         "## 재현",
         "",
@@ -202,6 +209,6 @@ if __name__ == "__main__":
     run("middle.py")
     run("concentration.py")
     run("robustness.py")
-    run("sensitivity_window.py")
+    run("era.py")
     write_report()
     run("export_web.py", label)

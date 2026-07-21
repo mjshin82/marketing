@@ -35,7 +35,7 @@ const ko = {
     코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>${m.n_R
       ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""},
     코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>
-    (유료 · 초기가 &lt;$40 · 2022.01–2025.06 출시 · 리뷰 ≥10 · 코호트는 상호배타,
+    (유료 · 초기가 &lt;$40 · 2022.01–2025.12 출시 · 리뷰 ≥10 · 코호트는 상호배타,
     분류 우선순위 코옵 &gt; 로그라이크 &gt; 내러티브).`,
   cohortA: "코옵 (온라인)",
   cohortB: "싱글 내러티브",
@@ -139,6 +139,26 @@ const ko = {
   </ul>`,
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
+  eraT: "시대 효과 — 연도별 추세",
+  eraCap: `연도 간 절대값 비교는 리뷰 누적 기간 차이로 오염된다 (2022년작은 ~4년치, 2025년작은
+    ~1년치 리뷰). 유효한 독법은 같은 연도 안에서 코호트끼리 비교하는 것 — 누적 기간이
+    상쇄된다. 배율(÷내러티브)의 연도별 추세가 장르 우위가 구조적인지 유행 순풍인지를 가른다.`,
+  eraNote: (ratios: any): string => {
+    const yrs = Object.keys(ratios).sort();
+    if (yrs.length < 2) return "";
+    const f = yrs[0], l = yrs[yrs.length - 1];
+    const rb0 = ratios[f]?.R_over_B, rb1 = ratios[l]?.R_over_B;
+    if (!rb0 || !rb1) return "";
+    const fading = rb1 < rb0;
+    return `로그라이크의 내러티브 대비 기하평균 배율은 ${f}년 ×${rb0.toFixed(1)} →
+      ${l}년 ×${rb1.toFixed(1)}로 ${fading ? `매년 줄고 있다 — 우위의 일부가 유행 순풍이었고
+      그 순풍이 식어가는 중이라는 신호다. 공급(출시작 수)이 늘며 조기 소멸률도 함께 오르는
+      전형적인 과열 패턴이다` : `유지되고 있다 — 유행보다는 구조적 우위에 가깝다는 신호다`}.
+      단, 연간 표본이 작아 아직 방향성 수준으로 읽어야 한다.`;
+  },
+  eraYear: "연도",
+  eraRatioA: "코옵÷내러",
+  eraRatioR: "로그÷내러",
   windowT: "민감도 — 출시 기간 컷오프 (2025-06 vs 2025-12)",
   windowNote: (n: number): string => `확장 창(~2025-12)이 추가하는 2025 하반기 게임은 ${n}개뿐이다.
     하반기 출시작은 리뷰 누적 기간이 짧고(7~12개월), SteamSpy 마스터 목록의 최신작 편입
@@ -168,7 +188,7 @@ const ko = {
         ${hasR ? `로그라이크는 내러티브보다 꼬리가 ${rbSig ? "통계적으로 유의하게 " : ""}무겁고
         (α 차이 ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})
         중간층도 두터운, 규모 대비 균형이 좋은 세계다.` : ""}</li>
-      <li><b>시대 효과 주의:</b> 분석 창(2022.01–2025.06)은 로그라이크 대유행기와 겹친다.
+      <li><b>시대 효과 주의:</b> 분석 창(2022.01–2025.12)은 로그라이크 대유행기와 겹친다.
         로그라이크의 좋은 수치에는 장르의 구조적 특성만이 아니라 유행의 순풍이 섞여 있을 수
         있다 — 유행이 식으면 재현되지 않을 수 있는 부분이다. 연도별 강건성 분석(2022→2025
         추세)이 이 효과를 부분적으로 가려낼 수 있다.</li>
@@ -183,6 +203,9 @@ const ko = {
     `<b>SteamSpy 신선도</b> — 태그·가격은 SteamSpy 캐시 기준. 리뷰 수는 가능한 한
      스팀 공식 appreviews로 대체했다.`,
     `<b>생존 편향</b> — 상장폐지된 게임은 스팀 API에서 빠져 조기 소멸률이 과소추정될 수 있다.`,
+    `<b>2025 하반기 커버리지</b> — 하반기 출시작은 리뷰 누적 기간이 짧고(7–12개월) SteamSpy
+     목록 편입 지연으로 표본이 얇다. 컷오프를 2025-06으로 좁혀도 결과는 사실상 동일했다
+     (민감도 확인 완료).`,
   ],
   foot: `데이터: SteamSpy + Steam 공식 API · 리뷰 수는 판매량의 대리변수 · 코드/재현:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
@@ -217,7 +240,7 @@ const en: typeof ko = {
     Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>${m.n_R
       ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""},
     cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>
-    (paid · launch price &lt;$40 · released 2022.01–2025.06 · ≥10 reviews · cohorts are
+    (paid · launch price &lt;$40 · released 2022.01–2025.12 · ≥10 reviews · cohorts are
     disjoint, classification priority co-op &gt; roguelike &gt; narrative).`,
   cohortA: "Co-op (online)",
   cohortB: "Single-player narrative",
@@ -333,6 +356,28 @@ const en: typeof ko = {
   </ul>`,
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
+  eraT: "Era effect — year-by-year trend",
+  eraCap: `Comparing absolute levels across years is confounded by review-accumulation time
+    (a 2022 release has had ~4 years of reviews, a 2025 release ~1 year). The valid reading
+    is the within-year comparison between cohorts — accumulation cancels out. The trend of
+    the ratio (÷narrative) across years separates a structural edge from a fashion tailwind.`,
+  eraNote: (ratios) => {
+    const yrs = Object.keys(ratios).sort();
+    if (yrs.length < 2) return "";
+    const f = yrs[0], l = yrs[yrs.length - 1];
+    const rb0 = ratios[f]?.R_over_B, rb1 = ratios[l]?.R_over_B;
+    if (!rb0 || !rb1) return "";
+    const fading = rb1 < rb0;
+    return `The roguelike-to-narrative geometric-mean ratio moved from ×${rb0.toFixed(1)} in
+      ${f} to ×${rb1.toFixed(1)} in ${l}${fading ? ` — shrinking every year, a sign that part
+      of the genre's edge was a fashion tailwind that is cooling. Supply (release counts) is
+      rising while early-death rates climb — a classic overheating pattern` : ` — holding
+      steady, suggesting a structural rather than fashion-driven edge`}. Per-year samples are
+      small, so read this as a direction, not a verdict.`;
+  },
+  eraYear: "Year",
+  eraRatioA: "Co-op ÷ narrative",
+  eraRatioR: "Roguelike ÷ narrative",
   windowT: "Sensitivity — release-window cutoff (2025-06 vs 2025-12)",
   windowNote: (n) => `The extended window (through 2025-12) adds only ${n} H2-2025 games.
     Those releases have short review-accumulation windows (7–12 months) and SteamSpy's
@@ -365,7 +410,7 @@ const en: typeof ko = {
         ${hasR ? `Roguelikes have a ${rbSig ? "statistically significantly " : ""}heavier tail
         than narrative games (α diff ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})
         plus a thick middle class — a well-balanced world for its scale.` : ""}</li>
-      <li><b>Beware the era effect:</b> the analysis window (2022.01–2025.06) overlaps with
+      <li><b>Beware the era effect:</b> the analysis window (2022.01–2025.12) overlaps with
         the roguelike boom. The genre's strong numbers may mix a structural property with a
         fashion tailwind — a part that may not replicate once the trend cools. The by-year
         robustness analysis (2022→2025 trend) can partially separate this.</li>
@@ -383,6 +428,9 @@ const en: typeof ko = {
      were replaced with official Steam appreviews data wherever possible.`,
     `<b>Survivorship bias</b> — delisted games disappear from the Steam API, so early-death
      rates may be underestimated.`,
+    `<b>H2-2025 coverage</b> — late-2025 releases have short review-accumulation windows
+     (7–12 months) and SteamSpy lags on recent titles, so that slice is thin. Narrowing the
+     cutoff to 2025-06 left the results essentially unchanged (sensitivity checked).`,
   ],
   foot: `Data: SteamSpy + official Steam API · review count is a sales proxy · code:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
@@ -416,7 +464,7 @@ const ja: typeof ko = {
     仮説を検証した。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>、
     コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>${m.n_R
       ? `、コホートR(ローグライク) <b>${m.n_R.toLocaleString()}本</b>` : ""}
-    (有料 · 初期価格 &lt;$40 · 2022.01–2025.06リリース · レビュー10件以上 ·
+    (有料 · 初期価格 &lt;$40 · 2022.01–2025.12リリース · レビュー10件以上 ·
     コホートは互いに排他的、分類優先順位はCo-op &gt; ローグライク &gt; ナラティブ)。`,
   cohortA: "Co-op (オンライン)",
   cohortB: "シングル・ナラティブ",
@@ -524,6 +572,27 @@ const ja: typeof ko = {
   </ul>`,
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",
+  eraT: "時代効果 — 年別トレンド",
+  eraCap: `年をまたいだ絶対値の比較はレビュー蓄積期間の差で汚染される(2022年作は~4年分、
+    2025年作は~1年分)。有効な読み方は同じ年の中でコホート同士を比較すること — 蓄積期間が
+    相殺される。倍率(÷ナラティブ)の年別トレンドが、ジャンルの優位が構造的なものか流行の
+    追い風かを分ける。`,
+  eraNote: (ratios) => {
+    const yrs = Object.keys(ratios).sort();
+    if (yrs.length < 2) return "";
+    const f = yrs[0], l = yrs[yrs.length - 1];
+    const rb0 = ratios[f]?.R_over_B, rb1 = ratios[l]?.R_over_B;
+    if (!rb0 || !rb1) return "";
+    const fading = rb1 < rb0;
+    return `ローグライクのナラティブ比幾何平均倍率は${f}年の×${rb0.toFixed(1)}から${l}年の
+      ×${rb1.toFixed(1)}へ${fading ? `毎年縮小している — 優位の一部が流行の追い風であり、
+      その追い風が冷めつつあるというシグナルだ。供給(リリース数)が増えつつ早期消滅率も
+      上がる、典型的な過熱パターンでもある` : `維持されている — 流行ではなく構造的優位に
+      近いというシグナルだ`}。ただし年別標本は小さく、まだ方向性として読むべきだ。`;
+  },
+  eraYear: "年",
+  eraRatioA: "Co-op÷ナラティブ",
+  eraRatioR: "ローグライク÷ナラティブ",
   windowT: "感度分析 — リリース期間カットオフ (2025-06 vs 2025-12)",
   windowNote: (n) => `拡張ウィンドウ(~2025-12)が追加する2025年下半期のゲームは${n}本のみ。
     下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、SteamSpyのマスターリストは最新作の
@@ -552,7 +621,7 @@ const ja: typeof ko = {
         ${hasR ? `ローグライクはナラティブより裾が${rbSig ? "統計的に有意に" : ""}重く
         (α差 ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})、
         中間層も厚い、規模のわりにバランスの良い世界だ。` : ""}</li>
-      <li><b>時代効果に注意:</b> 分析ウィンドウ(2022.01–2025.06)はローグライク大流行期と重なる。
+      <li><b>時代効果に注意:</b> 分析ウィンドウ(2022.01–2025.12)はローグライク大流行期と重なる。
         ローグライクの良い数値には、ジャンルの構造的特性だけでなく流行の追い風が混ざっている
         可能性がある — 流行が冷めれば再現しない部分かもしれない。年別の頑健性分析(2022→2025の
         トレンド)がこの効果を部分的に切り分けられる。</li>
@@ -568,6 +637,9 @@ const ja: typeof ko = {
      Steam公式appreviewsで置き換えた。`,
     `<b>生存バイアス</b> — ストアから削除されたゲームはSteam APIから消えるため、
      早期消滅率は過小推定される可能性がある。`,
+    `<b>2025年下半期のカバレッジ</b> — 下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、
+     SteamSpyの収録遅延で標本が薄い。カットオフを2025-06に狭めても結果は実質同じだった
+     (感度確認済み)。`,
   ],
   foot: `データ: SteamSpy + Steam公式API · レビュー数は販売量の代理変数 · コード/再現:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,

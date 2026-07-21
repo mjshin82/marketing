@@ -297,25 +297,29 @@
       </section>
     {/if}
 
-    {#if R.window_sensitivity}
+    {#if R.era?.years && Object.keys(R.era.years).length >= 2}
       <section class="card">
-        <h3>{L.windowT}</h3>
-        <p class="cap">{L.windowNote(R.window_sensitivity.h2_2025_games)}</p>
+        <h3>{L.eraT}</h3>
+        <p class="cap">{L.eraCap}</p>
         <table>
-          <thead><tr><th></th>{#each L.windowCols as w}<th>{w}</th>{/each}</tr></thead>
+          <thead><tr><th>{L.eraYear}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>{cohortName(c)}</th>{/each}<th>{L.eraRatioA}</th><th>{L.eraRatioR}</th></tr></thead>
           <tbody>
-            {#each COLS as c}
-              {#if R.window_sensitivity.primary[c] && R.window_sensitivity.extended[c]}
-                <tr>
-                  <td><span class="dot {DOT[c]}"></span>{cohortName(c)}</td>
-                  <td>{R.window_sensitivity.primary[c].alpha.toFixed(2)} → {R.window_sensitivity.extended[c].alpha.toFixed(2)}</td>
-                  <td>{R.window_sensitivity.primary[c].gini.toFixed(3)} → {R.window_sensitivity.extended[c].gini.toFixed(3)}</td>
-                  <td>{Math.round(R.window_sensitivity.primary[c].geomean).toLocaleString()} → {Math.round(R.window_sensitivity.extended[c].geomean).toLocaleString()}</td>
-                </tr>
-              {/if}
+            {#each Object.keys(R.era.years).sort() as yr}
+              <tr>
+                <td>{yr}</td>
+                {#each COLS as c}
+                  <td>{R.era.years[yr][c] ? Math.round(R.era.years[yr][c].geomean).toLocaleString() : "—"}</td>
+                {/each}
+                <td>{R.era.ratios[yr]?.A_over_B ? `×${R.era.ratios[yr].A_over_B.toFixed(1)}` : "—"}</td>
+                <td>{R.era.ratios[yr]?.R_over_B ? `×${R.era.ratios[yr].R_over_B.toFixed(1)}` : "—"}</td>
+              </tr>
             {/each}
           </tbody>
         </table>
+        <div class="interp">
+          <p class="interp-t">{L.interpT}</p>
+          <p>{@html L.eraNote(R.era.ratios)}</p>
+        </div>
       </section>
     {/if}
 

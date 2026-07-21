@@ -34,8 +34,8 @@ CSV_EXT_PATH = ROOT / "data" / "games_ext.csv"
 UA = "insight1-research/0.1 (academic distribution study; dev@concode.co)"
 
 RELEASE_MIN = "2022-01-01"
-RELEASE_MAX = "2025-06-30"       # primary analysis window (>=1yr review accumulation)
-RELEASE_MAX_EXT = "2025-12-31"   # extended window, sensitivity analysis only
+RELEASE_MAX = "2025-12-31"       # primary analysis window
+RELEASE_MAX_EXT = "2025-12-31"   # kept equal to primary (ext machinery retained)
 MAX_PRICE_CENTS = 3999  # exclude >= $40 (AAA proxy)
 
 TAGS_A_COOP = {"Online Co-Op", "Co-op"}

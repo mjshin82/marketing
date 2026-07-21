@@ -294,7 +294,17 @@ const ko = {
       <li><b>사실:</b> 코옵 코호트는 보통의 세계(기하평균 ${sig2(c.A.geomean)} vs 내러티브
         ${sig2(c.B.geomean)}), 조기 소멸률(${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
-        보인다. </li>
+        보인다.${(() => {
+          const yrs = Object.keys(r.era?.years ?? {}).sort();
+          const l = yrs[yrs.length - 1];
+          const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
+                nl = r.era?.years?.[l]?.A?.n_full;
+          return s25 && nl && n0
+            ? ` 단, 코옵은 <b>공급이 급증하는 중</b>이다 — ${l}년 신작 ${nl}개로 ${yrs[0]}년(${n0}개)
+               대비 늘었고, 시장 전체 성장을 보정한 공급 지수도 ${s25.toFixed(2)}로 시장보다
+               빠르다. 경쟁이 이렇게 불어나는 국면에서도 이 우위가 유지될지는 알 수 없다.`
+            : "";
+        })()} </li>
       <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
         그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
         <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
@@ -661,7 +671,17 @@ const en: typeof ko = {
       <li><b>The fact:</b> the co-op cohort performs best on most metrics — the typical world
         (geometric mean ${sig2(c.A.geomean)} vs narrative ${sig2(c.B.geomean)}), early-death
         rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. </li>
+        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more.${(() => {
+          const yrs = Object.keys(r.era?.years ?? {}).sort();
+          const l = yrs[yrs.length - 1];
+          const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
+                nl = r.era?.years?.[l]?.A?.n_full;
+          return s25 && nl && n0
+            ? ` That said, co-op <b>supply is surging</b>: ${nl} new titles in ${l} versus
+               ${n0} in ${yrs[0]}, and a market-adjusted supply index of ${s25.toFixed(2)} —
+               faster than the market. Whether the advantage survives that inflow is unknown.`
+            : "";
+        })()} </li>
       <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
         the cohort contains far fewer hobbyist releases. The co-op advantage is likely
         <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
@@ -1033,7 +1053,17 @@ const ja: typeof ko = {
     <ul>
       <li><b>事実:</b> Co-opコホートは普通の世界(幾何平均 ${sig2(c.A.geomean)} vs ナラティブ
         ${sig2(c.B.geomean)})、早期消滅率(${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。</li>
+        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。${(() => {
+          const yrs = Object.keys(r.era?.years ?? {}).sort();
+          const l = yrs[yrs.length - 1];
+          const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
+                nl = r.era?.years?.[l]?.A?.n_full;
+          return s25 && nl && n0
+            ? `ただしCo-opは<b>供給が急増中</b>だ — ${l}年の新作${nl}本は${yrs[0]}年(${n0}本)から
+               増えており、市場全体の成長を補正した供給指数も${s25.toFixed(2)}と市場より速い。
+               競争がこれほど膨らむ局面でもこの優位が維持されるかは分からない。`
+            : "";
+        })()}</li>
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
         難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
         ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>

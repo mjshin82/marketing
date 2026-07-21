@@ -393,7 +393,7 @@
 
     <section class="card">
       <h3>{L.conclT}</h3>
-      <div class="concl">{@html L.concl(R, hasR, data.meta.label !== "full")}</div>
+      <div class="concl">{@html L.concl({ ...R, S: supplyTable }, hasR, data.meta.label !== "full")}</div>
     </section>
 
     <section class="card">

@@ -219,8 +219,10 @@ const ko = {
         그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
         <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
         바꿨을 때의 효과는 이 비교로 알 수 없다.</li>
-      <li><b>비용은 데이터에 없다:</b> 코옵의 기대 성과가 몇 배 높아도 개발·운영 비용이 그만큼
-        크면 비용 대비로는 뒤집힐 수 있다. 또한 코옵의 복권 배수(×${(c.A.mean / c.A.geomean).toFixed(0)})가
+      <li><b>비용은 데이터에 없다:</b> 코옵의 기대 성과가 몇 배 높아도 비용이 그만큼 크면
+        비용 대비로는 뒤집힐 수 있다. 다만 스팀 백엔드(P2P·릴레이)를 쓰는 세션형 코옵은
+        서버비를 사실상 0으로 만들 수 있으므로, 실질적 비용 격차는 운영비보다
+        개발 복잡도(넷코드·동기화·QA) 쪽이다. 또한 코옵의 복권 배수(×${(c.A.mean / c.A.geomean).toFixed(0)})가
         가장 크고 상위 1% 점유(${(100 * c.A.top1_share).toFixed(0)}%)는 소표본에서 히트작 몇
         개가 만든 수치라 아직 흔들린다.</li>
       <li><b>안전하게 말할 수 있는 것:</b> ${(() => {
@@ -254,12 +256,14 @@ const ko = {
      관측된 집중도를 "친구 조정" 메커니즘만으로 귀속할 수 없다.`,
     `<b>SteamSpy 신선도</b> — 태그·가격은 SteamSpy 캐시 기준. 리뷰 수는 가능한 한
      스팀 공식 appreviews로 대체했다.`,
-    `<b>생존 편향 (코옵에 특히 유리하게 작동)</b> — 상장폐지된 게임은 스팀 API에서 빠져
+    `<b>생존 편향 (방향은 불확실)</b> — 상장폐지된 게임은 스팀 API에서 빠져
      모든 코호트의 조기 소멸률이 과소추정된다. 특히 <b>온라인 코옵은 유저가 없으면 게임을
      내릴 가능성이 높다</b> — 싱글 게임은 유저가 없어도 계속 팔 수 있지만, 코옵은 매칭이
      죽으면 상품성이 사라지기 때문이다. 실패작이 코옵 쪽에서 더 많이 사라진다면 코옵
      코호트의 성과 지표(기하평균·조기 소멸률 등)는 <b>생존자만 관측되어 실제보다 좋게
-     측정</b>됐을 수 있다.`,
+     측정</b>됐을 수 있다. 반론도 있다 — 스팀 P2P 기반 코옵은 서버 유지비가 없어 죽은
+     게임을 굳이 내릴 유인도 낮으므로, 이 편향이 실제로 코옵에 얼마나 유리하게 작용했는지는
+     불확실하다.`,
     `<b>2025 하반기 커버리지</b> — 하반기 출시작은 리뷰 누적 기간이 짧고(7–12개월) SteamSpy
      목록 편입 지연으로 표본이 얇다. 컷오프를 2025-06으로 좁혀도 결과는 사실상 동일했다
      (민감도 확인 완료).`,
@@ -522,7 +526,9 @@ const en: typeof ko = {
         effect. What happens if the same team merely switches genre cannot be read off this
         comparison.</li>
       <li><b>Costs are not in the data:</b> even a several-fold higher expected outcome can
-        flip once development and live-ops costs are counted. Co-op also has the largest
+        flip once costs are counted. That said, session-based co-op built on Steam's backend
+        (P2P + relay) can push server costs to effectively zero — the real cost gap is
+        development complexity (netcode, sync, QA) rather than live-ops. Co-op also has the largest
         lottery multiplier (×${(c.A.mean / c.A.geomean).toFixed(0)}) and its top-1% share
         (${(100 * c.A.top1_share).toFixed(0)}%) rests on a few hits in a small sample.</li>
       <li><b>What can be said safely:</b> ${(() => {
@@ -559,13 +565,15 @@ const en: typeof ko = {
      mechanism alone.`,
     `<b>SteamSpy freshness</b> — tags and prices come from SteamSpy's cache. Review counts
      were replaced with official Steam appreviews data wherever possible.`,
-    `<b>Survivorship bias (works in co-op's favor)</b> — delisted games disappear from the
+    `<b>Survivorship bias (direction uncertain)</b> — delisted games disappear from the
      Steam API, so early-death rates are underestimated for every cohort. Crucially,
      <b>online co-op games are more likely to be taken down when the playerbase dies</b> —
      a single-player game can keep selling with zero players, but a co-op game loses its
      sellability once matchmaking is dead. If failures vanish disproportionately on the
      co-op side, the co-op cohort's outcome metrics (geometric mean, early-death rate, …)
-     are <b>measured only on survivors and thus biased upward</b>.`,
+     are <b>measured only on survivors and thus biased upward</b>. The counterargument:
+     Steam-P2P co-op has no server upkeep, so there is little incentive to delist a dead
+     game either — how strongly this bias actually favors co-op is uncertain.`,
     `<b>H2-2025 coverage</b> — late-2025 releases have short review-accumulation windows
      (7–12 months) and SteamSpy lags on recent titles, so that slice is thin. Narrowing the
      cutoff to 2025-06 left the results essentially unchanged (sensitivity checked).`,
@@ -813,8 +821,10 @@ const ja: typeof ko = {
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
         難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
         ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>
-      <li><b>コストはデータにない:</b> 期待成果が数倍高くても、開発・運営コストがそれだけ大きければ
-        コスト対比では逆転しうる。またCo-opの宝くじ倍率(×${(c.A.mean / c.A.geomean).toFixed(0)})は
+      <li><b>コストはデータにない:</b> 期待成果が数倍高くてもコストがそれだけ大きければ
+        コスト対比では逆転しうる。ただしSteamバックエンド(P2P・リレー)を使うセッション型
+        Co-opはサーバー費を実質ゼロにできるため、実質的なコスト差は運営費よりも
+        開発の複雑さ(ネットコード・同期・QA)にある。またCo-opの宝くじ倍率(×${(c.A.mean / c.A.geomean).toFixed(0)})は
         最大で、上位1%占有(${(100 * c.A.top1_share).toFixed(0)}%)は小標本の数本のヒットが
         作った数値でまだ不安定だ。</li>
       <li><b>安全に言えること:</b> ${(() => {
@@ -848,12 +858,14 @@ const ja: typeof ko = {
      集中度を「フレンド調整」メカニズムだけに帰属することはできない。`,
     `<b>SteamSpyの鮮度</b> — タグ·価格はSteamSpyのキャッシュ基準。レビュー数は可能な限り
      Steam公式appreviewsで置き換えた。`,
-    `<b>生存バイアス (Co-opに有利に働く)</b> — ストアから削除されたゲームはSteam APIから
+    `<b>生存バイアス (方向は不確実)</b> — ストアから削除されたゲームはSteam APIから
      消えるため、全コホートで早期消滅率が過小推定される。特に<b>オンラインCo-opはユーザーが
      いなくなるとストアから取り下げられる可能性が高い</b> — シングルゲームはプレイヤーが
      ゼロでも売り続けられるが、Co-opはマッチングが死ねば商品性を失うからだ。失敗作が
      Co-op側で多く消えているなら、Co-opコホートの成果指標(幾何平均・早期消滅率など)は
-     <b>生存者だけを観測して実際より良く測定</b>されている可能性がある。`,
+     <b>生存者だけを観測して実際より良く測定</b>されている可能性がある。反論もある —
+     Steam P2Pベースのco-opはサーバー維持費がないため、死んだゲームをわざわざ取り下げる
+     動機も薄い。このバイアスが実際どれほどCo-opに有利に働いたかは不確実だ。`,
     `<b>2025年下半期のカバレッジ</b> — 下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、
      SteamSpyの収録遅延で標本が薄い。カットオフを2025-06に狭めても結果は実質同じだった
      (感度確認済み)。`,

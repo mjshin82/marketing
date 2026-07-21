@@ -62,15 +62,20 @@ def main():
             c: int((full[full.cohort == c].total_reviews >= th).sum())
             for c in COHORTS}
     out["cohort_sizes"] = {c: int((full.cohort == c).sum()) for c in COHORTS}
-    # named list of million-sellers per cohort (for the collapsible list)
-    out["million_sellers"] = {}
-    for c in COHORTS:
-        g = full[(full.cohort == c) & (full.total_reviews >= 1000000)]
-        g = g.sort_values("total_reviews", ascending=False)
-        out["million_sellers"][c] = [
-            {"appid": int(r.appid), "name": str(r["name"]),
-             "copies": int(r.total_reviews)}
-            for _, r in g.iterrows()]
+    # named lists per cohort for the collapsible sections
+    def named(lo, hi=None):
+        out_ = {}
+        for c in COHORTS:
+            g = full[(full.cohort == c) & (full.total_reviews >= lo)]
+            if hi is not None:
+                g = g[g.total_reviews < hi]
+            g = g.sort_values("total_reviews", ascending=False)
+            out_[c] = [{"appid": int(r.appid), "name": str(r["name"]),
+                        "copies": int(r.total_reviews)} for _, r in g.iterrows()]
+        return out_
+
+    out["million_sellers"] = named(1000000)
+    out["half_million_sellers"] = named(500000, 1000000)
 
     fig, ax = plt.subplots(figsize=(6, 6))
     for c in death:

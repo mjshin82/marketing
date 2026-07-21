@@ -295,8 +295,7 @@ const ko = {
       <li><b>사실:</b> 코옵 코호트는 보통의 세계(기하평균 ${sig2(c.A.geomean)} vs 내러티브
         ${sig2(c.B.geomean)}), 조기 소멸률(${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
-        보인다. 단, 코옵 게임은 <b>생존 편향</b>이 있을 수 있어(한계 참조) 이 우위는 실제보다
-        부풀려졌을 수 있다. ${(() => {
+        보인다. ${(() => {
           const y26 = r.era?.years?.["2026"]?.A?.n_full, y25 = r.era?.years?.["2025"]?.A?.n_full;
           return y26 && y25
             ? `실제로 2026년 상반기에만 코옵 신작 ${y26}개가 나와 2025년 연간(${y25}개)의
@@ -339,10 +338,6 @@ const ko = {
      입력으로 쓰는 추정 모델이지 원시 관측이 아니다. 모델의 왜곡 가능성은 스팀 리뷰 수
      원시 관측(검증 레이어 카드)과의 대조로 상쇄한다 — 두 척도가 같은 방향이면 결론은
      모델 의존적이지 않다.`,
-    `<b>생존 편향 (방향은 불확실)</b> — 상장폐지된 게임은 카탈로그에서 빠져 모든 코호트의
-     조기 소멸률이 과소추정된다. 온라인 코옵은 매칭이 죽으면 상품성이 사라져 내려갈 유인이
-     있으나, 스팀 P2P 기반 코옵은 서버 유지비가 없어 내릴 유인도 낮다 — 편향의 크기와
-     방향은 불확실하다.`,
     `<b>장르 교집합은 제외</b> — 멀티 코옵이면서 로그라이크인 게임(예: Risk of Rain 계열)은
      로그라이크 코호트에서 빠지고, Singleplayer 태그까지 있으면 어느 코호트에도 들어가지
      않는다 (Singleplayer가 없으면 분류 우선순위에 따라 코옵으로 분류). 상호배타 코호트를
@@ -679,8 +674,7 @@ const en: typeof ko = {
       <li><b>The fact:</b> the co-op cohort performs best on most metrics — the typical world
         (geometric mean ${sig2(c.A.geomean)} vs narrative ${sig2(c.B.geomean)}), early-death
         rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. Note, however, that co-op games may carry <b>survivorship
-        bias</b> (see Limitations), so this advantage may be inflated. ${(() => {
+        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. ${(() => {
           const y26 = r.era?.years?.["2026"]?.A?.n_full, y25 = r.era?.years?.["2025"]?.A?.n_full;
           return y26 && y25
             ? ` In H1 2026 alone, ${y26} new co-op games shipped — ${Math.round(100 * y26 / y25)}%
@@ -725,10 +719,6 @@ const en: typeof ko = {
      model fed by review counts, playtime and more — not a raw observation. Potential model
      distortion is offset by the raw review-count validation layer (see the comparison
      card): where both scales agree, conclusions are not model-dependent.`,
-    `<b>Survivorship bias (direction uncertain)</b> — delisted games drop out of catalogs,
-     so early-death rates are underestimated for every cohort. Dead-matchmaking co-op games
-     have a delisting incentive, but Steam-P2P co-op has no server upkeep and thus little
-     incentive either — the size and direction of this bias are uncertain.`,
     `<b>Genre intersections are dropped</b> — games that are both multiplayer co-op and
      roguelike (e.g. the Risk of Rain series) fall out of the roguelike cohort, and with a
      Singleplayer tag they land in no cohort (without it they count as co-op). We keep
@@ -1068,8 +1058,7 @@ const ja: typeof ko = {
     <ul>
       <li><b>事実:</b> Co-opコホートは普通の世界(幾何平均 ${sig2(c.A.geomean)} vs ナラティブ
         ${sig2(c.B.geomean)})、早期消滅率(${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。 ただしCo-opゲームには<b>生存バイアス</b>の可能性があり
-        (限界を参照)、この優位は実際より膨らんでいるかもしれない。またこのデータは2025年
+        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。またこのデータは2025年
         リリース作までだ — 2026年はCo-opヒット作(例: MECCHA CHAMELEON、YAPYAP)の影響で供給がさらに増えた(増える)
         可能性が高く、この優位が今後も維持されるかは分からない。</li>
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
@@ -1103,9 +1092,6 @@ const ja: typeof ko = {
     `<b>販売本数は推定値</b> — 主要結果変数のGamalytic copiesSoldはレビュー数・プレイタイム
      などを入力とする推定モデルであり、生の観測ではない。モデル歪みの可能性はSteamレビュー数の
      生観測(検証レイヤーカード)との対照で相殺する — 両尺度が同方向なら結論はモデル依存ではない。`,
-    `<b>生存バイアス (方向は不確実)</b> — ストアから削除されたゲームはカタログから消え、
-     全コホートで早期消滅率が過小推定される。マッチングが死んだCo-opには取り下げ動機があるが、
-     Steam P2PのCo-opはサーバー維持費がなく動機も薄い — バイアスの大きさと方向は不確実だ。`,
     `<b>ジャンルの交差は除外</b> — マルチCo-opかつローグライク(例: Risk of Rainシリーズ)は
      ローグライクコホートから外れ、Singleplayerタグ付きならどのコホートにも入らない
      (なければ優先順位によりCo-opに分類)。ハイブリッドジャンルの成果はこの分析の範囲外だ。`,

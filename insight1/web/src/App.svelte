@@ -330,27 +330,30 @@
             {/each}
           </tbody>
         </table>
-        {#if R.concentration.million_sellers}
-          <details class="ms-list">
-            <summary>≥ 1,000,000 — {COLS.reduce((n, c) => n + (R.concentration.million_sellers[c]?.length ?? 0), 0)} games</summary>
-            <div class="ms-cols">
-              {#each COLS as c}
-                <div>
-                  <p class="ms-h"><span class="dot {DOT[c]}"></span>{cohortName(c)} ({R.concentration.million_sellers[c]?.length ?? 0})</p>
-                  <ol>
-                    {#each R.concentration.million_sellers[c] ?? [] as g}
-                      <li>
-                        <a href="https://store.steampowered.com/app/{g.appid}/" target="_blank"
-                           rel="noopener">{g.name}</a>
-                        <span class="ms-n">{(g.copies / 1e6).toFixed(1)}M</span>
-                      </li>
-                    {/each}
-                  </ol>
-                </div>
-              {/each}
-            </div>
-          </details>
-        {/if}
+        {#each [{ key: "million_sellers", label: "≥ 1,000,000" },
+                { key: "half_million_sellers", label: "500,000 – 999,999" }] as sec}
+          {#if R.concentration[sec.key]}
+            <details class="ms-list">
+              <summary>{sec.label} — {COLS.reduce((n, c) => n + (R.concentration[sec.key][c]?.length ?? 0), 0)} games</summary>
+              <div class="ms-cols">
+                {#each COLS as c}
+                  <div>
+                    <p class="ms-h"><span class="dot {DOT[c]}"></span>{cohortName(c)} ({R.concentration[sec.key][c]?.length ?? 0})</p>
+                    <ol>
+                      {#each R.concentration[sec.key][c] ?? [] as g}
+                        <li>
+                          <a href="https://store.steampowered.com/app/{g.appid}/" target="_blank"
+                             rel="noopener">{g.name}</a>
+                          <span class="ms-n">{g.copies >= 1e6 ? `${(g.copies / 1e6).toFixed(1)}M` : `${Math.round(g.copies / 1e3)}K`}</span>
+                        </li>
+                      {/each}
+                    </ol>
+                  </div>
+                {/each}
+              </div>
+            </details>
+          {/if}
+        {/each}
         <div class="interp">
           <p class="interp-t">{L.interpT}</p>
           <p>{@html L.countNote(R.concentration)}</p>
@@ -510,7 +513,7 @@
   .def-table :global(code) { background: var(--page); border: 1px solid var(--grid);
     border-radius: 4px; padding: 1px 5px; font-size: 0.8rem; color: var(--text-primary); }
   .def-common { margin-top: 10px; }
-  .ms-list { margin-top: 12px; border: 1px solid var(--grid); border-radius: 8px;
+  .ms-list { margin-top: 10px; border: 1px solid var(--grid); border-radius: 8px;
              padding: 8px 12px; }
   .ms-list summary { cursor: pointer; font-size: 0.86rem; font-weight: 600;
                      color: var(--text-secondary); }

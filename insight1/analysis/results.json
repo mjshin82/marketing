@@ -580,6 +580,274 @@
           "copies": 1048490
         }
       ]
+    },
+    "half_million_sellers": {
+      "A": [
+        {
+          "appid": 3400930,
+          "name": "Guilty as Sock!",
+          "copies": 987479
+        },
+        {
+          "appid": 774801,
+          "name": "Crab Champions",
+          "copies": 924980
+        },
+        {
+          "appid": 3121110,
+          "name": "Zort",
+          "copies": 903955
+        },
+        {
+          "appid": 1211020,
+          "name": "Wobbly Life",
+          "copies": 825502
+        },
+        {
+          "appid": 1785150,
+          "name": "Friends vs Friends",
+          "copies": 813428
+        },
+        {
+          "appid": 1607680,
+          "name": "Bread & Fred",
+          "copies": 793429
+        },
+        {
+          "appid": 2683150,
+          "name": "Ale & Tale Tavern",
+          "copies": 779342
+        },
+        {
+          "appid": 1757300,
+          "name": "Jump Space",
+          "copies": 732242
+        },
+        {
+          "appid": 1801110,
+          "name": "BOKURA",
+          "copies": 697669
+        },
+        {
+          "appid": 3263320,
+          "name": "Carry The Glass",
+          "copies": 674867
+        },
+        {
+          "appid": 1436990,
+          "name": "Feign",
+          "copies": 670300
+        },
+        {
+          "appid": 605740,
+          "name": "Flashing Lights - Police, Firefighting, Emergency Services (EMS) Simulator",
+          "copies": 650100
+        },
+        {
+          "appid": 1611600,
+          "name": "WARNO",
+          "copies": 644141
+        },
+        {
+          "appid": 1857950,
+          "name": "VEIN",
+          "copies": 622839
+        },
+        {
+          "appid": 2208570,
+          "name": "Dark Hours",
+          "copies": 600594
+        },
+        {
+          "appid": 2878420,
+          "name": "Old Market Simulator",
+          "copies": 550341
+        },
+        {
+          "appid": 3376250,
+          "name": "Nine-Ball Roulette",
+          "copies": 543869
+        },
+        {
+          "appid": 2963880,
+          "name": "Murky Divers",
+          "copies": 516996
+        },
+        {
+          "appid": 1635450,
+          "name": "Longvinter",
+          "copies": 514761
+        }
+      ],
+      "B": [
+        {
+          "appid": 1809540,
+          "name": "Nine Sols",
+          "copies": 995409
+        },
+        {
+          "appid": 3180070,
+          "name": "No, I'm not a Human",
+          "copies": 938579
+        },
+        {
+          "appid": 2593370,
+          "name": "The Hungry Lamb: Traveling in the Late Ming Dynasty",
+          "copies": 934469
+        },
+        {
+          "appid": 2190290,
+          "name": "To Be or Not to Be",
+          "copies": 926619
+        },
+        {
+          "appid": 3478050,
+          "name": "Road to Empress I",
+          "copies": 872603
+        },
+        {
+          "appid": 1401590,
+          "name": "Disney Dreamlight Valley",
+          "copies": 862177
+        },
+        {
+          "appid": 1569580,
+          "name": "Blue Prince",
+          "copies": 859697
+        },
+        {
+          "appid": 1034140,
+          "name": "Subverse",
+          "copies": 839105
+        },
+        {
+          "appid": 1989270,
+          "name": "Slay the Princess \u2014 The Pristine Cut",
+          "copies": 805079
+        },
+        {
+          "appid": 1924480,
+          "name": "College Kings 2 - Episode 1",
+          "copies": 774901
+        },
+        {
+          "appid": 1562700,
+          "name": "SANABI",
+          "copies": 752675
+        },
+        {
+          "appid": 1737100,
+          "name": "Treasure of Nadia",
+          "copies": 746065
+        },
+        {
+          "appid": 2475490,
+          "name": "Mouthwashing",
+          "copies": 711134
+        },
+        {
+          "appid": 1954200,
+          "name": "Kena: Bridge of Spirits",
+          "copies": 647669
+        },
+        {
+          "appid": 1063660,
+          "name": "Bendy and the Dark Revival",
+          "copies": 639815
+        },
+        {
+          "appid": 1173820,
+          "name": "FINAL FANTASY VI",
+          "copies": 618583
+        },
+        {
+          "appid": 1607130,
+          "name": "Lust Theory - Season 1",
+          "copies": 615013
+        },
+        {
+          "appid": 1533420,
+          "name": "Neon White",
+          "copies": 594559
+        },
+        {
+          "appid": 1574580,
+          "name": "Strange Horticulture",
+          "copies": 576576
+        },
+        {
+          "appid": 1488200,
+          "name": "Symphony of War: The Nephilim Saga",
+          "copies": 566365
+        },
+        {
+          "appid": 2378900,
+          "name": "The Coffin of Andy and Leyley",
+          "copies": 556316
+        },
+        {
+          "appid": 1601570,
+          "name": "The Alters",
+          "copies": 538443
+        },
+        {
+          "appid": 1421250,
+          "name": "Tiny Bunny",
+          "copies": 534287
+        },
+        {
+          "appid": 2194530,
+          "name": "Yog-Sothoth\u2019s Yard",
+          "copies": 522384
+        },
+        {
+          "appid": 1677770,
+          "name": "The Case of the Golden Idol",
+          "copies": 510238
+        },
+        {
+          "appid": 1147550,
+          "name": "Not For Broadcast",
+          "copies": 505560
+        }
+      ],
+      "R": [
+        {
+          "appid": 1416920,
+          "name": "Chinese Online Game",
+          "copies": 915986
+        },
+        {
+          "appid": 1404850,
+          "name": "Luck be a Landlord",
+          "copies": 761822
+        },
+        {
+          "appid": 1796470,
+          "name": "Haste",
+          "copies": 652262
+        },
+        {
+          "appid": 1740720,
+          "name": "Have a Nice Death",
+          "copies": 612882
+        },
+        {
+          "appid": 2163330,
+          "name": "Yet Another Zombie Survivors",
+          "copies": 608396
+        },
+        {
+          "appid": 1970580,
+          "name": "Backpack Hero",
+          "copies": 583495
+        },
+        {
+          "appid": 2067920,
+          "name": "Rogue: Genesia",
+          "copies": 508591
+        }
+      ]
     }
   },
   "robustness": {

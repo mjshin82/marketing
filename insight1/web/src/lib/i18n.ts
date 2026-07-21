@@ -300,9 +300,8 @@ const ko = {
           const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
                 nl = r.era?.years?.[l]?.A?.n_full;
           return s25 && nl && n0
-            ? ` 단, 코옵은 <b>공급이 급증하는 중</b>이다 — ${l}년 신작 ${nl}개로 ${yrs[0]}년(${n0}개)
-               대비 늘었고, 시장 전체 성장을 보정한 공급 지수도 ${s25.toFixed(2)}로 시장보다
-               빠르다. 경쟁이 이렇게 불어나는 국면에서도 이 우위가 유지될지는 알 수 없다.`
+            ? ` 다만 코옵은 <b>공급이 급증하는 중</b>이라, 경쟁이 이렇게 불어나는 국면에서도
+               이 우위가 유지될지는 지켜봐야 한다.`
             : "";
         })()} </li>
       <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
@@ -677,9 +676,8 @@ const en: typeof ko = {
           const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
                 nl = r.era?.years?.[l]?.A?.n_full;
           return s25 && nl && n0
-            ? ` That said, co-op <b>supply is surging</b>: ${nl} new titles in ${l} versus
-               ${n0} in ${yrs[0]}, and a market-adjusted supply index of ${s25.toFixed(2)} —
-               faster than the market. Whether the advantage survives that inflow is unknown.`
+            ? ` That said, co-op <b>supply is surging</b>, so whether this advantage holds
+               up as competition swells remains to be seen.`
             : "";
         })()} </li>
       <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
@@ -1059,9 +1057,8 @@ const ja: typeof ko = {
           const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
                 nl = r.era?.years?.[l]?.A?.n_full;
           return s25 && nl && n0
-            ? `ただしCo-opは<b>供給が急増中</b>だ — ${l}年の新作${nl}本は${yrs[0]}年(${n0}本)から
-               増えており、市場全体の成長を補正した供給指数も${s25.toFixed(2)}と市場より速い。
-               競争がこれほど膨らむ局面でもこの優位が維持されるかは分からない。`
+            ? `ただしCo-opは<b>供給が急増中</b>のため、競争がこれほど膨らむ局面でも
+               この優位が維持されるかは見守る必要がある。`
             : "";
         })()}</li>
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが

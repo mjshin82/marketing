@@ -337,7 +337,9 @@
           스팀 공식 appreviews로 대체했다.</li>
         <li><b>생존 편향</b> — 상장폐지된 게임은 스팀 API에서 빠져 조기 소멸률이 과소추정될 수 있다.</li>
       </ul>
-      <p class="muted foot">데이터: SteamSpy + Steam 공식 API · 코드: collect/pipeline.py, analysis/ · 리뷰 수는 판매량의 대리변수</p>
+      <p class="muted foot">데이터: SteamSpy + Steam 공식 API · 리뷰 수는 판매량의 대리변수 ·
+        코드/재현: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank"
+        rel="noopener">github.com/mjshin82/marketing</a></p>
     </section>
   </main>
 {/if}
@@ -381,4 +383,5 @@
   .limits li { margin-bottom: 6px; }
   .muted { color: var(--text-muted); }
   .foot { font-size: 0.78rem; margin: 12px 0 0; }
+  .repo { color: var(--text-secondary); }
 </style>

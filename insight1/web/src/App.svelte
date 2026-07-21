@@ -288,7 +288,7 @@
           <tr><td>{L.rows.alpha}</td>{#each COLS as c}<td>{R.tail[c].alpha.toFixed(3)} ({R.tail[c].alpha_se.toFixed(3)})</td>{/each}</tr>
           <tr><td>{L.rows.xmin}</td>{#each COLS as c}<td>{R.tail[c].xmin.toLocaleString()} / {R.tail[c].n_tail}</td>{/each}</tr>
           <tr><td>{L.rows.median}</td>{#each COLS as c}<td>{R.concentration[c].median.toLocaleString()}</td>{/each}</tr>
-          <tr><td>{L.rows.mean}</td>{#each COLS as c}<td>{Math.round(R.concentration[c].mean).toLocaleString()} (×{R.concentration[c].mean_over_median.toFixed(0)})</td>{/each}</tr>
+          <tr><td>{L.rows.mean}</td>{#each COLS as c}<td>{Math.round(R.concentration[c].mean).toLocaleString()} (×{(R.concentration[c].mean / R.concentration[c].geomean).toFixed(0)})</td>{/each}</tr>
           <tr><td>{L.rows.geomean}</td>{#each COLS as c}<td>{Math.round(R.concentration[c].geomean).toLocaleString()}</td>{/each}</tr>
           <tr><td>{L.rows.middle}</td>{#each COLS as c}<td>{pct(R.middle[c].middle_share)}</td>{/each}</tr>
           <tr><td>{L.rows.dip}</td>{#each COLS as c}<td>{p3(R.middle[c].dip_p)}</td>{/each}</tr>

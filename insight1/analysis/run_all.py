@@ -102,7 +102,7 @@ def write_report():
         "",
         "## 가설 3 — 더 높은 집중도: " + verdict(h3_supported),
         "",
-        "| 코호트 | 중간값 | 평균 (중간값의 배수) | 기하평균 | Gini [95% CI] | 상위 1% | 상위 5% | 조기 소멸률(<10리뷰) |",
+        "| 코호트 | 중간값 | 평균 (기하평균의 배수) | 기하평균 | Gini [95% CI] | 상위 1% | 상위 5% | 조기 소멸률(<10리뷰) |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for k, label in [("A", "코옵"), ("B", "싱글 내러티브"), ("R", "로그라이크")]:
@@ -110,7 +110,7 @@ def write_report():
             continue
         x = c[k]
         lines.append(
-            f"| {label} | {x['median']:,.0f} | {x['mean']:,.0f} (×{x['mean_over_median']:.0f}) | "
+            f"| {label} | {x['median']:,.0f} | {x['mean']:,.0f} (×{x['mean'] / x['geomean']:.0f}) | "
             f"{x['geomean']:,.0f} | "
             f"{x['gini']:.3f} [{x['gini_ci'][0]:.3f}, {x['gini_ci'][1]:.3f}] | "
             f"{x['top1_share']:.1%} | {x['top5_share']:.1%} | "

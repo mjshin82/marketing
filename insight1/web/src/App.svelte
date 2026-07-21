@@ -41,7 +41,8 @@
   const p3 = (x: number) => (x < 0.001 ? x.toExponential(1) : x.toFixed(3));
   const pct = (x: number) => (100 * x).toFixed(1) + "%";
   const logTick = (v: number) =>
-    ({ 0: "1", 1: "10", 2: "100", 3: "1k", 4: "10k", 5: "100k", 6: "1M" })[v] ?? "";
+    ({ 0: "1", 1: "10", 2: "100", 3: "1k", 4: "10k", 5: "100k", 6: "1M",
+       7: "10M", 8: "100M" })[v] ?? "";
 
   const R = $derived(data?.results);
   const hasR = $derived(!!(data?.series?.R && R?.tail?.R && R?.middle?.R && R?.concentration?.R));
@@ -169,7 +170,8 @@
         valueFormatter: (v: any) => Number(v).toFixed(2),
       },
       grid: { left: 56, right: 16, top: 34, bottom: 44 },
-      xAxis: { type: "value", min: 1, max: 6, interval: 1, name: L.axLogReviews,
+      xAxis: { type: "value", min: data.meta.log_range?.[0] ?? 1,
+               max: data.meta.log_range?.[1] ?? 6, interval: 1, name: L.axLogReviews,
                nameLocation: "middle", nameGap: 30,
                axisLabel: { color: t.muted, formatter: logTick },
                axisLine: { lineStyle: { color: t.axis } },
@@ -181,7 +183,8 @@
           markArea: {
             silent: true, itemStyle: { color: t.band },
             label: { color: t.ink2, position: "insideTop" },
-            data: [[{ name: L.bandLabel, xAxis: 2 }, { xAxis: 3 }]],
+            data: [[{ name: L.bandLabel, xAxis: Math.log10(data.meta.middle_band[0]) },
+                    { xAxis: Math.log10(data.meta.middle_band[1]) }]],
           } },
         ...(hasR ? [{ name: L.cohortR, type: "line", data: s.R.kde, showSymbol: false,
           smooth: true, color: t.r, lineStyle: { width: 2 }, areaStyle: { opacity: 0.14 } }] : []),
@@ -311,6 +314,22 @@
       </div>
     </section>
 
+
+    {#if R.review_check?.A && R.review_check?.B}
+      <section class="card">
+        <h3>{L.validT}</h3>
+        <p class="cap">{@html L.validCap(R.review_check)}</p>
+        <table>
+          <thead><tr><th>{L.validMetric}</th><th>{L.validMain}</th><th>{L.validCheck}</th><th>{L.validAgree}</th></tr></thead>
+          <tbody>
+            {#each L.validRows(R) as row}
+              <tr><td>{row.label}</td><td>{row.main}</td><td>{row.check}</td>
+                <td>{row.ok ? "✓" : "✗"}</td></tr>
+            {/each}
+          </tbody>
+        </table>
+      </section>
+    {/if}
 
     <section class="card">
       <h3>{L.marketT}</h3>

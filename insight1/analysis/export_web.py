@@ -6,7 +6,8 @@ from datetime import datetime, timezone
 import numpy as np
 from scipy import stats
 
-from common import CSV, MIDDLE_HI, MIDDLE_LO, RESULTS, ROOT, load
+from common import (CSV, LOG_HI, LOG_LO, MIDDLE_HI, MIDDLE_LO, MODE,
+                    RESULTS, ROOT, load)
 
 OUT = ROOT / "web" / "src" / "public" / "report_data.json"
 
@@ -34,9 +35,9 @@ def fit_line(x, alpha, xmin):
 def main(label="full"):
     full, main_df = load()
     r = json.loads(RESULTS.read_text())
-    edges = np.linspace(1, 6, 41)
+    edges = np.linspace(LOG_LO, LOG_HI, 41)
     centers = (edges[:-1] + edges[1:]) / 2
-    kde_grid = np.linspace(1, 6, 240)
+    kde_grid = np.linspace(LOG_LO, LOG_HI, 240)
     series = {}
     for c in ["A", "B", "R"]:
         x = main_df[main_df.cohort == c].total_reviews.values
@@ -69,6 +70,8 @@ def main(label="full"):
             "n_full_B": int((full.cohort == "B").sum()),
             "n_full_R": int((full.cohort == "R").sum()),
             "middle_band": [MIDDLE_LO, MIDDLE_HI],
+            "mode": MODE,
+            "log_range": [LOG_LO, LOG_HI],
         },
         "results": r,
         "series": series,

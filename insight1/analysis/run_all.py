@@ -43,10 +43,11 @@ def write_report():
         "싱글 내러티브 게임보다 성공 분포가 더 극단적인 승자독식 형태(supercritical branching "
         "process)를 보인다.",
         "",
-        "**데이터:** 스팀 리뷰 수를 판매량 대리변수로 사용 (Boxleiter 원재료). "
+        "**데이터:** Gamalytic의 판매량 추정치(copiesSold)를 주 결과변수로 사용하고, "
+        "스팀 리뷰 수 원시 관측(SteamSpy/Steam 공식 API)을 검증 레이어로 병행. "
         f"코호트 A(코옵) n={t['A']['n']}, 코호트 B(싱글 내러티브) n={t['B']['n']}"
         + (f", 코호트 R(로그라이크) n={t['R']['n']}" if 'R' in t else "")
-        + " (리뷰 ≥10, 유료, <$40, 2022-01~2025-12 출시). "
+        + " (판매 ≥300장, 유료, <$40, 2022-01~2025-12 출시, AAA 제외). "
         "코호트는 상호배타적이며 분류 우선순위는 A(코옵) > R(로그라이크) > B(내러티브).",
         "",
         "## 가설 1 — 더 무거운 꼬리 (α_coop < α_single): " + verdict(h1_supported),
@@ -278,12 +279,12 @@ def write_report():
 if __name__ == "__main__":
     boot = sys.argv[1] if len(sys.argv) > 1 else "1000"
     label = sys.argv[2] if len(sys.argv) > 2 else "full"
+    run("build_sales_dataset.py")   # main outcome: Gamalytic copiesSold
     run("tail.py", boot)
     run("middle.py")
     run("concentration.py")
     run("robustness.py")
     run("era.py")
-    if (ROOT / "data" / "gamalytic.jsonl").exists():
-        run("gamalytic_check.py")
+    run("review_check.py")          # validation layer: raw review counts
     write_report()
     run("export_web.py", label)

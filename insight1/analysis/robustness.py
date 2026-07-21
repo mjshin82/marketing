@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import powerlaw
 
-from common import COHORTS, gini, load, save_results
+from common import COHORTS, FIXED_XMIN, gini, load, save_results
 
 warnings.filterwarnings("ignore")
 
@@ -30,14 +30,14 @@ def main():
     # objection when comparing tail exponents across cohorts
     for c in ["A", "B", "R"]:
         x = df[df.cohort == c].total_reviews.values
-        x = x[x >= 100]
+        x = x[x >= FIXED_XMIN]
         if len(x) < 50:
             continue
-        f = powerlaw.Fit(x, xmin=100, discrete=True, verbose=False)
+        f = powerlaw.Fit(x, xmin=FIXED_XMIN, discrete=True, verbose=False)
         out["fixed_xmin"][c] = {"alpha": f.power_law.alpha,
                                 "alpha_se": f.power_law.sigma,
                                 "n_tail": int(len(x))}
-        print(f"fixed-xmin(100) {c}: alpha={f.power_law.alpha:.3f}"
+        print(f"fixed-xmin {c}: alpha={f.power_law.alpha:.3f}"
               f"±{f.power_law.sigma:.3f} ntail={len(x)}")
 
     df["price_band"] = (df.price // 5 * 5).clip(upper=35)

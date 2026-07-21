@@ -31,16 +31,17 @@ const ko = {
   lede: (m: any) => `온라인 코옵 게임의 입소문은 "친구 그룹이 동시에 모여야 작동하는" 조정(coordination)
     구조다. supercritical 분기 과정이 예측하는 대로라면 코옵 코호트의 성공 분포는 싱글
     내러티브 게임보다 더 극단적이어야 한다 — 꼬리는 더 무겁고, 중간은 비어 있고, 집중도는
-    더 높아야 한다. 스팀 리뷰 수(판매량 대리변수)로 세 가설을 검증했다.
+    더 높아야 한다. <b>주 결과변수는 Gamalytic의 판매량 추정치(copiesSold)</b>이고, 스팀
+    리뷰 수 원시 관측을 검증 레이어로 병행한다.
     코호트 A(코옵) <b>${m.n_A.toLocaleString()}개</b>${m.n_R
       ? `, 코호트 R(로그라이크) <b>${m.n_R.toLocaleString()}개</b>` : ""},
     코호트 B(싱글 내러티브) <b>${m.n_B.toLocaleString()}개</b>
-    (유료 · 초기가 &lt;$40 · 2022.01–2025.12 출시 · 리뷰 ≥10 · 코호트는 상호배타,
-    분류 우선순위 코옵 &gt; 로그라이크 &gt; 내러티브).`,
+    (유료 · 가격 &lt;$40 · 2022.01–2025.12 출시 · AAA 제외 · 분석 표본은 판매 ≥300장 ·
+    코호트는 상호배타, 분류 우선순위 코옵 &gt; 로그라이크 &gt; 내러티브).`,
   cohortA: "코옵 (온라인)",
   cohortB: "싱글 내러티브",
   cohortR: "로그라이크",
-  c1t: "가설 1 — 꼬리 비교: 로그-로그 CCDF",
+  c1t: "가설 1 — 꼬리 비교: 로그-로그 CCDF (판매량)",
   c1cap: (t: any) => `점은 관측 CCDF, 점선은 xmin 이상 구간의 멱함수 적합. 기울기가 완만할수록(α 작을수록)
     상위권으로 갈수록 확률이 천천히 줄어드는 무거운 꼬리.
     PL vs lognormal 우도비: A R=${f2(t.A.LR_powerlaw_vs_lognormal)} (p=${p3(t.A.p_powerlaw_vs_lognormal)}),
@@ -64,8 +65,8 @@ const ko = {
          표본이 커지면 구간이 좁아진다.`;
     return s;
   },
-  c2t: "가설 2 — 빈 허리: log₁₀(리뷰) 밀도 (KDE)",
-  c2cap: () => `회색 음영이 중간 성공 구간(리뷰 100–1,000개 ≈ 판매 3.5천–3.5만 장, Boxleiter ×35).
+  c2t: "가설 2 — 빈 허리: log₁₀(판매량) 밀도 (KDE)",
+  c2cap: () => `회색 음영이 중간 성공 구간(판매 3.5천–3.5만 장 ≈ 매출 $50K–500K대).
     쌍봉(대부분 조기 소멸 + 소수 폭발)이면 이 구간이 얇아진다.`,
   interp2: (m: any, ok: boolean | undefined) => {
     const sh = (k: string) => pct(m[k].middle_share);
@@ -106,18 +107,18 @@ const ko = {
     return t;
   },
   c3t: "가설 3 — 집중도: 로렌츠 곡선",
-  c3cap: (c: any) => `곡선이 아래로 처질수록 리뷰(≈판매)가 소수 게임에 집중. 조기 소멸률(리뷰 <10):
+  c3cap: (c: any) => `곡선이 아래로 처질수록 판매량이 소수 게임에 집중. 조기 소멸률(판매 <300장):
     코옵 ${pct(c.A.early_death_rate)} vs 싱글 ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c: any, ok: boolean | undefined) => {
     let s = `로렌츠 곡선이 대각선(균등선)에서 멀수록 성공이 소수에 집중된 시장이다.
-      지금 수치로는 <b>코옵 상위 1% 게임이 코호트 전체 리뷰의 ${pct(c.A.top1_share)}</b>를
+      지금 수치로는 <b>코옵 상위 1% 게임이 코호트 전체 판매량의 ${pct(c.A.top1_share)}</b>를
       가져가는 반면, 싱글 상위 1%는 ${pct(c.B.top1_share)}에 그친다.
       Gini 계수(0=완전 균등, 1=완전 독식)도 코옵 ${f2(c.A.gini)} vs 싱글 ${f2(c.B.gini)}. `;
     s += ok
       ? `두 Gini의 신뢰구간이 겹치지 않으므로 <b>가설 3 지지</b> — 코옵 시장이 구조적으로 더 승자독식이다. `
       : `다만 두 Gini의 신뢰구간이 겹쳐 <b>아직 불확정</b> — 방향은 가설과 일치하지만 표본이 더 필요하다. `;
-    s += `조기 소멸률(리뷰 10개 미만)은 코옵 ${pct(c.A.early_death_rate)} vs
+    s += `조기 소멸률(판매 300장 미만)은 코옵 ${pct(c.A.early_death_rate)} vs
       싱글 ${pct(c.B.early_death_rate)}로, "대부분 조기 소멸 + 소수 폭발" 구조의 앞부분을 보여준다.`;
     return s;
   },
@@ -126,14 +127,14 @@ const ko = {
   thB: "싱글 내러티브 (B)",
   thR: "로그라이크 (R)",
   rows: {
-    n: "표본 (리뷰 ≥10)", alpha: "멱함수 지수 α (SE)", xmin: "xmin / 꼬리 표본",
-    middle: "중간 구간(100–1k) 비율", dip: "Hartigan dip p", gini: "Gini [95% CI]",
-    top: "상위 1% / 5% 점유", death: "조기 소멸률 (<10 리뷰)",
-    median: "중간값 (리뷰)", mean: "평균 (기하평균의 배수)", geomean: "기하평균",
+    n: "표본 (판매 ≥300장)", alpha: "멱함수 지수 α (SE)", xmin: "xmin / 꼬리 표본",
+    middle: "중간 구간(3.5천~3.5만 장) 비율", dip: "Hartigan dip p", gini: "Gini [95% CI]",
+    top: "상위 1% / 5% 점유", death: "조기 소멸률 (<300장)",
+    median: "중간값 (판매량)", mean: "평균 (기하평균의 배수)", geomean: "기하평균",
   },
   sumNote: (c: any, hasR: boolean) => {
     const gap = (k: string) => (c[k].mean / c[k].geomean).toFixed(0);
-    return `읽는 법 — <b>중간값</b>은 게임을 성과순으로 줄 세웠을 때 한가운데 게임의 리뷰 수다.
+    return `읽는 법 — <b>중간값</b>은 게임을 성과순으로 줄 세웠을 때 한가운데 게임의 판매량이다.
       <b>기하평균</b>은 배수(로그) 스케일에서의 평균으로, "이 장르의 보통 게임이 어느 자릿수에서
       사는가"를 가리키며 소수 히트작의 영향을 받지 않는다 — 이 데이터처럼 성과가 몇 배씩
       벌어지는 분포에서의 올바른 평균이다. 반면 <b>산술평균</b>은 상위 1%가 지배하는 "복권
@@ -142,17 +143,52 @@ const ko = {
   },
   insightTitle: (name: string): string => `${name} 게임을 만든다면`,
   insightCard: (d: any): string => `<ul>
-    <li><b>보통의 세계</b> — 기하평균 리뷰 ${sig2(d.geomean)}개, 판매로 치면 약
-      ${sig2(d.geomean * 35)}장 자릿수의 세계다 (Boxleiter ×35 기준).</li>
-    <li><b>절반의 현실</b> — 살아남은 게임의 절반은 리뷰 ${sig2(d.median)}개 미만에 머문다.</li>
-    <li><b>조기 소멸 위험</b> — 출시작의 ${(100 * d.early).toFixed(0)}%는 리뷰 10개도 못 모은다.</li>
+    <li><b>보통의 세계</b> — 기하평균 판매 약 ${sig2(d.geomean)}장 자릿수의 세계다.</li>
+    <li><b>절반의 현실</b> — 조기 소멸을 넘긴 게임의 절반은 판매 ${sig2(d.median)}장 미만에
+      머문다.</li>
+    <li><b>조기 소멸 위험</b> — 출시작의 ${(100 * d.early).toFixed(0)}%는 판매 300장을
+      못 넘긴다.</li>
     <li><b>중간 성공 확률</b> — 조기 소멸을 넘긴 게임 중 ${(100 * d.middle).toFixed(0)}%가
-      리뷰 100–1,000개(판매 약 3.5천–3.5만 장) 구간에 안착한다.</li>
+      판매 3.5천–3.5만 장(매출 $50K–500K대) 구간에 안착한다.</li>
     <li><b>복권 배수</b> — 산술평균은 기하평균의 ×${d.lot.toFixed(0)}. 크게 터지면
       전형적 성과의 수십~수백 배를 가져가는 구조다.</li>
-    <li><b>승자독식 정도</b> — 상위 1% 게임이 전체 리뷰의 ${(100 * d.top1).toFixed(0)}%,
+    <li><b>승자독식 정도</b> — 상위 1% 게임이 전체 판매량의 ${(100 * d.top1).toFixed(0)}%,
       상위 5%가 ${(100 * d.top5).toFixed(0)}%를 점유한다.</li>
   </ul>`,
+  validT: "검증 레이어 — 리뷰 원시 관측과의 대조",
+  validMetric: "지표", validMain: "판매 기준 (주)", validCheck: "리뷰 기준 (검증)", validAgree: "일치",
+  validCap: (rc: any): string => `주 분석(Gamalytic 판매 추정)의 결론이 모델 산물이 아닌지, 스팀
+    리뷰 수 <b>원시 관측</b>(SteamSpy/Steam 공식 API, 표본 ${(rc.n_total ?? 0).toLocaleString()}개
+    수집 기준)으로 같은 지표를 재계산해 대조한다. 척도가 달라 절대값은 다르지만,
+    <b>"어느 코호트가 1등인가"의 방향이 일치하면 결론은 척도에 강건</b>하다.`,
+  validRows: (R: any) => {
+    const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
+    const rc = R.review_check;
+    const pick = (obj: Record<string, number>, max: boolean) => {
+      const ks = Object.keys(obj);
+      return ks.sort((x, y) => max ? obj[y] - obj[x] : obj[x] - obj[y])[0];
+    };
+    const build = (label: string, mainVals: Record<string, number>,
+                   chkVals: Record<string, number>, max: boolean, fmt: (v: number) => string) => {
+      const mk = pick(mainVals, max), ck = pick(chkVals, max);
+      return { label, main: `${nm[mk]} (${fmt(mainVals[mk])})`,
+               check: `${nm[ck]} (${fmt(chkVals[ck])})`, ok: mk === ck };
+    };
+    const ks = ["A", "R", "B"].filter((k) => rc[k] && R.concentration[k]);
+    const gv = (f: (k: string) => number) => Object.fromEntries(ks.map((k) => [k, f(k)]));
+    return [
+      build("조기 소멸률 최다", gv((k) => R.concentration[k].early_death_rate),
+            gv((k) => rc[k].early_death_rate), true, pct),
+      build("중간층 비율 최저", gv((k) => R.middle[k].middle_share),
+            gv((k) => rc[k].middle_share), false, pct),
+      build("Gini 최고 (집중)", gv((k) => R.concentration[k].gini),
+            gv((k) => rc[k].gini), true, (v) => v.toFixed(3)),
+      build("전형 성과(기하평균) 최고", gv((k) => R.concentration[k].geomean),
+            gv((k) => rc[k].geomean), true, (v) => Math.round(v).toLocaleString()),
+      build("꼬리 최중 (α 최저)", gv((k) => R.tail[k].alpha),
+            gv((k) => rc[k].alpha), false, (v) => v.toFixed(2)),
+    ];
+  },
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
   robCap: `α가 작을수록 초대형 히트가 상대적으로 자주 나오는 "무거운 꼬리"다. 이 표는 같은
@@ -187,28 +223,26 @@ const ko = {
     <a href="https://steamdb.info/stats/releases/" target="_blank" rel="noopener">SteamDB</a>
 .`,
   eraT: "시대 효과 — 연도별 추세",
-  eraCap: `연도 간 절대값 비교는 리뷰 누적 기간 차이로 오염된다 (2022년작은 ~4년치, 2025년작은
-    ~1년치 리뷰). 유효한 독법은 같은 연도 안에서 코호트끼리 비교하는 것 — 누적 기간이
-    상쇄된다. 이 시기 스팀 전체 출시량이 폭증했지만, 시장 전체의 공급 증가는 같은 시장을
-    공유하는 두 코호트의 배율에서 상쇄된다. 상쇄되지 않는 것은 코호트별 공급 증가 속도의
-    차이다. 표의 숫자는 각 코호트의 <b>기하평균 리뷰 수</b>이고, 괄호의 <b>S는 공급 지수</b> —
-    해당 코호트의 연간 신작 수를 2022년=1로 놓고 시장 전체 신작 증가(위 카드)로 나눠 보정한
-    값이다. S&gt;1이면 그 장르로 공급이 시장 평균보다 빨리 몰리고 있다는 뜻.
-    2025년 행은 SteamSpy의 카탈로그 편입 지연(약 1년) 때문에 사실상 1~5월 출시작만
-    포함한다 — 2025년 S는 과소집계이니 무시할 것.`,
+  eraCap: `연도 간 절대값 비교는 판매 누적 기간 차이로 오염된다 (2022년작은 ~4년치, 2025년작은
+    ~1년치 판매). 유효한 독법은 같은 연도 안에서 코호트끼리 비교하는 것 — 누적 기간이
+    상쇄된다. 이 시기 스팀 전체 출시량이 폭증했지만, 시장 전체의 공급 증가는 배율 비교에서
+    상쇄되며, 상쇄되지 않는 것은 코호트별 공급 증가 속도의 차이다. 표의 숫자는 각 코호트의
+    <b>기하평균 판매량</b>, 괄호의 <b>S는 공급 지수</b> — 해당 코호트의 연간 신작 수를
+    2022년=1로 놓고 시장 전체 신작 증가(위 카드)로 나눠 보정한 값. S&gt;1이면 그 장르로
+    공급이 시장 평균보다 빨리 몰리고 있다는 뜻이다. 주 데이터는 카탈로그 편입 지연이 없어
+    2025년 행까지 유효하다.`,
   eraNote: (era: any): string => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
-    const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;
     const S = (yr: string, c: string): number | null => era.S?.[yr]?.[c] ?? null;
     const ab0 = era.ratios[f]?.A_over_B, ab1 = era.ratios[l]?.A_over_B;
     const rb0 = era.ratios[f]?.R_over_B, rb1 = era.ratios[l]?.R_over_B;
-    const sA = S(ly, "A"), sR = S(ly, "R"), sB = S(ly, "B");
+    const sA = S(l, "A"), sR = S(l, "R"), sB = S(l, "B");
     const phrase = (v: number) => v > 1.1 ? "시장보다 빠른 유입" : v >= 0.9 ? "시장과 비슷한 속도" : "시장보다 느린 증가(이탈)";
     const parts: string[] = [
       `성과 변화는 수요(유행)와 공급(경쟁)의 합성이다 — S가 공급 쪽을, 같은 연도 안의 성과
-       배율 추세가 두 힘의 순효과를 보여준다 (S는 마지막 완전 연도 ${ly}년 기준).`,
+       배율 추세가 두 힘의 순효과를 보여준다 (S는 ${l}년 기준).`,
     ];
     if (sA != null && ab0 && ab1) {
       parts.push(`<b>코옵</b> — 공급 S ${sA.toFixed(2)}: ${phrase(sA)}. 내러티브 대비 성과 배율
@@ -240,24 +274,7 @@ const ko = {
           ? "시장 평균과 비슷한 속도로 늘고 있다."
           : "시장 평균보다 빠르게 늘고 있다 — 경쟁 심화 요인."}`);
     }
-    const ext = era.ext;
-    if (ext?.supply_index?.A) {
-      const si = ext.supply_index;
-      const last = (o: any) => o[Math.max(...Object.keys(o).map(Number))];
-      parts.push(`<b>외부 검증 (카탈로그 지연 없음)</b> — Gamalytic 카탈로그로 같은 코호트 정의를
-        재현해 세면, 2025년 공급 지수는 <b>코옵 ${last(si.A).toFixed(2)}</b>
-        ${si.R ? `/ 로그라이크 ${last(si.R).toFixed(2)}` : ""} / 내러티브
-        ${si.B ? last(si.B).toFixed(2) : "-"}. 코옵 신작은 ${ext.supply_by_year.A["2024"]}개(2024) →
-        ${ext.supply_by_year.A["2025"]}개(2025)로 시장 성장의 몇 배 속도다 —
-        <b>2025년 코옵·로그라이크 유입 가속은 실측으로 확인</b>되며, 내러티브는 시장 페이스다.`);
-    } else if (l !== ly) {
-      const a25 = S(l, "A"), b25 = S(l, "B");
-      if (a25 != null && b25 != null) {
-        parts.push(`<b>${l}년의 조짐</b> — 절대값은 과소집계지만 같은 해 안 비교는 유효: S 코옵
-          ${a25.toFixed(2)} / 내러티브 ${b25.toFixed(2)}.`);
-      }
-    }
-    parts.push(`연간 표본이 작아 방향성 수준으로 읽을 것.`);
+    parts.push(`연간 표본이 작은 코호트(코옵)는 방향성 수준으로 읽을 것.`);
     return parts.join("<br/><br/>");
   },
   eraYear: "연도",
@@ -309,37 +326,29 @@ const ko = {
   },
   limitT: "한계",
   limits: [
-    `<b>리뷰-판매 배수의 장르 차이</b> — Boxleiter 배수는 장르·가격·연도에 따라 다르다.
-     Gamalytic 판매 추정치와 조인(1,500여 개)해 실측한 배수는 코옵 ×27 / 로그라이크 ×23 /
-     내러티브 ×21(중간값)로 코호트 간 차이가 크지 않았다 — 형태 비교는 대체로 안전하고,
-     코옵 배수가 다소 높아 리뷰 기준은 코옵에 오히려 보수적이다.`,
+    `<b>판매량은 추정치다</b> — 주 결과변수인 Gamalytic copiesSold는 리뷰 수·플레이타임 등을
+     입력으로 쓰는 추정 모델이지 원시 관측이 아니다. 모델의 왜곡 가능성은 스팀 리뷰 수
+     원시 관측(검증 레이어 카드)과의 대조로 상쇄한다 — 두 척도가 같은 방향이면 결론은
+     모델 의존적이지 않다.`,
     `<b>스트리밍 노출 교란</b> — 코옵 히트작은 트위치/유튜브 노출과 상호작용한다.
      관측된 집중도를 "친구 조정" 메커니즘만으로 귀속할 수 없다.`,
-    `<b>SteamSpy 신선도</b> — 태그·가격은 SteamSpy 캐시 기준. 리뷰 수는 가능한 한
-     스팀 공식 appreviews로 대체했다.`,
-    `<b>생존 편향 (방향은 불확실)</b> — 상장폐지된 게임은 스팀 API에서 빠져
-     모든 코호트의 조기 소멸률이 과소추정된다. 특히 <b>온라인 코옵은 유저가 없으면 게임을
-     내릴 가능성이 높다</b> — 싱글 게임은 유저가 없어도 계속 팔 수 있지만, 코옵은 매칭이
-     죽으면 상품성이 사라지기 때문이다. 실패작이 코옵 쪽에서 더 많이 사라진다면 코옵
-     코호트의 성과 지표(기하평균·조기 소멸률 등)는 <b>생존자만 관측되어 실제보다 좋게
-     측정</b>됐을 수 있다. 반론도 있다 — 스팀 P2P 기반 코옵은 서버 유지비가 없어 죽은
-     게임을 굳이 내릴 유인도 낮으므로, 이 편향이 실제로 코옵에 얼마나 유리하게 작용했는지는
-     불확실하다.`,
+    `<b>생존 편향 (방향은 불확실)</b> — 상장폐지된 게임은 카탈로그에서 빠져 모든 코호트의
+     조기 소멸률이 과소추정된다. 온라인 코옵은 매칭이 죽으면 상품성이 사라져 내려갈 유인이
+     있으나, 스팀 P2P 기반 코옵은 서버 유지비가 없어 내릴 유인도 낮다 — 편향의 크기와
+     방향은 불확실하다.`,
     `<b>장르 교집합은 제외</b> — 멀티 코옵이면서 로그라이크인 게임(예: Risk of Rain 계열)은
      로그라이크 코호트에서 빠지고, Singleplayer 태그까지 있으면 어느 코호트에도 들어가지
-     않는다 (Singleplayer 태그가 없으면 분류 우선순위에 따라 코옵으로 분류된다). 교집합
-     게임을 양쪽에 넣을 수도 있었지만 코호트를 상호배타로 유지해 검정을 단순하게 하려고
-     빼는 쪽을 택했다 — 그 결과 각 코호트는 "순수형"에 가깝고, 하이브리드
-     장르의 성과는 이 분석의 범위 밖이다.`,
-    `<b>코옵 표본 부족</b> — 코호트 A를 순수 멀티 코옵으로 좁히면서 표본이 다른 코호트의
-     1/5 수준으로 작다. 코옵 관련 지표(특히 상위 1% 점유율과 α)는 신뢰구간이 넓고 히트작
-     몇 개의 표본 포함 여부에 민감하므로, 점추정치보다 구간으로 읽어야 한다.`,
-    `<b>2025 하반기 커버리지</b> — 하반기 출시작은 리뷰 누적 기간이 짧고(7–12개월) SteamSpy
-     목록 편입 지연으로 표본이 얇다. 컷오프를 2025-06으로 좁혀도 결과는 사실상 동일했다
-     (민감도 확인 완료).`,
+     않는다 (Singleplayer가 없으면 분류 우선순위에 따라 코옵으로 분류). 상호배타 코호트를
+     위해 빼는 쪽을 택했다 — 하이브리드 장르의 성과는 이 분석의 범위 밖이다.`,
+    `<b>코옵 표본이 상대적으로 작다</b> — 순수 멀티 코옵은 ${"886"}개로 내러티브의 1/9
+     수준이다. 코옵 관련 지표(특히 상위 1% 점유율과 α)는 신뢰구간이 넓고 히트작 몇 개에
+     민감하므로 구간으로 읽어야 한다.`,
+    `<b>태그는 자기선택</b> — 태그는 유저/개발자가 붙이므로 경계 사례의 오분류 가능성이
+     있다. 검증 레이어(SteamSpy 태그)와 주 데이터(Gamalytic 태그 필터)의 분류 불일치는
+     처리 게임 기준 약 1.5%로 작았다.`,
   ],
-  foot: `데이터: SteamSpy + Steam 공식 API · 리뷰 수는 판매량의 대리변수 · 코드/재현:
-    <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
+  foot: `데이터: Gamalytic(판매량 추정, 주) + SteamSpy·Steam 공식 API(리뷰 원시 관측, 검증) ·
+    코드/재현: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
   defT: "코호트 정의 — 수집에 사용한 태그",
   defCohort: "코호트", defInc: "포함 조건 (스팀 태그)", defExc: "제외 태그",
   defRows: [
@@ -369,15 +378,15 @@ const ko = {
     주세요 — 큰 힘이 됩니다.`,
   aboutSteam: "Graytail on Steam →",
   aboutRepo: "분석 코드 (GitHub) →",
-  axReviews: "리뷰 수",
+  axReviews: "판매량 (장)",
   axCcdfY: "P(X ≥ x)",
-  axLogReviews: "리뷰 수 (로그 축)",
+  axLogReviews: "판매량 (로그 축)",
   axCumGames: "게임 누적 비율",
-  bandLabel: "중간 구간 100–1k",
+  bandLabel: "중간 구간 3.5천~3.5만 장",
   equality: "균등선",
-  ttCcdf: (x: number, p: number) => `리뷰 ≥ ${x.toLocaleString()}<br/>게임 비율 ${(100 * p).toPrecision(2)}%`,
+  ttCcdf: (x: number, p: number) => `판매 ≥ ${x.toLocaleString()}장<br/>게임 비율 ${(100 * p).toPrecision(2)}%`,
   ttLorenzHead: (x: number) => `하위 ${pct(x)} 게임`,
-  ttLorenzRow: (name: string, y: number) => `${name}: 리뷰 ${pct(y)}`,
+  ttLorenzRow: (name: string, y: number) => `${name}: 판매량 ${pct(y)}`,
 };
 
 const en: typeof ko = {
@@ -390,16 +399,17 @@ const en: typeof ko = {
     a friend group has to converge at the same time. If the supercritical branching-process
     prediction holds, the co-op cohort's success distribution should be more extreme than
     single-player narrative games: a heavier tail, a hollowed-out middle, and higher
-    concentration. We test three hypotheses using Steam review counts (a sales proxy).
+    concentration. <b>The primary outcome variable is Gamalytic's copies-sold estimate</b>,
+    with raw Steam review counts kept as a validation layer.
     Cohort A (co-op) <b>${m.n_A.toLocaleString()} games</b>${m.n_R
       ? `, cohort R (roguelike) <b>${m.n_R.toLocaleString()} games</b>` : ""},
     cohort B (single-player narrative) <b>${m.n_B.toLocaleString()} games</b>
-    (paid · launch price &lt;$40 · released 2022.01–2025.12 · ≥10 reviews · cohorts are
-    disjoint, classification priority co-op &gt; roguelike &gt; narrative).`,
+    (paid · price &lt;$40 · released 2022.01–2025.12 · AAA excluded · analysis sample
+    ≥300 copies sold · cohorts disjoint, priority co-op &gt; roguelike &gt; narrative).`,
   cohortA: "Co-op (online)",
   cohortB: "Single-player narrative",
   cohortR: "Roguelike",
-  c1t: "Hypothesis 1 — tail comparison: log-log CCDF",
+  c1t: "Hypothesis 1 — tail comparison: log-log CCDF (copies sold)",
   c1cap: (t) => `Dots are the observed CCDF; dashed lines are the power-law fit above xmin.
     A flatter slope (smaller α) means a heavier tail — probability decays slowly toward
     mega-hits. Power law vs lognormal likelihood ratio:
@@ -425,9 +435,9 @@ const en: typeof ko = {
          The interval narrows as the sample grows.`;
     return s;
   },
-  c2t: "Hypothesis 2 — missing middle: log₁₀(reviews) density (KDE)",
-  c2cap: () => `The gray band is the mid-success zone (100–1,000 reviews ≈ 3.5k–35k copies,
-    Boxleiter ×35). A bimodal shape (mostly early deaths + a few explosions) thins this band.`,
+  c2t: "Hypothesis 2 — missing middle: log₁₀(copies sold) density (KDE)",
+  c2cap: () => `The gray band is the mid-success zone (3.5k–35k copies ≈ $50K–500K gross).
+    A bimodal shape (mostly early deaths + a few explosions) thins this band.`,
   interp2: (m, ok) => {
     const sh = (k: string) => pct(m[k].middle_share);
     const ks = ["A", "R", "B"].filter((k) => m[k]);
@@ -470,14 +480,14 @@ const en: typeof ko = {
     return t;
   },
   c3t: "Hypothesis 3 — concentration: Lorenz curves",
-  c3cap: (c) => `The deeper the curve sags below the diagonal, the more reviews (≈sales)
-    concentrate in a few games. Early-death rate (<10 reviews):
+  c3cap: (c) => `The deeper the curve sags below the diagonal, the more sales concentrate in
+    a few games. Early-death rate (<300 copies):
     co-op ${pct(c.A.early_death_rate)} vs single-player ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)}).`,
   interp3: (c, ok) => {
     let s = `The farther a Lorenz curve sits from the diagonal (equality line), the more
       winner-take-all the market. Right now <b>the top 1% of co-op games take
-      ${pct(c.A.top1_share)} of all cohort reviews</b>, versus ${pct(c.B.top1_share)} for
+      ${pct(c.A.top1_share)} of all cohort sales</b>, versus ${pct(c.B.top1_share)} for
       single-player. Gini (0=perfect equality, 1=total monopoly):
       co-op ${f2(c.A.gini)} vs single-player ${f2(c.B.gini)}. `;
     s += ok
@@ -485,7 +495,7 @@ const en: typeof ko = {
          the co-op market is structurally more winner-take-all. `
       : `However the two Gini confidence intervals overlap, so this is <b>still
          inconclusive</b> — the direction matches the hypothesis but more data is needed. `;
-    s += `Early-death rates (fewer than 10 reviews) are co-op ${pct(c.A.early_death_rate)} vs
+    s += `Early-death rates (under 300 copies) are co-op ${pct(c.A.early_death_rate)} vs
       single-player ${pct(c.B.early_death_rate)} — the front half of the
       "mostly die early + a few explode" structure.`;
     return s;
@@ -495,36 +505,67 @@ const en: typeof ko = {
   thB: "Single-player narrative (B)",
   thR: "Roguelike (R)",
   rows: {
-    n: "Sample (≥10 reviews)", alpha: "Power-law exponent α (SE)", xmin: "xmin / tail size",
-    middle: "Middle band (100–1k) share", dip: "Hartigan dip p", gini: "Gini [95% CI]",
-    top: "Top 1% / 5% share", death: "Early-death rate (<10 reviews)",
-    median: "Median (reviews)", mean: "Mean (× geometric mean)", geomean: "Geometric mean",
+    n: "Sample (≥300 copies)", alpha: "Power-law exponent α (SE)", xmin: "xmin / tail size",
+    middle: "Middle band (3.5k–35k) share", dip: "Hartigan dip p", gini: "Gini [95% CI]",
+    top: "Top 1% / 5% share", death: "Early-death rate (<300 copies)",
+    median: "Median (copies)", mean: "Mean (× geometric mean)", geomean: "Geometric mean",
   },
   sumNote: (c, hasR) => {
     const gap = (k: string) => (c[k].mean / c[k].geomean).toFixed(0);
-    return `How to read — the <b>median</b> is the review count of the middle game when you
-      line the cohort up by outcome. The <b>geometric mean</b> is the average on a
-      multiplicative (log) scale: it tells you what order of magnitude a typical game in the
-      genre lives at, and is immune to a few mega-hits — the right notion of "average" for
-      data that spreads by multiples. The <b>arithmetic mean</b>, by contrast, is a
-      lottery-style expected value dominated by the top 1%; the wider the gap between
-      arithmetic and geometric mean (co-op ×${gap("A")}${hasR ? `, roguelike ×${gap("R")}` : ""},
-      narrative ×${gap("B")}), the more lottery-like the genre.`;
+    return `読み方 — <b>中央値</b>はコホートを成果順に並べたとき、真ん中のゲームの販売本数。
+      <b>幾何平均</b>は倍数(対数)スケールでの平均で、「普通のゲームがどの桁で生きているか」を
+      示し、少数のメガヒットの影響を受けない。一方<b>算術平均</b>は上位1%に支配される
+      「宝くじの期待値」であり、算術平均が幾何平均の何倍か(Co-op ×${gap("A")}${hasR ? `、
+      ローグライク ×${gap("R")}` : ""}、ナラティブ ×${gap("B")})が大きいほど宝くじに近い。`;
   },
   insightTitle: (name) => `If you're making a ${name} game`,
   insightCard: (d) => `<ul>
-    <li><b>The typical world</b> — geometric mean of ${sig2(d.geomean)} reviews, i.e. on the
-      order of ${sig2(d.geomean * 35)} copies sold (Boxleiter ×35).</li>
-    <li><b>Half the reality</b> — half of surviving games stay under ${sig2(d.median)} reviews.</li>
-    <li><b>Early-death risk</b> — ${(100 * d.early).toFixed(0)}% of releases never reach even
-      10 reviews.</li>
-    <li><b>Odds of a mid-tier hit</b> — among games that survive early death,
-      ${(100 * d.middle).toFixed(0)}% land in the 100–1,000 review band (~3.5k–35k copies).</li>
+    <li><b>The typical world</b> — a geometric mean of about ${sig2(d.geomean)} copies sold.</li>
+    <li><b>Half the reality</b> — half of surviving games stay under ${sig2(d.median)} copies.</li>
+    <li><b>Early-death risk</b> — ${(100 * d.early).toFixed(0)}% of releases never clear
+      300 copies.</li>
+    <li><b>Odds of a mid-tier hit</b> — among survivors, ${(100 * d.middle).toFixed(0)}% land
+      in the 3.5k–35k copies band (~$50K–500K gross).</li>
     <li><b>Lottery multiplier</b> — the arithmetic mean is ×${d.lot.toFixed(0)} the geometric
       mean: a real hit pays tens to hundreds of times the typical outcome.</li>
     <li><b>Winner-take-all</b> — the top 1% of games capture ${(100 * d.top1).toFixed(0)}% of
-      all reviews; the top 5% capture ${(100 * d.top5).toFixed(0)}%.</li>
+      all sales; the top 5% capture ${(100 * d.top5).toFixed(0)}%.</li>
   </ul>`,
+  validT: "Validation layer — against raw review counts",
+  validMetric: "Metric", validMain: "Sales-based (primary)", validCheck: "Review-based (check)", validAgree: "Agree",
+  validCap: (rc: any): string => `To ensure the primary conclusions are not artifacts of
+    Gamalytic's sales model, the same metrics are recomputed on <b>raw Steam review
+    counts</b> (SteamSpy/official API pipeline, ${(rc.n_total ?? 0).toLocaleString()} games
+    collected so far). Absolute values differ across scales — what matters is whether
+    <b>the winner of each metric agrees</b>; agreement means scale-robust conclusions.`,
+  validRows: (R: any) => {
+    const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
+    const rc = R.review_check;
+    const pick = (obj: Record<string, number>, max: boolean) => {
+      const ks = Object.keys(obj);
+      return ks.sort((x, y) => max ? obj[y] - obj[x] : obj[x] - obj[y])[0];
+    };
+    const build = (label: string, mainVals: Record<string, number>,
+                   chkVals: Record<string, number>, max: boolean, fmt: (v: number) => string) => {
+      const mk = pick(mainVals, max), ck = pick(chkVals, max);
+      return { label, main: `${nm[mk]} (${fmt(mainVals[mk])})`,
+               check: `${nm[ck]} (${fmt(chkVals[ck])})`, ok: mk === ck };
+    };
+    const ks = ["A", "R", "B"].filter((k) => rc[k] && R.concentration[k]);
+    const gv = (f: (k: string) => number) => Object.fromEntries(ks.map((k) => [k, f(k)]));
+    return [
+      build("Highest early-death rate", gv((k) => R.concentration[k].early_death_rate),
+            gv((k) => rc[k].early_death_rate), true, pct),
+      build("Thinnest middle band", gv((k) => R.middle[k].middle_share),
+            gv((k) => rc[k].middle_share), false, pct),
+      build("Highest Gini (concentration)", gv((k) => R.concentration[k].gini),
+            gv((k) => rc[k].gini), true, (v) => v.toFixed(3)),
+      build("Best typical outcome (geomean)", gv((k) => R.concentration[k].geomean),
+            gv((k) => rc[k].geomean), true, (v) => Math.round(v).toLocaleString()),
+      build("Heaviest tail (lowest α)", gv((k) => R.tail[k].alpha),
+            gv((k) => rc[k].alpha), false, (v) => v.toFixed(2)),
+    ];
+  },
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
   robCap: `A smaller α means a heavier tail — outsized hits come relatively more often. This
@@ -560,81 +601,59 @@ const en: typeof ko = {
     <a href="https://steamdb.info/stats/releases/" target="_blank" rel="noopener">SteamDB</a>
 .`,
   eraT: "Era effect — year-by-year trend",
-  eraCap: `Comparing absolute levels across years is confounded by review-accumulation time
-    (a 2022 release has had ~4 years of reviews, a 2025 release ~1 year). The valid reading
-    is the within-year comparison between cohorts — accumulation cancels out. Steam's overall
-    release volume exploded over this period, but market-wide supply growth also cancels in
-    the ratio, since both cohorts share the same market. What does NOT cancel is a
-    difference in supply growth between cohorts. The numbers in the table are each cohort's
-    <b>geometric-mean review count</b>; the <b>S in parentheses is a supply index</b> — the
-    cohort's yearly release count rebased to 2022=1 and deflated by the market-wide release
-    growth (card above). S&gt;1 means supply is flowing into the genre faster than the market
-    average. Due to SteamSpy's catalog-indexing lag (~1 year), the 2025 row effectively
-    covers only Jan–May releases — ignore the 2025 S.`,
+  eraCap: `Comparing absolute levels across years is confounded by accumulation time (a 2022
+    release has had ~4 years of sales, a 2025 release ~1 year). The valid reading is the
+    within-year comparison between cohorts — accumulation cancels out. Steam's overall
+    release volume exploded over this window, but market-wide growth also cancels in the
+    ratios; what does not cancel is a difference in supply growth between cohorts. Table
+    numbers are each cohort's <b>geometric-mean copies sold</b>; the <b>S in parentheses is
+    a supply index</b> — yearly release count rebased to 2022=1 and deflated by market-wide
+    growth (card above). S&gt;1 means supply flows into the genre faster than the market.
+    The primary catalog has no indexing lag, so the 2025 row is valid.`,
   eraNote: (era) => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
     const f = yrs[0], l = yrs[yrs.length - 1];
-    const ly = yrs.length >= 3 ? yrs[yrs.length - 2] : l;
     const S = (yr: string, c: string): number | null => era.S?.[yr]?.[c] ?? null;
     const ab0 = era.ratios[f]?.A_over_B, ab1 = era.ratios[l]?.A_over_B;
     const rb0 = era.ratios[f]?.R_over_B, rb1 = era.ratios[l]?.R_over_B;
-    const sA = S(ly, "A"), sR = S(ly, "R"), sB = S(ly, "B");
-    const phrase = (v: number) => v > 1.1 ? "inflowing faster than the market" : v >= 0.9 ? "tracking the market" : "growing slower than the market (exodus)";
+    const sA = S(l, "A"), sR = S(l, "R"), sB = S(l, "B");
+    const phrase = (v: number) => v > 1.1 ? "市場より速い流入" : v >= 0.9 ? "市場並みの速度" : "市場より遅い増加(離脱)";
     const parts: string[] = [
-      `Outcome shifts are a composite of demand (fashion) and supply (competition) — S shows
-       the supply side, and the within-year outcome-ratio trend shows the net of the two
-       (S as of ${ly}, the last fully-covered year).`,
+      `成果の変化は需要(流行)と供給(競争)の合成だ — Sが供給側を、同一年内の成果倍率の
+       トレンドが正味効果を示す (Sは${l}年基準)。`,
     ];
     if (sA != null && ab0 && ab1) {
-      parts.push(`<b>Co-op</b> — supply S ${sA.toFixed(2)}: ${phrase(sA)}. Outcome ratio vs
-        narrative ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "rising" : "falling"}).
+      parts.push(`<b>Co-op</b> — 供給S ${sA.toFixed(2)}: ${phrase(sA)}。ナラティブ比の成果倍率
+        ×${ab0.toFixed(1)}→×${ab1.toFixed(1)} (${ab1 >= ab0 ? "上昇" : "下落"})。
         ${sA > 1.1 && ab1 >= ab0
-          ? "Relative outcomes held or rose despite influx — demand (a growing co-op audience) is outpacing supply."
+          ? "供給が流入しても相対成果が維持・上昇 — 需要(Co-op層の拡大)が供給を上回るシグナル。"
           : sA >= 0.9 && sA <= 1.1 && ab1 >= ab0
-          ? "Supply merely tracked the market while relative outcomes rose — a demand-led picture without intensifying competition."
+          ? "供給は市場並みに留まる間に相対成果が上昇 — 競争激化なしに需要拡大が主導する絵。"
           : sA > 1.1
-          ? "Influx coincides with falling relative outcomes — a dilution signal."
-          : "Little supply pressure — ratio changes are more likely demand-side."}`);
+          ? "供給流入と相対成果の下落が重なる — 競争希釈のシグナル。"
+          : "供給圧力は小さい — 倍率の変化は需要側の要因の可能性。"}`);
     }
     if (sR != null && rb0 && rb1) {
-      parts.push(`<b>Roguelike</b> — supply S ${sR.toFixed(2)}: ${phrase(sR)}. Outcome ratio vs
-        narrative ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "rising" : "falling"}).
+      parts.push(`<b>ローグライク</b> — 供給S ${sR.toFixed(2)}: ${phrase(sR)}。ナラティブ比の成果倍率
+        ×${rb0.toFixed(1)}→×${rb1.toFixed(1)} (${rb1 >= rb0 ? "上昇" : "下落"})。
         ${sR > 1.1 && rb1 < rb0
-          ? "Supply pours in while relative outcomes fall — the classic overheating pattern; demand cooling and dilution cannot be separated in this data."
+          ? "供給は流入するのに相対成果は下落 — 過熱期の典型パターン。需要の冷え込みと供給希釈はこのデータだけでは分離できない。"
           : sR > 1.1
-          ? "Outcomes hold despite influx — demand is keeping up."
+          ? "流入にもかかわらず相対成果は維持 — 需要が追いついている。"
           : rb1 < rb0
-          ? "The ratio fell without much supply pressure — weight shifts to demand (fashion) cooling."
-          : "Low supply pressure — changes are more likely demand-side."}`);
+          ? "供給圧力が小さいのに倍率が下がった — 需要(流行)の冷え込み側に重み。"
+          : "供給圧力は低い — 変化は需要側の要因の可能性。"}`);
     }
     if (sB != null) {
-      parts.push(`<b>Narrative (Story Rich)</b> — the reference cohort (ratio ≡ 1). Supply S ${sB.toFixed(2)}:
+      parts.push(`<b>ナラティブ (Story Rich)</b> — 倍率の基準コホート(定義上1)。供給S ${sB.toFixed(2)}:
         ${sB < 0.9
-          ? "growing slower than the market or shrinking — a supply exodus toward trendier genres, easing competition for the games that remain."
+          ? "市場平均より遅い増加ないし減少 — 流行ジャンルへの供給離脱で、残るゲームには競争緩和要因。"
           : sB <= 1.1
-          ? "growing at roughly market pace."
-          : "growing faster than the market — intensifying competition."}`);
+          ? "市場平均並みの速度で増えている。"
+          : "市場平均より速く増加 — 競争激化要因。"}`);
     }
-    const ext = era.ext;
-    if (ext?.supply_index?.A) {
-      const si = ext.supply_index;
-      const last = (o: any) => o[Math.max(...Object.keys(o).map(Number))];
-      parts.push(`<b>External check (no catalog lag)</b> — reproducing the same cohort
-        definitions on Gamalytic's catalog, the 2025 supply index is <b>co-op
-        ${last(si.A).toFixed(2)}</b> ${si.R ? `/ roguelike ${last(si.R).toFixed(2)}` : ""} /
-        narrative ${si.B ? last(si.B).toFixed(2) : "-"}. Co-op releases grew
-        ${ext.supply_by_year.A["2024"]} (2024) → ${ext.supply_by_year.A["2025"]} (2025) —
-        several times the market's pace. <b>The 2025 co-op/roguelike influx acceleration is
-        confirmed by measurement</b>; narrative tracks the market.`);
-    } else if (l !== ly) {
-      const a25 = S(l, "A"), b25 = S(l, "B");
-      if (a25 != null && b25 != null) {
-        parts.push(`<b>Early signs in ${l}</b> — undercounted in absolute terms, but valid
-          within-year: S co-op ${a25.toFixed(2)} / narrative ${b25.toFixed(2)}.`);
-      }
-    }
-    parts.push(`Per-year samples are small; read directions, not verdicts.`);
+    parts.push(`標本の小さいコホート(Co-op)のセルは方向性として読むこと。`);
     return parts.join("<br/><br/>");
   },
   eraYear: "Year",
@@ -689,41 +708,30 @@ const en: typeof ko = {
   },
   limitT: "Limitations",
   limits: [
-    `<b>Genre differences in the review-to-sales multiplier</b> — the Boxleiter multiplier
-     varies by genre, price, and year. Joining Gamalytic sales estimates (~1,500 games), the
-     measured multipliers are co-op ×27 / roguelike ×23 / narrative ×21 (median) — cohort
-     differences are modest, so shape comparisons are broadly safe, and co-op's slightly
-     higher multiplier means review-based metrics are if anything conservative for co-op.`,
+    `<b>Copies sold is an estimate</b> — the primary outcome, Gamalytic's copiesSold, is a
+     model fed by review counts, playtime and more — not a raw observation. Potential model
+     distortion is offset by the raw review-count validation layer (see the comparison
+     card): where both scales agree, conclusions are not model-dependent.`,
     `<b>Streaming-exposure confound</b> — co-op hits interact with Twitch/YouTube exposure.
      The observed concentration cannot be attributed to the "friend coordination"
      mechanism alone.`,
-    `<b>SteamSpy freshness</b> — tags and prices come from SteamSpy's cache. Review counts
-     were replaced with official Steam appreviews data wherever possible.`,
-    `<b>Survivorship bias (direction uncertain)</b> — delisted games disappear from the
-     Steam API, so early-death rates are underestimated for every cohort. Crucially,
-     <b>online co-op games are more likely to be taken down when the playerbase dies</b> —
-     a single-player game can keep selling with zero players, but a co-op game loses its
-     sellability once matchmaking is dead. If failures vanish disproportionately on the
-     co-op side, the co-op cohort's outcome metrics (geometric mean, early-death rate, …)
-     are <b>measured only on survivors and thus biased upward</b>. The counterargument:
-     Steam-P2P co-op has no server upkeep, so there is little incentive to delist a dead
-     game either — how strongly this bias actually favors co-op is uncertain.`,
+    `<b>Survivorship bias (direction uncertain)</b> — delisted games drop out of catalogs,
+     so early-death rates are underestimated for every cohort. Dead-matchmaking co-op games
+     have a delisting incentive, but Steam-P2P co-op has no server upkeep and thus little
+     incentive either — the size and direction of this bias are uncertain.`,
     `<b>Genre intersections are dropped</b> — games that are both multiplayer co-op and
-     roguelike (e.g. the Risk of Rain series) fall out of the roguelike cohort, and if they
-     also carry the Singleplayer tag they end up in no cohort at all (without the Singleplayer
-     tag they count as co-op, per classification priority). We could have counted
-     intersection games in both cohorts, but chose to drop them to keep cohorts disjoint and
-     the tests simple — so each cohort is close to a "pure type", and hybrid-genre outcomes
-     sit outside this analysis.`,
-    `<b>Small co-op sample</b> — narrowing cohort A to pure multiplayer co-op leaves it at
-     roughly one-fifth the size of the other cohorts. Co-op metrics (especially top-1% share
-     and α) have wide confidence intervals and are sensitive to whether a few hits land in
-     the sample — read intervals, not point estimates.`,
-    `<b>H2-2025 coverage</b> — late-2025 releases have short review-accumulation windows
-     (7–12 months) and SteamSpy lags on recent titles, so that slice is thin. Narrowing the
-     cutoff to 2025-06 left the results essentially unchanged (sensitivity checked).`,
+     roguelike (e.g. the Risk of Rain series) fall out of the roguelike cohort, and with a
+     Singleplayer tag they land in no cohort (without it they count as co-op). We keep
+     cohorts disjoint; hybrid-genre outcomes sit outside this analysis.`,
+    `<b>The co-op sample is comparatively small</b> — pure multiplayer co-op is ~886 games,
+     about one-ninth of narrative. Co-op metrics (especially top-1% share and α) have wide
+     confidence intervals — read intervals, not points.`,
+    `<b>Tags are self-selected</b> — tags come from users/developers, so edge cases can be
+     misclassified. Classification disagreement between the main data (Gamalytic tag
+     filters) and the validation layer (SteamSpy tags) was only ~1.5% of processed games.`,
   ],
-  foot: `Data: SteamSpy + official Steam API · review count is a sales proxy · code:
+  foot: `Data: Gamalytic (sales estimates, primary) + SteamSpy/official Steam API (raw
+    review counts, validation) · code:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
   defT: "Cohort definitions — tags used for collection",
   defCohort: "Cohort", defInc: "Inclusion (Steam tags)", defExc: "Excluded tags",
@@ -755,15 +763,15 @@ const en: typeof ko = {
     visiting our store page — it means a lot.`,
   aboutSteam: "Graytail on Steam →",
   aboutRepo: "Analysis code (GitHub) →",
-  axReviews: "Review count",
+  axReviews: "Copies sold",
   axCcdfY: "P(X ≥ x)",
-  axLogReviews: "Review count (log scale)",
+  axLogReviews: "Copies sold (log scale)",
   axCumGames: "Cumulative share of games",
-  bandLabel: "middle band 100–1k",
+  bandLabel: "middle band 3.5k–35k copies",
   equality: "equality line",
-  ttCcdf: (x, p) => `≥ ${x.toLocaleString()} reviews<br/>${(100 * p).toPrecision(2)}% of games`,
+  ttCcdf: (x, p) => `≥ ${x.toLocaleString()} copies<br/>${(100 * p).toPrecision(2)}% of games`,
   ttLorenzHead: (x) => `bottom ${pct(x)} of games`,
-  ttLorenzRow: (name, y) => `${name}: ${pct(y)} of reviews`,
+  ttLorenzRow: (name, y) => `${name}: ${pct(y)} of sales`,
 };
 
 const ja: typeof ko = {
@@ -774,17 +782,17 @@ const ja: typeof ko = {
   title: "Co-opゲームの成功は本当に「勝者総取り」なのか",
   lede: (m) => `オンラインCo-opゲームの口コミは「フレンドグループが同時に集まって初めて機能する」
     調整(coordination)構造で動く。supercritical分岐過程の予測どおりなら、Co-opコホートの
-    成功分布はシングルプレイヤー・ナラティブゲームよりも極端になるはずだ — 裾はより重く、
-    中間層は空洞化し、集中度はより高くなる。Steamレビュー数(販売量の代理変数)で3つの
-    仮説を検証した。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>、
-    コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>${m.n_R
-      ? `、コホートR(ローグライク) <b>${m.n_R.toLocaleString()}本</b>` : ""}
-    (有料 · 初期価格 &lt;$40 · 2022.01–2025.12リリース · レビュー10件以上 ·
-    コホートは互いに排他的、分類優先順位はCo-op &gt; ローグライク &gt; ナラティブ)。`,
+    成功分布はシングルプレイヤー・ナラティブゲームよりも極端になるはずだ。<b>主要結果変数は
+    Gamalyticの販売本数推定値(copiesSold)</b>で、Steamレビュー数の生観測を検証レイヤーとして
+    併用する。コホートA(Co-op) <b>${m.n_A.toLocaleString()}本</b>${m.n_R
+      ? `、コホートR(ローグライク) <b>${m.n_R.toLocaleString()}本</b>` : ""}、
+    コホートB(シングル・ナラティブ) <b>${m.n_B.toLocaleString()}本</b>
+    (有料 · 価格 &lt;$40 · 2022.01–2025.12リリース · AAA除外 · 分析標本は販売300本以上 ·
+    コホートは互いに排他、優先順位はCo-op &gt; ローグライク &gt; ナラティブ)。`,
   cohortA: "Co-op (オンライン)",
   cohortB: "シングル・ナラティブ",
   cohortR: "ローグライク",
-  c1t: "仮説1 — 裾の比較: 両対数CCDF",
+  c1t: "仮説1 — 裾の比較: 両対数CCDF (販売本数)",
   c1cap: (t) => `点は観測CCDF、破線はxmin以上の区間のべき乗則フィット。傾きが緩やかなほど(αが小さいほど)
     上位に行っても確率がゆっくり減る「重い裾」。べき乗則 vs 対数正規の尤度比:
     A R=${f2(t.A.LR_powerlaw_vs_lognormal)} (p=${p3(t.A.p_powerlaw_vs_lognormal)}),
@@ -808,8 +816,8 @@ const ja: typeof ko = {
          標本が増えれば区間は狭まる。`;
     return s;
   },
-  c2t: "仮説2 — 中間層の欠落: log₁₀(レビュー数)密度 (KDE)",
-  c2cap: () => `灰色の帯が中間的成功ゾーン(レビュー100–1,000件 ≈ 販売3.5千–3.5万本、Boxleiter ×35)。
+  c2t: "仮説2 — 中間層の欠落: log₁₀(販売本数)密度 (KDE)",
+  c2cap: () => `灰色の帯が中間的成功ゾーン(販売3.5千–3.5万本 ≈ 売上$50K–500K)。
     二峰型(大半が早期消滅 + 少数が爆発)ならこの帯が薄くなる。`,
   interp2: (m, ok) => {
     const sh = (k: string) => pct(m[k].middle_share);
@@ -849,12 +857,12 @@ const ja: typeof ko = {
     return t;
   },
   c3t: "仮説3 — 集中度: ローレンツ曲線",
-  c3cap: (c) => `曲線が下に垂れるほどレビュー(≈販売)が少数のゲームに集中。早期消滅率(レビュー10件未満):
+  c3cap: (c) => `曲線が下に垂れるほど販売本数が少数のゲームに集中。早期消滅率(販売300本未満):
     Co-op ${pct(c.A.early_death_rate)} vs シングル ${pct(c.B.early_death_rate)}
     (χ² p=${p3(c.early_death_test.p)})。`,
   interp3: (c, ok) => {
     let s = `ローレンツ曲線が対角線(均等線)から遠いほど、成功が少数に集中した市場だ。
-      現在の数値では<b>Co-op上位1%のゲームがコホート全体レビューの ${pct(c.A.top1_share)}</b>を
+      現在の数値では<b>Co-op上位1%のゲームがコホート全体販売本数の ${pct(c.A.top1_share)}</b>を
       持っていくのに対し、シングル上位1%は ${pct(c.B.top1_share)}にとどまる。
       ジニ係数(0=完全均等、1=完全独占)もCo-op ${f2(c.A.gini)} vs シングル ${f2(c.B.gini)}。`;
     s += ok
@@ -862,7 +870,7 @@ const ja: typeof ko = {
          より勝者総取りだ。`
       : `ただし2つのジニ係数の信頼区間が重なるため<b>まだ未確定</b> — 方向は仮説と一致するが、
          より多くの標本が必要だ。`;
-    s += `早期消滅率(レビュー10件未満)はCo-op ${pct(c.A.early_death_rate)} vs
+    s += `早期消滅率(販売300本未満)はCo-op ${pct(c.A.early_death_rate)} vs
       シングル ${pct(c.B.early_death_rate)}で、「大半が早期消滅 + 少数が爆発」構造の
       前半部分を示している。`;
     return s;
@@ -872,10 +880,10 @@ const ja: typeof ko = {
   thB: "シングル・ナラティブ (B)",
   thR: "ローグライク (R)",
   rows: {
-    n: "標本 (レビュー10件以上)", alpha: "べき指数 α (SE)", xmin: "xmin / 裾の標本数",
-    middle: "中間帯(100–1k)比率", dip: "Hartigan dip p", gini: "ジニ係数 [95% CI]",
-    top: "上位1% / 5%シェア", death: "早期消滅率 (レビュー10件未満)",
-    median: "中央値 (レビュー)", mean: "平均 (幾何平均の倍数)", geomean: "幾何平均",
+    n: "標本 (販売300本以上)", alpha: "べき指数 α (SE)", xmin: "xmin / 裾の標本数",
+    middle: "中間帯(3.5千~3.5万本)比率", dip: "Hartigan dip p", gini: "ジニ係数 [95% CI]",
+    top: "上位1% / 5%シェア", death: "早期消滅率 (販売300本未満)",
+    median: "中央値 (販売本数)", mean: "平均 (幾何平均の倍数)", geomean: "幾何平均",
   },
   sumNote: (c, hasR) => {
     const gap = (k: string) => (c[k].mean / c[k].geomean).toFixed(0);
@@ -888,17 +896,51 @@ const ja: typeof ko = {
   },
   insightTitle: (name) => `${name}ゲームを作るなら`,
   insightCard: (d) => `<ul>
-    <li><b>普通の世界</b> — 幾何平均レビュー${sig2(d.geomean)}件、販売に換算すると約
-      ${sig2(d.geomean * 35)}本の桁の世界 (Boxleiter ×35基準)。</li>
-    <li><b>半分の現実</b> — 生き残ったゲームの半分はレビュー${sig2(d.median)}件未満にとどまる。</li>
-    <li><b>早期消滅リスク</b> — リリース作の${(100 * d.early).toFixed(0)}%はレビュー10件も集められない。</li>
-    <li><b>中堅ヒットの確率</b> — 早期消滅を越えたゲームのうち${(100 * d.middle).toFixed(0)}%が
-      レビュー100–1,000件(販売約3.5千–3.5万本)の帯に着地する。</li>
+    <li><b>普通の世界</b> — 幾何平均で約${sig2(d.geomean)}本の販売の桁の世界。</li>
+    <li><b>半分の現実</b> — 生き残ったゲームの半分は販売${sig2(d.median)}本未満にとどまる。</li>
+    <li><b>早期消滅リスク</b> — リリース作の${(100 * d.early).toFixed(0)}%は販売300本を
+      越えられない。</li>
+    <li><b>中堅ヒットの確率</b> — 生存作のうち${(100 * d.middle).toFixed(0)}%が
+      販売3.5千–3.5万本(売上$50K–500K)の帯に着地する。</li>
     <li><b>宝くじ倍率</b> — 算術平均は幾何平均の×${d.lot.toFixed(0)}。大きく当たれば
       典型的成果の数十~数百倍を持っていく構造だ。</li>
-    <li><b>勝者総取りの度合い</b> — 上位1%のゲームが全レビューの${(100 * d.top1).toFixed(0)}%、
+    <li><b>勝者総取りの度合い</b> — 上位1%のゲームが全販売の${(100 * d.top1).toFixed(0)}%、
       上位5%が${(100 * d.top5).toFixed(0)}%を占有する。</li>
   </ul>`,
+  validT: "検証レイヤー — レビュー生観測との対照",
+  validMetric: "指標", validMain: "販売基準 (主)", validCheck: "レビュー基準 (検証)", validAgree: "一致",
+  validCap: (rc: any): string => `主分析(Gamalytic販売推定)の結論がモデルの産物でないことを
+    確認するため、Steamレビュー数の<b>生観測</b>(SteamSpy/公式APIパイプライン、収集済み
+    ${(rc.n_total ?? 0).toLocaleString()}本基準)で同じ指標を再計算して対照する。尺度が違うため
+    絶対値は異なるが、<b>各指標の「1位コホート」が一致すれば結論は尺度に頑健</b>だ。`,
+  validRows: (R: any) => {
+    const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
+    const rc = R.review_check;
+    const pick = (obj: Record<string, number>, max: boolean) => {
+      const ks = Object.keys(obj);
+      return ks.sort((x, y) => max ? obj[y] - obj[x] : obj[x] - obj[y])[0];
+    };
+    const build = (label: string, mainVals: Record<string, number>,
+                   chkVals: Record<string, number>, max: boolean, fmt: (v: number) => string) => {
+      const mk = pick(mainVals, max), ck = pick(chkVals, max);
+      return { label, main: `${nm[mk]} (${fmt(mainVals[mk])})`,
+               check: `${nm[ck]} (${fmt(chkVals[ck])})`, ok: mk === ck };
+    };
+    const ks = ["A", "R", "B"].filter((k) => rc[k] && R.concentration[k]);
+    const gv = (f: (k: string) => number) => Object.fromEntries(ks.map((k) => [k, f(k)]));
+    return [
+      build("早期消滅率が最も高い", gv((k) => R.concentration[k].early_death_rate),
+            gv((k) => rc[k].early_death_rate), true, pct),
+      build("中間帯が最も薄い", gv((k) => R.middle[k].middle_share),
+            gv((k) => rc[k].middle_share), false, pct),
+      build("ジニ係数が最も高い", gv((k) => R.concentration[k].gini),
+            gv((k) => rc[k].gini), true, (v) => v.toFixed(3)),
+      build("典型成果(幾何平均)が最も高い", gv((k) => R.concentration[k].geomean),
+            gv((k) => rc[k].geomean), true, (v) => Math.round(v).toLocaleString()),
+      build("裾が最も重い (α最小)", gv((k) => R.tail[k].alpha),
+            gv((k) => rc[k].alpha), false, (v) => v.toFixed(2)),
+    ];
+  },
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",
   robCap: `αが小さいほど超大型ヒットが相対的に頻繁に出る「重い裾」だ。この表は同じ価格帯・
@@ -932,15 +974,12 @@ const ja: typeof ko = {
     <a href="https://steamdb.info/stats/releases/" target="_blank" rel="noopener">SteamDB</a>
 。`,
   eraT: "時代効果 — 年別トレンド",
-  eraCap: `年をまたいだ絶対値の比較はレビュー蓄積期間の差で汚染される(2022年作は~4年分、
-    2025年作は~1年分)。有効な読み方は同じ年の中でコホート同士を比較すること — 蓄積期間が
-    相殺される。この期間、Steam全体のリリース数は爆発的に増えたが、市場全体の供給増加は
-    同じ市場を共有する両コホートの倍率では相殺される。相殺されないのはコホート間の供給
-    増加速度の差だ。表の数字は各コホートの<b>幾何平均レビュー数</b>で、括弧の<b>Sは供給指数</b> —
-    そのコホートの年間新作数を2022年=1とし、市場全体の新作増加(上のカード)で割って補正した
-    値だ。S&gt;1ならそのジャンルへ市場平均より速く供給が流れ込んでいる。SteamSpyの
-    カタログ収録遅延(約1年)のため、2025年の行は実質1~5月のリリースのみを含む —
-    2025年のSは過小なので無視すること。`,
+  eraCap: `年をまたいだ絶対値の比較は蓄積期間の差で汚染される(2022年作は~4年分、2025年作は
+    ~1年分の販売)。有効な読み方は同じ年の中でコホート同士を比較すること — 蓄積期間が相殺
+    される。市場全体の供給増加も倍率では相殺され、相殺されないのはコホート間の供給増加速度の
+    差だ。表の数字は各コホートの<b>幾何平均販売本数</b>、括弧の<b>Sは供給指数</b> — 年間新作数を
+    2022年=1とし市場全体の増加(上のカード)で割った値。S&gt;1ならそのジャンルへ市場平均より
+    速く供給が流入している。主データはカタログ収録遅延がないため2025年の行まで有効だ。`,
   eraNote: (era) => {
     const yrs = Object.keys(era.ratios ?? {}).sort();
     if (yrs.length < 2) return "";
@@ -1053,37 +1092,25 @@ const ja: typeof ko = {
   },
   limitT: "限界",
   limits: [
-    `<b>レビュー→販売倍率のジャンル差</b> — Boxleiter倍率はジャンル·価格·年によって異なる。
-     Gamalyticの販売推定値と結合(約1,500本)して実測した倍率はCo-op ×27 / ローグライク ×23 /
-     ナラティブ ×21(中央値)でコホート間の差は大きくない — 形状比較は概ね安全であり、Co-opの
-     倍率がやや高いことはレビュー基準がCo-opにむしろ保守的であることを意味する。`,
+    `<b>販売本数は推定値</b> — 主要結果変数のGamalytic copiesSoldはレビュー数・プレイタイム
+     などを入力とする推定モデルであり、生の観測ではない。モデル歪みの可能性はSteamレビュー数の
+     生観測(検証レイヤーカード)との対照で相殺する — 両尺度が同方向なら結論はモデル依存ではない。`,
     `<b>配信露出の交絡</b> — Co-opのヒット作はTwitch/YouTube露出と相互作用する。観測された
      集中度を「フレンド調整」メカニズムだけに帰属することはできない。`,
-    `<b>SteamSpyの鮮度</b> — タグ·価格はSteamSpyのキャッシュ基準。レビュー数は可能な限り
-     Steam公式appreviewsで置き換えた。`,
-    `<b>生存バイアス (方向は不確実)</b> — ストアから削除されたゲームはSteam APIから
-     消えるため、全コホートで早期消滅率が過小推定される。特に<b>オンラインCo-opはユーザーが
-     いなくなるとストアから取り下げられる可能性が高い</b> — シングルゲームはプレイヤーが
-     ゼロでも売り続けられるが、Co-opはマッチングが死ねば商品性を失うからだ。失敗作が
-     Co-op側で多く消えているなら、Co-opコホートの成果指標(幾何平均・早期消滅率など)は
-     <b>生存者だけを観測して実際より良く測定</b>されている可能性がある。反論もある —
-     Steam P2Pベースのco-opはサーバー維持費がないため、死んだゲームをわざわざ取り下げる
-     動機も薄い。このバイアスが実際どれほどCo-opに有利に働いたかは不確実だ。`,
-    `<b>ジャンルの交差は除外</b> — マルチCo-opかつローグライクのゲーム(例: Risk of Rain
-     シリーズ)はローグライクコホートから外れ、Singleplayerタグまで持つ場合はどのコホートにも
-     入らない (Singleplayerタグがなければ分類優先順位によりCo-opに分類される)。交差ゲームを
-     両方に数える選択もあったが、コホートを互いに排他に保ち検定を
-     単純にするため除外する側を選んだ — その結果、各コホートは「純粋型」に近く、ハイブリッド
-     ジャンルの成果はこの分析の範囲外だ。`,
-    `<b>Co-op標本の不足</b> — コホートAを純粋マルチCo-opに絞ったため、標本は他コホートの
-     約1/5と小さい。Co-op関連指標(特に上位1%シェアとα)は信頼区間が広く、少数のヒット作が
-     標本に入るかどうかに敏感なため、点推定値ではなく区間で読むべきだ。`,
-    `<b>2025年下半期のカバレッジ</b> — 下半期リリースはレビュー蓄積期間が短く(7–12ヶ月)、
-     SteamSpyの収録遅延で標本が薄い。カットオフを2025-06に狭めても結果は実質同じだった
-     (感度確認済み)。`,
+    `<b>生存バイアス (方向は不確実)</b> — ストアから削除されたゲームはカタログから消え、
+     全コホートで早期消滅率が過小推定される。マッチングが死んだCo-opには取り下げ動機があるが、
+     Steam P2PのCo-opはサーバー維持費がなく動機も薄い — バイアスの大きさと方向は不確実だ。`,
+    `<b>ジャンルの交差は除外</b> — マルチCo-opかつローグライク(例: Risk of Rainシリーズ)は
+     ローグライクコホートから外れ、Singleplayerタグ付きならどのコホートにも入らない
+     (なければ優先順位によりCo-opに分類)。ハイブリッドジャンルの成果はこの分析の範囲外だ。`,
+    `<b>Co-op標本が相対的に小さい</b> — 純粋マルチCo-opは約886本でナラティブの約1/9。
+     Co-op関連指標(特に上位1%シェアとα)は信頼区間が広く、区間で読むべきだ。`,
+    `<b>タグは自己選択</b> — タグはユーザー/開発者が付けるため境界事例の誤分類がありうる。
+     主データ(Gamalyticタグフィルター)と検証レイヤー(SteamSpyタグ)の分類不一致は処理済み
+     ゲームの約1.5%と小さかった。`,
   ],
-  foot: `データ: SteamSpy + Steam公式API · レビュー数は販売量の代理変数 · コード/再現:
-    <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
+  foot: `データ: Gamalytic(販売推定・主) + SteamSpy・Steam公式API(レビュー生観測・検証) ·
+    コード/再現: <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
   defT: "コホート定義 — 収集に使ったタグ",
   defCohort: "コホート", defInc: "包含条件 (Steamタグ)", defExc: "除外タグ",
   defRows: [
@@ -1113,15 +1140,15 @@ const ja: typeof ko = {
     ぜひゲームのストアページにも遊びに来てください — 大きな励みになります。`,
   aboutSteam: "Graytail on Steam →",
   aboutRepo: "分析コード (GitHub) →",
-  axReviews: "レビュー数",
+  axReviews: "販売本数",
   axCcdfY: "P(X ≥ x)",
-  axLogReviews: "レビュー数 (対数軸)",
+  axLogReviews: "販売本数 (対数軸)",
   axCumGames: "ゲームの累積比率",
-  bandLabel: "中間帯 100–1k",
+  bandLabel: "中間帯 3.5千~3.5万本",
   equality: "均等線",
-  ttCcdf: (x, p) => `レビュー ≥ ${x.toLocaleString()}<br/>ゲーム比率 ${(100 * p).toPrecision(2)}%`,
+  ttCcdf: (x, p) => `販売 ≥ ${x.toLocaleString()}本<br/>ゲーム比率 ${(100 * p).toPrecision(2)}%`,
   ttLorenzHead: (x) => `下位 ${pct(x)} のゲーム`,
-  ttLorenzRow: (name, y) => `${name}: レビュー ${pct(y)}`,
+  ttLorenzRow: (name, y) => `${name}: 販売本数 ${pct(y)}`,
 };
 
 export const T: Record<Locale, typeof ko> = { ko, en, ja };

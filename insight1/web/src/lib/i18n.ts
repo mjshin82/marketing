@@ -174,6 +174,24 @@ const ko = {
     <li><b>승자독식 정도</b> — 상위 1% 게임이 전체 판매량의 ${(100 * d.top1).toFixed(0)}%,
       상위 5%가 ${(100 * d.top5).toFixed(0)}%를 점유한다.</li>
   </ul>`,
+  countT: "성공 게임의 절대 수 — 판매 임계값별",
+  countCap: `비율이 아니라 개수다. 2022~2025년 4년치 출시작 기준이고, 판매량은 2026년 7월
+    시점의 누적치. 모수가 다르다는 점을 기억할 것 — 코옵 886 / 로그라이크 3,516 /
+    내러티브 8,071개 (약 1:4:9).`,
+  countTh: "성공 기준",
+  countNote: (c: any): string => {
+    const t = c.abs_counts;
+    if (!t) return "";
+    const g = (th: string, k: string) => t[th]?.[k] ?? 0;
+    return `내러티브는 9배 많이 만들어지므로 <b>중간 성공(3.5만~10만 장)의 절대 수는
+      내러티브가 2~3배 많다</b> — "적당히 성공한 사례"가 많이 보이는 이유다. 약 50만 장에서
+      균형이 맞고(코옵 ${g("500000","A")} vs 내러티브 ${g("500000","B")}),
+      <b>100만 장 이상부터는 코옵이 절대 수로도 역전한다</b>
+      (${g("1000000","A")} vs ${g("1000000","B")}${g("5000000","A") ? `, 500만 장 이상은
+      ${g("5000000","A")} vs ${g("5000000","B")}` : ""}) — 9배 적게 만들어지는데도 밀리언셀러는
+      더 많다. 최상위 구간에서 코옵의 비율 우위가 모수 격차를 뚫는다는 뜻이다. 단, 이 역시
+      "코옵이라서"가 아니라 코옵을 만들 수 있는 팀의 역량 프리미엄(구성 효과)일 수 있다.`;
+  },
   validT: "검증 레이어 — 리뷰 원시 관측과의 대조",
   validMetric: "지표", validMain: "판매 기준 (주)", validCheck: "리뷰 기준 (검증)", validAgree: "일치",
   validCap: (rc: any): string => `주 분석(Gamalytic 판매 추정)의 결론이 모델 산물이 아닌지, 스팀
@@ -569,6 +587,25 @@ const en: typeof ko = {
     <li><b>Winner-take-all</b> — the top 1% of games capture ${(100 * d.top1).toFixed(0)}% of
       all sales; the top 5% capture ${(100 * d.top5).toFixed(0)}%.</li>
   </ul>`,
+  countT: "Absolute number of successful games — by sales threshold",
+  countCap: `Counts, not shares. Releases from the four years 2022–2025; sales are cumulative
+    as of July 2026. Keep the population sizes in mind — co-op 886 / roguelike 3,516 /
+    narrative 8,071 (about 1:4:9).`,
+  countTh: "Threshold",
+  countNote: (c: any): string => {
+    const t = c.abs_counts;
+    if (!t) return "";
+    const g = (th: string, k: string) => t[th]?.[k] ?? 0;
+    return `Narrative ships 9× more games, so <b>in the mid-success range (35k–100k copies)
+      it also has 2–3× more successes in absolute terms</b> — why "moderate hits" are so
+      visible there. The scales balance around 500k copies (co-op ${g("500000","A")} vs
+      narrative ${g("500000","B")}), and <b>from 1M copies up, co-op wins even in absolute
+      count</b> (${g("1000000","A")} vs ${g("1000000","B")}${g("5000000","A") ? `; at 5M+,
+      ${g("5000000","A")} vs ${g("5000000","B")}` : ""}) — more million-sellers despite 9×
+      fewer releases. At the very top, co-op's rate advantage punches through the population
+      gap. As always, this may reflect the capability premium of teams able to ship co-op
+      (composition effect), not co-op itself.`;
+  },
   validT: "Validation layer — against raw review counts",
   validMetric: "Metric", validMain: "Sales-based (primary)", validCheck: "Review-based (check)", validAgree: "Agree",
   validCap: (rc: any): string => `To ensure the primary conclusions are not artifacts of
@@ -963,6 +1000,24 @@ const ja: typeof ko = {
     <li><b>勝者総取りの度合い</b> — 上位1%のゲームが全販売の${(100 * d.top1).toFixed(0)}%、
       上位5%が${(100 * d.top5).toFixed(0)}%を占有する。</li>
   </ul>`,
+  countT: "成功ゲームの絶対数 — 販売しきい値別",
+  countCap: `比率ではなく個数だ。2022~2025年の4年分のリリースが対象で、販売本数は2026年7月
+    時点の累積値。母数の違いに注意 — Co-op 886 / ローグライク 3,516 / ナラティブ 8,071本
+    (約1:4:9)。`,
+  countTh: "しきい値",
+  countNote: (c: any): string => {
+    const t = c.abs_counts;
+    if (!t) return "";
+    const g = (th: string, k: string) => t[th]?.[k] ?? 0;
+    return `ナラティブは9倍多く作られるため、<b>中位の成功(3.5万~10万本)の絶対数はナラティブが
+      2~3倍多い</b> — 「そこそこのヒット」が目につく理由だ。約50万本で均衡し(Co-op
+      ${g("500000","A")} vs ナラティブ ${g("500000","B")})、<b>100万本以上ではCo-opが絶対数
+      でも逆転する</b>(${g("1000000","A")} vs ${g("1000000","B")}${g("5000000","A") ? `、
+      500万本以上は${g("5000000","A")} vs ${g("5000000","B")}` : ""}) — 9倍少ない供給で
+      ミリオンセラーはより多い。最上位ではCo-opの比率優位が母数の差を突き破る。ただし例に
+      よって、これも「Co-opだから」ではなくCo-opを作れるチームの力量プレミアム(構成効果)かも
+      しれない。`;
+  },
   validT: "検証レイヤー — レビュー生観測との対照",
   validMetric: "指標", validMain: "販売基準 (主)", validCheck: "レビュー基準 (検証)", validAgree: "一致",
   validCap: (rc: any): string => `主分析(Gamalytic販売推定)の結論がモデルの産物でないことを

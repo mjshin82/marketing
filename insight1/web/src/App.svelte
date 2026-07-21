@@ -315,6 +315,28 @@
     </section>
 
 
+    {#if R.concentration?.abs_counts}
+      <section class="card">
+        <h3>{L.countT}</h3>
+        <p class="cap">{L.countCap}</p>
+        <table>
+          <thead><tr><th>{L.countTh}</th>{#each COLS as c}<th><span class="dot {DOT[c]}"></span>{cohortName(c)}</th>{/each}</tr></thead>
+          <tbody>
+            {#each Object.entries(R.concentration.abs_counts) as [th, row]}
+              <tr>
+                <td>≥ {Number(th).toLocaleString()}</td>
+                {#each COLS as c}<td>{(row as any)[c] ?? "—"}</td>{/each}
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+        <div class="interp">
+          <p class="interp-t">{L.interpT}</p>
+          <p>{@html L.countNote(R.concentration)}</p>
+        </div>
+      </section>
+    {/if}
+
     {#if R.review_check?.A && R.review_check?.B}
       <section class="card">
         <h3>{L.validT}</h3>

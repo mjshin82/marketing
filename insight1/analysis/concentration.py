@@ -55,6 +55,14 @@ def main():
     if "A_vs_B" in out["early_death_tests"]:
         out["early_death_test"] = out["early_death_tests"]["A_vs_B"]  # back-compat
 
+    # absolute counts of games clearing sales thresholds (full cohorts)
+    out["abs_counts"] = {}
+    for th in [35000, 100000, 500000, 1000000, 5000000]:
+        out["abs_counts"][str(th)] = {
+            c: int((full[full.cohort == c].total_reviews >= th).sum())
+            for c in COHORTS}
+    out["cohort_sizes"] = {c: int((full.cohort == c).sum()) for c in COHORTS}
+
     fig, ax = plt.subplots(figsize=(6, 6))
     for c in death:
         p_pop, p_rev = lorenz(main_df[main_df.cohort == c].total_reviews.values)

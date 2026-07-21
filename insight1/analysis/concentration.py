@@ -34,6 +34,9 @@ def main():
         dead = int((xf < MIN_REVIEWS).sum())
         death[c] = [dead, len(xf) - dead]
         out[c] = {"n": int(len(x)),
+                  "median": float(np.median(x)), "mean": float(np.mean(x)),
+                  "geomean": float(np.exp(np.mean(np.log(x)))),
+                  "mean_over_median": float(np.mean(x) / np.median(x)),
                   "gini": g, "gini_ci": [g_lo, g_hi],
                   "top1_share": t1, "top1_ci": [t1_lo, t1_hi],
                   "top5_share": t5, "top5_ci": [t5_lo, t5_hi],

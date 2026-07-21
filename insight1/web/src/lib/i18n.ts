@@ -225,6 +225,25 @@ const ko = {
   ],
   foot: `데이터: SteamSpy + Steam 공식 API · 리뷰 수는 판매량의 대리변수 · 코드/재현:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
+  defT: "코호트 정의 — 수집에 사용한 태그",
+  defCohort: "코호트", defInc: "포함 조건 (스팀 태그)", defExc: "제외 태그",
+  defRows: [
+    { c: "A", inc: `<code>Online Co-Op</code> 또는 <code>Co-op</code> 중 하나
+      <b>그리고</b> <code>Multiplayer</code>`, exc: `—` },
+    { c: "R", inc: `<code>Rogue-like</code>, <code>Rogue-lite</code>,
+      <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
+      <code>Roguevania</code>, <code>Traditional Roguelike</code> 중 하나 이상`,
+      exc: `멀티/코옵 계열 전부` },
+    { c: "B", inc: `<code>Singleplayer</code> <b>그리고</b> (<code>Story Rich</code> 또는
+      <code>Adventure</code> 또는 <code>Puzzle</code> 중 하나 이상)`,
+      exc: `멀티/코옵 계열 전부` },
+  ] as { c: string; inc: string; exc: string }[],
+  defCommon: `멀티/코옵 계열 제외 태그 = <code>Co-op</code>, <code>Online Co-Op</code>,
+    <code>Local Co-Op</code>, <code>Co-op Campaign</code>, <code>Multiplayer</code>,
+    <code>Massively Multiplayer</code>. 태그는 SteamSpy가 제공하는 스팀 유저 태그 기준.
+    코호트는 상호배타적이며 분류 우선순위는 <b>코옵 → 로그라이크 → 내러티브</b>
+    (예: 스토리 있는 로그라이트는 로그라이크로 분류). 공통 필터: 유료 · 초기가 &lt;$40 ·
+    type=game · 2022-01~2025-12 출시 · 대형 퍼블리셔(EA, Ubisoft 등) 제외.`,
   aboutT: "만든 사람",
   aboutBody: `이 분석은 <b>Concode</b>의 개발자가 만들었습니다. 저희는 지금 스팀에서
     <b>Graytail</b>이라는 게임을 만들고 있어요. 이 리포트가 도움이 되었다면,
@@ -468,6 +487,26 @@ const en: typeof ko = {
   ],
   foot: `Data: SteamSpy + official Steam API · review count is a sales proxy · code:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
+  defT: "Cohort definitions — tags used for collection",
+  defCohort: "Cohort", defInc: "Inclusion (Steam tags)", defExc: "Excluded tags",
+  defRows: [
+    { c: "A", inc: `<code>Online Co-Op</code> or <code>Co-op</code>,
+      <b>and</b> <code>Multiplayer</code>`, exc: `—` },
+    { c: "R", inc: `any of <code>Rogue-like</code>, <code>Rogue-lite</code>,
+      <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
+      <code>Roguevania</code>, <code>Traditional Roguelike</code>`,
+      exc: `all multiplayer/co-op tags` },
+    { c: "B", inc: `<code>Singleplayer</code> <b>and</b> (<code>Story Rich</code> or
+      <code>Adventure</code> or <code>Puzzle</code>)`,
+      exc: `all multiplayer/co-op tags` },
+  ],
+  defCommon: `Multiplayer/co-op exclusion tags = <code>Co-op</code>, <code>Online Co-Op</code>,
+    <code>Local Co-Op</code>, <code>Co-op Campaign</code>, <code>Multiplayer</code>,
+    <code>Massively Multiplayer</code>. Tags are Steam user tags as served by SteamSpy.
+    Cohorts are disjoint with classification priority <b>co-op → roguelike → narrative</b>
+    (e.g. a story-rich roguelite counts as roguelike). Common filters: paid · launch price
+    &lt;$40 · type=game · released 2022-01..2025-12 · major publishers (EA, Ubisoft, …)
+    excluded.`,
   aboutT: "Who made this",
   aboutBody: `This analysis was made by a developer at <b>Concode</b>. We are currently
     building a game called <b>Graytail</b> on Steam. If this report helped you, please
@@ -692,6 +731,25 @@ const ja: typeof ko = {
   ],
   foot: `データ: SteamSpy + Steam公式API · レビュー数は販売量の代理変数 · コード/再現:
     <a class="repo" href="https://github.com/mjshin82/marketing" target="_blank" rel="noopener">github.com/mjshin82/marketing</a>`,
+  defT: "コホート定義 — 収集に使ったタグ",
+  defCohort: "コホート", defInc: "包含条件 (Steamタグ)", defExc: "除外タグ",
+  defRows: [
+    { c: "A", inc: `<code>Online Co-Op</code> または <code>Co-op</code>、
+      <b>かつ</b> <code>Multiplayer</code>`, exc: `—` },
+    { c: "R", inc: `<code>Rogue-like</code>, <code>Rogue-lite</code>,
+      <code>Action Roguelike</code>, <code>Roguelike Deckbuilder</code>,
+      <code>Roguevania</code>, <code>Traditional Roguelike</code> のいずれか`,
+      exc: `マルチ/Co-op系すべて` },
+    { c: "B", inc: `<code>Singleplayer</code> <b>かつ</b> (<code>Story Rich</code> または
+      <code>Adventure</code> または <code>Puzzle</code>)`,
+      exc: `マルチ/Co-op系すべて` },
+  ],
+  defCommon: `マルチ/Co-op系の除外タグ = <code>Co-op</code>, <code>Online Co-Op</code>,
+    <code>Local Co-Op</code>, <code>Co-op Campaign</code>, <code>Multiplayer</code>,
+    <code>Massively Multiplayer</code>。タグはSteamSpyが提供するSteamユーザータグ基準。
+    コホートは互いに排他的で、分類優先順位は<b>Co-op → ローグライク → ナラティブ</b>
+    (例: ストーリーのあるローグライトはローグライクに分類)。共通フィルター: 有料 ·
+    初期価格 &lt;$40 · type=game · 2022-01~2025-12リリース · 大手パブリッシャー除外。`,
   aboutT: "作った人",
   aboutBody: `この分析は<b>Concode</b>の開発者が作りました。私たちは現在Steamで
     <b>Graytail</b>というゲームを開発しています。このレポートが役に立ったら、

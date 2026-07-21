@@ -336,6 +336,23 @@
       <p class="muted foot">{@html L.foot}</p>
     </section>
 
+    <section class="card">
+      <h3>{L.defT}</h3>
+      <table class="def-table">
+        <thead><tr><th>{L.defCohort}</th><th>{L.defInc}</th><th>{L.defExc}</th></tr></thead>
+        <tbody>
+          {#each L.defRows as row}
+            <tr>
+              <td><span class="dot {DOT[row.c]}"></span>{cohortName(row.c)}</td>
+              <td>{@html row.inc}</td>
+              <td>{@html row.exc}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+      <p class="cap def-common">{@html L.defCommon}</p>
+    </section>
+
     <section class="card about">
       <h3>{L.aboutT}</h3>
       <p class="about-p">{@html L.aboutBody}</p>
@@ -393,6 +410,11 @@
   .dot.dr { background: var(--series-r); }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .def-table th, .def-table td { text-align: left; font-variant-numeric: normal; }
+  .def-table td { color: var(--text-secondary); font-size: 0.86rem; }
+  .def-table :global(code) { background: var(--page); border: 1px solid var(--grid);
+    border-radius: 4px; padding: 1px 5px; font-size: 0.8rem; color: var(--text-primary); }
+  .def-common { margin-top: 10px; }
   .concl { color: var(--text-secondary); font-size: 0.9rem; }
   .concl :global(p) { margin: 0 0 8px; }
   .concl :global(ul) { margin: 0; padding-left: 18px; }

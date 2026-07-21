@@ -241,7 +241,7 @@ const ko = {
         ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
         보인다. 단, 코옵 게임은 <b>생존 편향</b>이 있을 수 있어(한계 참조) 이 우위는 실제보다
         부풀려졌을 수 있다. 또한 이 데이터는 2025년 출시작까지다 — 2026년에는 코옵
-        흥행작들의 영향으로 공급이 더 늘었거나 늘어날 확률이 높아, 이 우위가 앞으로도
+        흥행작들(예: MECCHA CHAMELEON, YAPYAP)의 영향으로 공급이 더 늘었거나 늘어날 확률이 높아, 이 우위가 앞으로도
         유지될지는 알 수 없다.</li>
       <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
         그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
@@ -574,8 +574,8 @@ const en: typeof ko = {
         rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%), and more. Note, however, that co-op games may carry <b>survivorship
         bias</b> (see Limitations), so this advantage may be inflated. Also, the data covers
-        releases through 2025 — in 2026, co-op hits have likely drawn (or will draw) even
-        more supply into the genre, so whether this advantage persists is unknown.</li>
+        releases through 2025 — in 2026, co-op hits (e.g. MECCHA CHAMELEON, YAPYAP) have likely drawn (or will draw)
+        even more supply into the genre, so whether this advantage persists is unknown.</li>
       <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
         the cohort contains far fewer hobbyist releases. The co-op advantage is likely
         <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
@@ -898,8 +898,8 @@ const ja: typeof ko = {
         ${sig2(c.B.geomean)})、早期消滅率(${(100 * c.A.early_death_rate).toFixed(0)}% vs
         ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。 ただしCo-opゲームには<b>生存バイアス</b>の可能性があり
         (限界を参照)、この優位は実際より膨らんでいるかもしれない。またこのデータは2025年
-        リリース作までだ — 2026年はCo-opヒット作の影響で供給がさらに増えた(増える)可能性が
-        高く、この優位が今後も維持されるかは分からない。</li>
+        リリース作までだ — 2026年はCo-opヒット作(例: MECCHA CHAMELEON、YAPYAP)の影響で供給がさらに増えた(増える)
+        可能性が高く、この優位が今後も維持されるかは分からない。</li>
       <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
         難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
         ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>

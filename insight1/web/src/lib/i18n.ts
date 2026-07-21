@@ -284,52 +284,26 @@ const ko = {
     하반기 출시작은 리뷰 누적 기간이 짧고(7~12개월), SteamSpy 마스터 목록의 최신작 편입
     지연으로 커버리지도 얇다 — 확장 창 수치는 참고용이며, 본 분석은 2025-06 컷오프를 쓴다.`,
   windowCols: ["α", "Gini", "기하평균"] as string[],
-  conclT: "지금까지의 결론",
+  conclT: "결론",
   concl: (r: any, hasR: boolean, interim: boolean): string => {
-    const c = r.concentration, t = r.tail;
-    const rb = t.alpha_diffs?.R_minus_B;
-    const rbSig = rb && rb.ci95[1] < 0;
-    return `${interim ? "<p><b>수집 진행 중 스냅샷 기준의 중간 결론</b>이다 — 표본이 늘면 수치는 달라질 수 있다.</p>" : ""}
-    <ul>
-      <li><b>사실:</b> 코옵 코호트는 보통의 세계(기하평균 ${sig2(c.A.geomean)} vs 내러티브
-        ${sig2(c.B.geomean)}), 조기 소멸률(${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
-        보인다.${(() => {
-          const yrs = Object.keys(r.era?.years ?? {}).sort();
-          const l = yrs[yrs.length - 1];
-          const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
-                nl = r.era?.years?.[l]?.A?.n_full;
-          return s25 && nl && n0
-            ? ` 다만 코옵은 <b>공급이 급증하는 중</b>이라, 경쟁이 이렇게 불어나는 국면에서도
-               이 우위가 유지될지는 지켜봐야 한다.`
-            : "";
-        })()} </li>
-      <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
-        그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
-        <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
-        바꿨을 때의 효과는 이 비교로 알 수 없다.</li>
-      <li><b>안전하게 말할 수 있는 것:</b> ${(() => {
-        const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
-        const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
-        const gmL = [...ks].sort((x, y) => c[y].geomean - c[x].geomean)
-          .map((k) => `${nm[k]} ${sig2(c[k].geomean)}`).join(" > ");
-        const edL = [...ks].sort((x, y) => c[y].early_death_rate - c[x].early_death_rate)
-          .map((k) => `${nm[k]} ${(100 * c[k].early_death_rate).toFixed(1)}%`).join(" > ");
-        return `현재 표본에서 전형적 성과(기하평균 리뷰)는 ${gmL} 순이고,
-          조기 소멸률은 ${edL} 순으로 높다.`;
-      })()}
-        ${hasR && rb ? (rb.point < 0
-          ? `로그라이크는 내러티브보다 꼬리가 ${rbSig ? "통계적으로 유의하게 " : ""}무겁다
-             (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`
-          : `로그라이크와 내러티브(스토리 중심)의 꼬리 분포는 사실상 대등하다
-             (α 차이 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
-        : ""}</li>
-      <li><b>시대 효과 주의:</b> 이 분석 창(2022.01–2025.12)의 수치에는 각 장르의 구조적
-        특성만이 아니라 시대 효과 — 특정 장르의 유행과 그 냉각, 경쟁작의 대거 진입, 시장
-        전체의 공급 폭증 — 가 섞여 있다. 어느 코호트든 지금의 수치가 유행이 바뀐 뒤에도
-        그대로 재현된다는 보장은 없다. "시대 효과 — 연도별 추세" 섹션이 이를 부분적으로
-        가려낸다.</li>
-    </ul>`;
+    const c = r.concentration;
+    const nm: Record<string, string> = { A: "코옵", R: "로그라이크", B: "내러티브" };
+    const ks = ["A", "R", "B"].filter((k) => c[k]);
+    const t1Max = [...ks].sort((x, y) => c[y].top1_share - c[x].top1_share)[0];
+    const gMax = [...ks].sort((x, y) => c[y].gini - c[x].gini)[0];
+    const ms = c.million_sellers;
+    return `${interim ? "<p><b>수집 진행 중 스냅샷 기준</b>이다 — 표본이 늘면 수치는 달라질 수 있다.</p>" : ""}
+    <p><b>코옵은 기본값이 높은 세계다</b> — 보통 게임의 성과(기하평균 ${sig2(c.A.geomean)}장 vs
+      내러티브 ${sig2(c.B.geomean)}장)도, ${ms ? `대박의 절대 수(100만 장 이상 ${ms.A?.length ?? 0}개 vs
+      ${ms.B?.length ?? 0}개, 9배 적게 만들어지는데도)도 ` : ""}가장 높다.
+      다만 그 안의 격차도 가장 커서(Gini ${c[gMax].gini.toFixed(3)}로 ${nm[gMax]} 최고) 성공과
+      실패가 뚜렷이 갈리며, <b>"초대박 몇 개가 독식"하는 형태는 오히려 ${nm[t1Max]} 쪽</b>이다
+      (상위 1% 점유 ${pct(c[t1Max].top1_share)} vs 코옵 ${pct(c.A.top1_share)}).</p>
+    <p>단서 둘 — ① 이것이 <b>"코옵이라서"인지 "코옵을 만들 수 있는 팀이라서"인지는 이 데이터로
+      구분할 수 없다</b>(구성 효과). 온라인 코옵은 넷코드·서버 때문에 만들기 어려워 코호트에
+      취미 수준 출시작이 애초에 적다. ② <b>공급이 급증하는 중</b>이라 이 우위가 유지될지는
+      지켜봐야 한다. 어느 코호트든 지금 수치에는 시대 효과(유행과 냉각, 경쟁작 진입)가 섞여
+      있다.</p>`;
   },
   limitT: "한계",
   limits: [
@@ -660,54 +634,28 @@ const en: typeof ko = {
     master list lags on recent titles, so coverage is thin — the extended figures are for
     reference; the primary analysis uses the 2025-06 cutoff.`,
   windowCols: ["α", "Gini", "Geometric mean"],
-  conclT: "Conclusions so far",
+  conclT: "Conclusion",
   concl: (r, hasR, interim) => {
-    const c = r.concentration, t = r.tail;
-    const rb = t.alpha_diffs?.R_minus_B;
-    const rbSig = rb && rb.ci95[1] < 0;
-    return `${interim ? "<p><b>Interim conclusions from an in-progress snapshot</b> — numbers may shift as the sample grows.</p>" : ""}
-    <ul>
-      <li><b>The fact:</b> the co-op cohort performs best on most metrics — the typical world
-        (geometric mean ${sig2(c.A.geomean)} vs narrative ${sig2(c.B.geomean)}), early-death
-        rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more.${(() => {
-          const yrs = Object.keys(r.era?.years ?? {}).sort();
-          const l = yrs[yrs.length - 1];
-          const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
-                nl = r.era?.years?.[l]?.A?.n_full;
-          return s25 && nl && n0
-            ? ` That said, co-op <b>supply is surging</b>, so whether this advantage holds
-               up as competition swells remains to be seen.`
-            : "";
-        })()} </li>
-      <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
-        the cohort contains far fewer hobbyist releases. The co-op advantage is likely
-        <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
-        effect. What happens if the same team merely switches genre cannot be read off this
-        comparison.</li>
-      <li><b>What can be said safely:</b> ${(() => {
-        const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
-        const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
-        const gmL = [...ks].sort((x, y) => c[y].geomean - c[x].geomean)
-          .map((k) => `${nm[k]} ${sig2(c[k].geomean)}`).join(" > ");
-        const edL = [...ks].sort((x, y) => c[y].early_death_rate - c[x].early_death_rate)
-          .map((k) => `${nm[k]} ${(100 * c[k].early_death_rate).toFixed(1)}%`).join(" > ");
-        return `In the current sample, typical outcomes (geometric-mean reviews) rank
-          ${gmL}, while early-death rates rank ${edL}.`;
-      })()}
-        ${hasR && rb ? (rb.point < 0
-          ? `Roguelikes have a ${rbSig ? "statistically significantly " : ""}heavier tail than
-             narrative games (α diff ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`
-          : `Roguelikes and (story-rich) narrative games show essentially comparable tail
-             distributions (α diff ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]).`)
-        : ""}</li>
-      <li><b>Beware era effects:</b> every number in this window (2022.01–2025.12) mixes
-        each genre's structural properties with era effects — genre fashions and their
-        cooling, mass influx of competitors, and the market-wide explosion in release
-        volume. For any cohort, there is no guarantee today's numbers replicate once the
-        fashion shifts. The "Era effect — year-by-year trend" section partially separates
-        this.</li>
-    </ul>`;
+    const c = r.concentration;
+    const nm: Record<string, string> = { A: "co-op", R: "roguelike", B: "narrative" };
+    const ks = ["A", "R", "B"].filter((k) => c[k]);
+    const t1Max = [...ks].sort((x, y) => c[y].top1_share - c[x].top1_share)[0];
+    const gMax = [...ks].sort((x, y) => c[y].gini - c[x].gini)[0];
+    const ms = c.million_sellers;
+    return `${interim ? "<p><b>Based on an in-progress snapshot</b> — numbers may shift as the sample grows.</p>" : ""}
+    <p><b>Co-op is a world with a higher baseline</b> — the typical game does better
+      (geometric mean ${sig2(c.A.geomean)} vs ${sig2(c.B.geomean)} copies for narrative),
+      ${ms ? `and even the absolute number of big hits is highest (${ms.A?.length ?? 0} million-sellers
+      vs ${ms.B?.length ?? 0}, despite shipping 9× fewer games). ` : ""}But the spread inside
+      it is also the widest (Gini ${c[gMax].gini.toFixed(3)}, highest for ${nm[gMax]}), so
+      success and failure separate sharply — while <b>the "a few mega-hits take everything"
+      shape belongs to ${nm[t1Max]}</b> instead (top-1% share ${pct(c[t1Max].top1_share)} vs
+      co-op's ${pct(c.A.top1_share)}).</p>
+    <p>Two caveats — ① whether this is <b>"because it's co-op" or "because only capable teams
+      ship co-op" cannot be separated in this data</b> (composition effect): online co-op is
+      hard to build, so the cohort holds far fewer hobbyist releases. ② <b>Supply is
+      surging</b>, so whether the advantage holds remains to be seen; every cohort's numbers
+      mix in era effects (fashions cooling, competitors flooding in).</p>`;
   },
   limitT: "Limitations",
   limits: [
@@ -1042,50 +990,26 @@ const ja: typeof ko = {
     収録が遅れるためカバレッジも薄い — 拡張ウィンドウの数値は参考値であり、本分析は
     2025-06カットオフを用いる。`,
   windowCols: ["α", "ジニ係数", "幾何平均"],
-  conclT: "ここまでの結論",
+  conclT: "結論",
   concl: (r, hasR, interim) => {
-    const c = r.concentration, t = r.tail;
-    const rb = t.alpha_diffs?.R_minus_B;
-    const rbSig = rb && rb.ci95[1] < 0;
-    return `${interim ? "<p><b>収集進行中のスナップショットに基づく中間結論</b>だ — 標本が増えれば数値は変わりうる。</p>" : ""}
-    <ul>
-      <li><b>事実:</b> Co-opコホートは普通の世界(幾何平均 ${sig2(c.A.geomean)} vs ナラティブ
-        ${sig2(c.B.geomean)})、早期消滅率(${(100 * c.A.early_death_rate).toFixed(0)}% vs
-        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。${(() => {
-          const yrs = Object.keys(r.era?.years ?? {}).sort();
-          const l = yrs[yrs.length - 1];
-          const s25 = r.S?.[l]?.A, n0 = r.era?.years?.[yrs[0]]?.A?.n_full,
-                nl = r.era?.years?.[l]?.A?.n_full;
-          return s25 && nl && n0
-            ? `ただしCo-opは<b>供給が急増中</b>のため、競争がこれほど膨らむ局面でも
-               この優位が維持されるかは見守る必要がある。`
-            : "";
-        })()}</li>
-      <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
-        難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
-        ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>
-      <li><b>安全に言えること:</b> ${(() => {
-        const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
-        const ks = hasR ? ["A", "R", "B"] : ["A", "B"];
-        const gmL = [...ks].sort((x, y) => c[y].geomean - c[x].geomean)
-          .map((k) => `${nm[k]} ${sig2(c[k].geomean)}`).join(" > ");
-        const edL = [...ks].sort((x, y) => c[y].early_death_rate - c[x].early_death_rate)
-          .map((k) => `${nm[k]} ${(100 * c[k].early_death_rate).toFixed(1)}%`).join(" > ");
-        return `現在の標本では、典型的成果(幾何平均レビュー)は${gmL}の順、
-          早期消滅率は${edL}の順に高い。`;
-      })()}
-        ${hasR && rb ? (rb.point < 0
-          ? `ローグライクはナラティブより裾が${rbSig ? "統計的に有意に" : ""}重い
-             (α差 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}])。`
-          : `ローグライクと(ストーリー重視の)ナラティブの裾の分布は実質的に対等だ
-             (α差 ${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}])。`)
-        : ""}</li>
-      <li><b>時代効果に注意:</b> このウィンドウ(2022.01–2025.12)の数値には、各ジャンルの
-        構造的特性だけでなく時代効果 — 特定ジャンルの流行とその冷え込み、競合作の大量参入、
-        市場全体のリリース量の爆発 — が混ざっている。どのコホートであれ、今の数値が流行が
-        変わった後も再現される保証はない。「時代効果 — 年別トレンド」セクションがこれを
-        部分的に切り分ける。</li>
-    </ul>`;
+    const c = r.concentration;
+    const nm: Record<string, string> = { A: "Co-op", R: "ローグライク", B: "ナラティブ" };
+    const ks = ["A", "R", "B"].filter((k) => c[k]);
+    const t1Max = [...ks].sort((x, y) => c[y].top1_share - c[x].top1_share)[0];
+    const gMax = [...ks].sort((x, y) => c[y].gini - c[x].gini)[0];
+    const ms = c.million_sellers;
+    return `${interim ? "<p><b>収集進行中のスナップショット基準</b>だ — 標本が増えれば数値は変わりうる。</p>" : ""}
+    <p><b>Co-opは基準値の高い世界だ</b> — 普通のゲームの成果(幾何平均${sig2(c.A.geomean)}本 vs
+      ナラティブ${sig2(c.B.geomean)}本)も、${ms ? `大ヒットの絶対数(100万本以上${ms.A?.length ?? 0}本 vs
+      ${ms.B?.length ?? 0}本、9倍少ない供給にもかかわらず)も` : ""}最も高い。ただし内部の格差も
+      最大で(ジニ係数${c[gMax].gini.toFixed(3)}で${nm[gMax]}が最高)、成功と失敗がはっきり分かれる。
+      一方<b>「少数のメガヒットが独占する」形はむしろ${nm[t1Max]}</b>だ
+      (上位1%シェア${pct(c[t1Max].top1_share)} vs Co-op ${pct(c.A.top1_share)})。</p>
+    <p>留意点2つ — ① これが<b>「Co-opだから」なのか「Co-opを作れるチームだから」なのかは
+      このデータでは分離できない</b>(構成効果)。オンラインCo-opは作るのが難しく、コホートに
+      趣味レベルのリリースが少ない。② <b>供給が急増中</b>のため、この優位が維持されるかは
+      見守る必要がある。どのコホートの数値にも時代効果(流行と冷え込み、競合の大量参入)が
+      混ざっている。</p>`;
   },
   limitT: "限界",
   limits: [

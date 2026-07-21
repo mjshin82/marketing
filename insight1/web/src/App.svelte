@@ -298,6 +298,11 @@
     {/if}
 
     <section class="card">
+      <h3>{L.conclT}</h3>
+      <div class="concl">{@html L.concl(R, hasR, data.meta.label !== "full")}</div>
+    </section>
+
+    <section class="card">
       <h3>{L.limitT}</h3>
       <ul class="limits">
         {#each L.limits as item}<li>{@html item}</li>{/each}
@@ -362,6 +367,10 @@
   .dot.dr { background: var(--series-r); }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .concl { color: var(--text-secondary); font-size: 0.9rem; }
+  .concl :global(p) { margin: 0 0 8px; }
+  .concl :global(ul) { margin: 0; padding-left: 18px; }
+  .concl :global(li) { margin-bottom: 8px; }
   .limits { color: var(--text-secondary); font-size: 0.9rem; padding-left: 18px; }
   .limits li { margin-bottom: 6px; }
   .muted { color: var(--text-muted); }

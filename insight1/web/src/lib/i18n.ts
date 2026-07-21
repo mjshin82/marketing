@@ -139,6 +139,34 @@ const ko = {
   </ul>`,
   robT: "강건성 — 가격대·연도별 α",
   robPrice: "가격대", robYear: "연도", robA: "α 코옵 (n)", robB: "α 싱글 (n)",
+  conclT: "지금까지의 결론",
+  concl: (r: any, hasR: boolean, interim: boolean): string => {
+    const c = r.concentration, t = r.tail;
+    const rb = t.alpha_diffs?.R_minus_B;
+    const rbSig = rb && rb.ci95[1] < 0;
+    return `${interim ? "<p><b>수집 진행 중 스냅샷 기준의 중간 결론</b>이다 — 표본이 늘면 수치는 달라질 수 있다.</p>" : ""}
+    <ul>
+      <li><b>사실:</b> 코옵 코호트는 보통의 세계(기하평균 ${sig2(c.A.geomean)} vs 내러티브
+        ${sig2(c.B.geomean)}), 조기 소멸률(${(100 * c.A.early_death_rate).toFixed(0)}% vs
+        ${(100 * c.B.early_death_rate).toFixed(0)}%) 등 대부분의 지표에서 가장 좋은 성과를
+        보인다.</li>
+      <li><b>그러나 이것은 인과가 아니다:</b> 온라인 코옵은 넷코드·서버 때문에 만들기 어렵고,
+        그래서 코호트에 취미 수준 출시작이 애초에 적다. 코옵의 우위는 "코옵이라서"가 아니라
+        <b>"코옵을 만들 수 있는 팀이라서"</b>일 가능성(구성 효과)이 크다. 같은 팀이 장르만
+        바꿨을 때의 효과는 이 비교로 알 수 없다.</li>
+      <li><b>비용은 데이터에 없다:</b> 코옵의 기대 성과가 몇 배 높아도 개발·운영 비용이 그만큼
+        크면 비용 대비로는 뒤집힐 수 있다. 또한 코옵의 복권 배수(×${(c.A.mean / c.A.geomean).toFixed(0)})가
+        가장 크고 상위 1% 점유(${(100 * c.A.top1_share).toFixed(0)}%)는 소표본에서 히트작 몇
+        개가 만든 수치라 아직 흔들린다.</li>
+      <li><b>안전하게 말할 수 있는 것:</b> 싱글 내러티브는 진입은 쉽지만 기대값이 가장 낮고
+        조기 소멸(${(100 * c.B.early_death_rate).toFixed(0)}%)이 가장 흔한 세계다.
+        ${hasR ? `로그라이크는 내러티브보다 꼬리가 ${rbSig ? "통계적으로 유의하게 " : ""}무겁고
+        (α 차이 ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})
+        중간층도 두터운, 규모 대비 균형이 좋은 세계다.` : ""}</li>
+      <li><b>다음 검증:</b> 코옵의 우위가 구성 효과를 넘어서는지는 전체 수집 후 같은 가격대끼리
+        비교(강건성 분석)했을 때도 유지되는지로 좁혀본다.</li>
+    </ul>`;
+  },
   limitT: "한계",
   limits: [
     `<b>리뷰-판매 배수의 장르 차이</b> — Boxleiter 배수는 장르·가격·연도에 따라 다르다.
@@ -298,6 +326,36 @@ const en: typeof ko = {
   </ul>`,
   robT: "Robustness — α by price band and year",
   robPrice: "Price band", robYear: "Year", robA: "α co-op (n)", robB: "α single (n)",
+  conclT: "Conclusions so far",
+  concl: (r, hasR, interim) => {
+    const c = r.concentration, t = r.tail;
+    const rb = t.alpha_diffs?.R_minus_B;
+    const rbSig = rb && rb.ci95[1] < 0;
+    return `${interim ? "<p><b>Interim conclusions from an in-progress snapshot</b> — numbers may shift as the sample grows.</p>" : ""}
+    <ul>
+      <li><b>The fact:</b> the co-op cohort performs best on most metrics — the typical world
+        (geometric mean ${sig2(c.A.geomean)} vs narrative ${sig2(c.B.geomean)}), early-death
+        rate (${(100 * c.A.early_death_rate).toFixed(0)}% vs
+        ${(100 * c.B.early_death_rate).toFixed(0)}%), and more.</li>
+      <li><b>But this is not causal:</b> online co-op is hard to build (netcode, servers), so
+        the cohort contains far fewer hobbyist releases. The co-op advantage is likely
+        <b>"teams capable of shipping co-op"</b> rather than "being co-op" — a composition
+        effect. What happens if the same team merely switches genre cannot be read off this
+        comparison.</li>
+      <li><b>Costs are not in the data:</b> even a several-fold higher expected outcome can
+        flip once development and live-ops costs are counted. Co-op also has the largest
+        lottery multiplier (×${(c.A.mean / c.A.geomean).toFixed(0)}) and its top-1% share
+        (${(100 * c.A.top1_share).toFixed(0)}%) rests on a few hits in a small sample.</li>
+      <li><b>What can be said safely:</b> single-player narrative is the easiest world to
+        enter but has the lowest expectations and the highest early-death rate
+        (${(100 * c.B.early_death_rate).toFixed(0)}%).
+        ${hasR ? `Roguelikes have a ${rbSig ? "statistically significantly " : ""}heavier tail
+        than narrative games (α diff ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})
+        plus a thick middle class — a well-balanced world for its scale.` : ""}</li>
+      <li><b>Next check:</b> whether the co-op advantage survives a composition control —
+        comparing within the same price band once the full collection lands.</li>
+    </ul>`;
+  },
   limitT: "Limitations",
   limits: [
     `<b>Genre differences in the review-to-sales multiplier</b> — the Boxleiter multiplier
@@ -451,6 +509,32 @@ const ja: typeof ko = {
   </ul>`,
   robT: "頑健性 — 価格帯·年別のα",
   robPrice: "価格帯", robYear: "年", robA: "α Co-op (n)", robB: "α シングル (n)",
+  conclT: "ここまでの結論",
+  concl: (r, hasR, interim) => {
+    const c = r.concentration, t = r.tail;
+    const rb = t.alpha_diffs?.R_minus_B;
+    const rbSig = rb && rb.ci95[1] < 0;
+    return `${interim ? "<p><b>収集進行中のスナップショットに基づく中間結論</b>だ — 標本が増えれば数値は変わりうる。</p>" : ""}
+    <ul>
+      <li><b>事実:</b> Co-opコホートは普通の世界(幾何平均 ${sig2(c.A.geomean)} vs ナラティブ
+        ${sig2(c.B.geomean)})、早期消滅率(${(100 * c.A.early_death_rate).toFixed(0)}% vs
+        ${(100 * c.B.early_death_rate).toFixed(0)}%)など、ほとんどの指標で最も良い成果を示す。</li>
+      <li><b>ただしこれは因果ではない:</b> オンラインCo-opはネットコードやサーバーのため作るのが
+        難しく、コホートに趣味レベルのリリースがそもそも少ない。Co-opの優位は「Co-opだから」
+        ではなく<b>「Co-opを作れるチームだから」</b>という構成効果の可能性が高い。</li>
+      <li><b>コストはデータにない:</b> 期待成果が数倍高くても、開発・運営コストがそれだけ大きければ
+        コスト対比では逆転しうる。またCo-opの宝くじ倍率(×${(c.A.mean / c.A.geomean).toFixed(0)})は
+        最大で、上位1%占有(${(100 * c.A.top1_share).toFixed(0)}%)は小標本の数本のヒットが
+        作った数値でまだ不安定だ。</li>
+      <li><b>安全に言えること:</b> シングル・ナラティブは参入は簡単だが期待値が最も低く、
+        早期消滅(${(100 * c.B.early_death_rate).toFixed(0)}%)が最も多い世界だ。
+        ${hasR ? `ローグライクはナラティブより裾が${rbSig ? "統計的に有意に" : ""}重く
+        (α差 ${rb ? `${rb.point.toFixed(2)} [${rb.ci95[0].toFixed(2)}, ${rb.ci95[1].toFixed(2)}]` : "-"})、
+        中間層も厚い、規模のわりにバランスの良い世界だ。` : ""}</li>
+      <li><b>次の検証:</b> Co-opの優位が構成効果を超えるかどうかは、全収集後に同じ価格帯同士で
+        比較(頑健性分析)しても維持されるかで絞り込む。</li>
+    </ul>`;
+  },
   limitT: "限界",
   limits: [
     `<b>レビュー→販売倍率のジャンル差</b> — Boxleiter倍率はジャンル·価格·年によって異なる。
